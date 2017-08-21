@@ -1,23 +1,20 @@
 # updrive
 
-> An electron-vue project
+> 又拍云文件管理桌面客户端
 
-#### Build Setup
+#### Build
 
 ``` bash
-# install dependencies
-npm inst all
+# 安装依赖
+yarn
 
-# serve with hot reload at localhost:9080
+# 启动
+yarn dev
 
-npm run dev
-
-# build electron application for production
-npm run build
-
+# 打包
+yarn build
 
 ```
 
 ---
 
-This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[b31b441](https://github.com/SimulatedGREG/electron-vue/tree/b31b44123ad42acac12337c4955df4ead853f0df) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
