@@ -1,0 +1,111 @@
+// page main
+.page-main {
+  display: flex;
+  flex: 1;
+  border-top: 1px solid #ccc;
+  background: #eee;
+}
+
+.menu {
+  width: 160px;
+  display: flex;
+}
+
+// page-header
+.page-header {
+  align-items: center;
+  display: flex;
+  padding: 0 12px;
+  background: #fff;
+}
+
+.page-title {
+  font-size: 1.5em;
+  line-height: 1;
+  margin: 15px 0;
+}
+
+.logo {
+  line-height: 50px;
+  display: inline-block;
+}
+
+.logo img{
+  height: 25px;
+  vertical-align: middle;
+}
+
+// page-nav
+.bar {
+  border-top: 1px solid #ccc;
+  align-items: center;
+  display: flex;
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(0,0,0,.2);
+  background: #fafafa;
+}
+
+.button-zone {
+  width: 160px;
+  display: flex;
+  justify-content:center;
+  .dropmenu {
+    width: 100px;
+    position: relative;
+    .button {
+      width: 100%;
+    }
+    .dropmenu-list {
+      display: none;
+      width: 160px;
+      left: 0;
+      z-index: 10;
+      top: 100%;
+      background: #fff;
+      position: absolute;
+      .panel {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+    &:hover {
+      .dropmenu-list {
+        display: block;
+      }
+    }
+  }
+}
+
+.nav {
+  align-items: center;
+  background: #fafafa;
+  flex: 1;
+  padding-left: 22px;
+  padding-right: 16px;
+  font-size: 1.5em;
+}
+
+.link-icon {
+  display: inline-block;
+  .link-icon-inner {
+    position: relative;
+    opacity: .5;
+    top: 4px;
+    vertical-align: top;
+  }
+}
+
+.breadcrumb-bar {
+  .path-item {
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+    // &:hover {
+    //   background: #fff;
+    //   border: 1px solid #c2c2c2;
+    //   padding: 0 5px;
+    //   box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+    //   cursor: pointer;
+    // }
+  }
+}

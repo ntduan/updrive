@@ -1,0 +1,49 @@
+.modal-folder.modal, .modal-rename.modal {
+  .modal-content {
+    width: 320px;
+    padding: 24px 32px;
+    background-color: white;
+    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+    color: #4a4a4a;
+    max-width: 100%;
+    position: relative;
+  }
+  .modal-header {
+    position: relative;
+    .modal-title {
+      font-size: 20px;
+    }
+    .modal-close-button {
+      outline: none;
+      height: 11px;
+      opacity: .7;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 11px;
+      cursor: pointer;
+    }
+  }
+  .modal-body {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .modal-footer {
+    display: flex;
+    flex-direction: row-reverse;
+    padding-top: 8px;
+  }
+}
+
+.modal-rename.modal {
+  .modal-content {
+    width: 480px;
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}

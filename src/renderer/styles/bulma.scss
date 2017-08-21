@@ -1,0 +1,26 @@
+@import "../../../node_modules/bulma/sass/utilities/initial-variables";
+@font-face {
+  font-family: SourceHanSansCN-Light;
+  src: url('./fonts/SourceHanSansCN-Light.ttf');
+  font-weight: normal;
+}
+
+$family-sans-serif: "Arial",
+"SourceHanSansCN-Light",
+"Microsoft YaHei",
+BlinkMacSystemFont,
+-apple-system,
+"Segoe UI",
+"Roboto",
+"Oxygen",
+"Ubuntu",
+"Cantarell",
+"Fira Sans",
+"Droid Sans",
+"Helvetica Neue",
+"Helvetica",
+sans-serif;
+
+$family-primary: $family-sans-serif;
+
+@import '../../../node_modules/bulma/bulma.sass';

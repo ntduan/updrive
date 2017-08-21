@@ -1,0 +1,31 @@
+html {
+  overflow-y: hidden;
+  height: 100%;
+  font-size: 14px;
+}
+
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+.button {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.login-form {
+  .label {
+    margin-bottom: 0;
+  }
+}

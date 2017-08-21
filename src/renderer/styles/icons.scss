@@ -1,0 +1,64 @@
+.res-icon {
+  vertical-align: -6px;
+  font-size: 25px;
+  display: inline-block;
+  line-height: 1;
+  width: 1em;
+  text-align: center;
+  margin-right: 5px;
+  &:before {
+    content: url("assets/icons/document.png");
+  }
+  &.icon-folder {
+    &:before {
+      content: url("assets/icons/folder.png");
+    }
+  }
+  &.icon-image {
+    &:before {
+      content: url("assets/icons/image.png");
+    }
+  }
+  &.icon-html {
+    &:before {
+      content: url("assets/icons/html.png");
+    }
+  }
+  &.icon-js {
+    &:before {
+      content: url("assets/icons/js.png");
+    }
+  }
+  &.icon-style {
+    &:before {
+      content: url("assets/icons/style.png");
+    }
+  }
+  &.icon-json {
+    &:before {
+      content: url("assets/icons/json.png");
+    }
+  }
+  &.icon-log {
+    &:before {
+      content: url("assets/icons/log.png");
+    }
+  }
+  &.icon-markdown {
+    &:before {
+      content: url("assets/icons/markdown.png");
+    }
+  }
+  &.icon-audio {
+    vertical-align: -3px;
+    &:before {
+      content: url("assets/icons/audio.png");
+    }
+  }
+  &.icon-video {
+    vertical-align: -3px;
+    &:before {
+      content: url("assets/icons/video.png");
+    }
+  }
+}
