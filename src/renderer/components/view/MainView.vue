@@ -2,7 +2,7 @@
   <div class="list-view">
     <div class="list-view-main" ref='listView' tabindex="-1" @keydown="keydown" @dragstart="dragstart" @dragleave="dragleave" @dragend="dragend" @dragover="dragover" @drop="drop">
       <div class="list-operation">
-        <div class="list-operation-item" @click="getLink" :class="listOperationSingelItemClass">
+        <div class="list-operation-item" @click="getLink" :class="listOperationSingelFileClass">
           <svg class="svg-icon">
             <use xlink:href="#icon-link"></use>
           </svg>
@@ -14,7 +14,7 @@
           </svg>
           下载
         </div>
-        <div class="list-operation-item" @click="dblclickItem" :class="listOperationSingelItemClass">
+        <div class="list-operation-item" @click="dblclickItem" :class="listOperationSingelFileClass">
           <svg class="svg-icon">
             <use xlink:href="#icon-browse"></use>
           </svg>
@@ -26,7 +26,7 @@
           </svg>
           删除
         </div>
-        <div class="list-operation-item" @click="renameFile" :class="listOperationSingelItemClass">
+        <div class="list-operation-item" @click="renameFile" :class="listOperationSingelFileClass">
           <svg class="svg-icon">
             <use xlink:href="#icon-edit"></use>
           </svg>
@@ -130,6 +130,11 @@
       listOperationSingelItemClass() {
         return {
           disabled: !this.uniqueSelectedUri
+        }
+      },
+      listOperationSingelFileClass() {
+        return {
+          disabled: !this.uniqueSelectedUri || isDir(this.uniqueSelectedUri)
         }
       },
       uniqueSelectedUri() {
