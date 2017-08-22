@@ -1,43 +1,38 @@
 <template>
   <div class="bar">
     <div class="button-zone">
-      <div class="dropmenu">
-        <a class="button is-primary">
-          <span>新建</span>
-        </a>
-        <div class="dropmenu-list">
-          <nav class="panel">
-            <a class="panel-block" href="#" @click.prevent="createFolder">
+      <div class="dropdown is-hoverable">
+        <div class="dropdown-trigger">
+          <button class="button is-primary">
+            <span>新建</span>
+          </button>
+        </div>
+        <div class="dropdown-menu">
+          <div class="dropdown-content">
+            <a class="dropdown-item" @click.prevent="createFolder">
               文件夹
             </a>
-            <a class="panel-block" href="#" @click.prevent="uploadFile">
+            <a class="dropdown-item" @click.prevent="uploadFile">
               上传文件
             </a>
-            <a class="panel-block" href="#" @click.prevent="uploadDirectory">
+            <a class="dropdown-item" @click.prevent="uploadDirectory">
               上传文件夹
             </a>
-          </nav>
+          </div>
         </div>
       </div>
     </div>
     <div class="nav">
-      <div>
-        <div class="breadcrumb-bar">
-          <div @click.prevent.stop="goto()" class="path-item">{{user.bucketName}}</div>
-        </div>
-      </div>
-      <div v-for="(name, index) in pathArray">
-        <div class="breadcrumb-bar">
-          <div class="link-icon">
-            <div class="link-icon-inner">
-              <svg class="a-s-fa-Ha-pa" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 24 24" focusable="false" fill="#000000">
-                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
-              </svg>
-            </div>
-          </div>
-          <div @click.prevent.stop="goto(index)" class="path-item">{{name}}</div>
-        </div>
-      </div>
+      <nav class="breadcrumb is-medium">
+        <ul>
+          <li :class="{'is-active': !pathArray.length}">
+            <a @click.prevent.stop="goto()">{{user.bucketName}}</a>
+          </li>
+          <li :class="{'is-active': index === pathArray.length - 1}" v-for="(name, index) in pathArray">
+            <a @click.prevent.stop="goto(index)">{{name}}</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </template>

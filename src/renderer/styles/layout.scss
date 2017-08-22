@@ -49,30 +49,9 @@
   width: 160px;
   display: flex;
   justify-content:center;
-  .dropmenu {
+  .dropdown-trigger .button {
     width: 100px;
     position: relative;
-    .button {
-      width: 100%;
-    }
-    .dropmenu-list {
-      display: none;
-      width: 160px;
-      left: 0;
-      z-index: 10;
-      top: 100%;
-      background: #fff;
-      position: absolute;
-      .panel {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-      }
-    }
-    &:hover {
-      .dropmenu-list {
-        display: block;
-      }
-    }
   }
 }
 
@@ -80,7 +59,6 @@
   align-items: center;
   background: #fafafa;
   flex: 1;
-  padding-left: 22px;
   padding-right: 16px;
   font-size: 1.5em;
 }
