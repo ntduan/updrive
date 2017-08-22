@@ -3,7 +3,7 @@ import { last } from 'ramda'
 
 export const baseHref = state => {
   const bucketName = path(['user', 'bucketName'], state)
-  return '//' + bucketName + '.b0.upaiyun.com/'
+  return 'http://' + bucketName + '.b0.upaiyun.com/'
 }
 
 export const apiHost = state => {

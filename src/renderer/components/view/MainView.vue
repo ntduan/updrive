@@ -109,7 +109,7 @@
   import { mapState, mapGetters, dispatch, commit } from 'vuex'
   import Path from 'path'
 
-  import { timestamp, digiUnit } from '../../tools'
+  import { timestamp, digiUnit, isDir } from '../../api/tool'
   import { uploadFileDialog, uploadDirectoryDialog, downloadFileDialog, messgaeDialog, createContextmenu, showContextmenu, openExternal, windowOpen, writeText } from '../../api/electron.js'
 
   export default {
@@ -281,21 +281,22 @@
       },
       // 显示菜单
       showContextMenu() {
-        console.log(this.uniqueSelectedUri)
+        const isSingleFile = this.uniqueSelectedUri && !isDir(this.uniqueSelectedUri)
+        // const isDir =
         showContextmenu({
           appendItems: [
             { hide: !this.uniqueSelectedUri, label: '打开', click: () => this.dblclickItem(this.uniqueSelectedUri) },
-            { hide: !this.uniqueSelectedUri, label: '在浏览器中打开', click: () => openExternal(this.getUrl()) },
+            { hide: !isSingleFile, label: '在浏览器中打开', click: () => openExternal(this.getUrl()) },
             { hide: !this.uniqueSelectedUri, type: 'separator' },
-            { hide: !this.uniqueSelectedUri, label: '查看详细信息', click: () => this.getFileDetail() },
-            { hide: !this.uniqueSelectedUri, label: '获取链接', click: () => this.getLink() },
-            { hide: !this.uniqueSelectedUri, label: '修改路径...', click: () => this.renameFile() },
+            { hide: !isSingleFile, label: '查看详细信息', click: () => this.getFileDetail() },
+            { hide: !isSingleFile, label: '获取链接', click: () => this.getLink() },
+            { hide: !isSingleFile, label: '修改路径...', click: () => this.renameFile() },
             { hide: !this.selected.length, label: '下载', click: () => this.downloadFile() },
-            { hide: !this.uniqueSelectedUri, type: 'separator' },
+            { hide: !this.selected.length, type: 'separator' },
             { hide: false, label: '新建文件夹', click: () => this.createFolder() },
             { hide: false, label: '上传文件', click: () => this.uploadFile() },
             { hide: false, label: '上传文件夹', click: () => this.uploadDirectory() },
-            { hide: !this.uniqueSelectedUri, type: 'separator' },
+            { hide: !this.selected.length, type: 'separator' },
             { hide: !this.selected.length, label: '删除', click: () => this.deleteFile() },
           ]
         })
@@ -312,7 +313,8 @@
         }
       },
       getUrl(uri = this.uniqueSelectedUri) {
-        return this.baseHref + encodeURIComponent(uri)
+        const urlObj = new URL(uri, this.baseHref)
+        return urlObj.href
       },
       // 链接
       getLink(uri) {

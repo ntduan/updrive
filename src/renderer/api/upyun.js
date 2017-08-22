@@ -8,6 +8,8 @@ import mime from 'mime'
 import { mandatory, getAuthorizationHeader, md5sum, getUri, standardUri, sleep, getFilenameFromUrl, isDir } from './tool.js'
 import Store from '../store' // 不能解构, 因为这时 store 还没完成初始化
 
+mime.default_type = ''
+
 export const getRequestOpts = ({ user = path(['state', 'user'], Store), search = '', toUrl = '', method = 'GET', headers = {} } = {}) => {
   const urlObject = new URL(toUrl, `http://${Store.getters.apiHost}/${user.bucketName}/`)
   if (search) urlObject.search = search
@@ -61,32 +63,11 @@ export const getListDirInfo = (remotePath = '') => {
               compose(
                 objOf('data'),
                 compose(
-                  map(converge(assoc, [
-                    always('uri'),
-                    converge(concat, [
-                      compose(
-                        concat(remotePath),
-                        prop('filename'),
-                      ),
-                      compose(
-                        ifElse(
-                          equals('F'),
-                          always('/'),
-                          always('')
-                        ),
-                        prop('folderType'),
-                      ),
-                    ]),
-                    identity,
-                  ])),
-                  map(converge(assoc, [
-                    always('filetype'),
-                    obj => {
-                      mime.default_type = ''
-                      return obj.folderType === 'F' ? '' : mime.lookup(obj.filename)
-                    },
-                    identity,
-                  ])),
+                  map(obj => {
+                    obj.filetype = obj.folderType === 'F' ? '' : mime.lookup(obj.filename)
+                    obj.uri = remotePath + obj.filename + (obj.folderType === 'F' ? '/' : '')
+                    return obj
+                  }),
                   map(compose(zipObj(['filename', 'folderType', 'size', 'lastModified']), split(/\t/))),
                   split(/\n/))))
           )(body)
@@ -269,6 +250,7 @@ export const getLocalName = (fileName = '', init = true) => {
 // 下载单个文件
 export const downloadFile = (localPath, downloadPath) => {
   if (!downloadPath && !existsSync(localPath)) return Promise.resolve(mkdirSync(localPath))
+  console.log(downloadPath)
   // const writeStream = createWriteStream(localPath)
   return new Promise((resolve, reject) => {
     Request(downloadPath)
@@ -293,7 +275,7 @@ export const downloadFiles = async (destPath, downloadPath) => {
   const dir = await traverseDir(downloadPath, { relative: true })
   const dirAll = dir.map(path => {
     return {
-      downloadPath: isDir(path.absolutePath) ? '' : (Store.getters.baseHref + encodeURIComponent(path.absolutePath)),
+      downloadPath: isDir(path.absolutePath) ? '' : (new URL(path.absolutePath, Store.getters.baseHref).href),
       localPath: Path.join(
         getLocalName(
           Path.join(
