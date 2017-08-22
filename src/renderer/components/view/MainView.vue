@@ -1,6 +1,6 @@
 <template>
   <div class="list-view">
-    <div class="list-view-main" ref='listView' tabindex="-1" @keydown="keydown" @dragstart="dragstart" @dragleave="dragleave" @dragend="dragend" @dragover="dragover" @drop="drop">
+    <div class="list-view-main" ref='listView' tabindex="-1" @keydown="keydown">
       <div class="list-operation">
         <div class="list-operation-item" @click="getLink" :class="listOperationSingelFileClass">
           <svg class="svg-icon">
@@ -33,8 +33,16 @@
           修改路径
         </div>
       </div>
-      <div class="list" @contextmenu.prevent="contextmenu()">
-        <div class="files-list" v-if="list.dirInfo.data.length">
+      <div class="list" :class="{'drag-over': isDragOver}" @contextmenu.prevent="contextmenu()">
+        <div
+          class="files-list"
+          v-if="list.dirInfo.data.length"
+          @dragstart="dragstart"
+          @dragleave="dragleave"
+          @dragend="dragend"
+          @dragover="dragover"
+          @drop="drop"
+        >
           <div class="files-list-column">
             <div class="column-file-name table-column"></div>
             <div class="column-last-modified table-column"></div>
@@ -115,7 +123,8 @@
   export default {
     data() {
       return {
-        isViewDetail: false
+        isViewDetail: false,
+        isDragOver: false,
       }
     },
     computed: {
@@ -178,18 +187,23 @@
         }
       },
       dragstart($event) {
+        console.log(1111)
         return false
       },
       dragleave($event) {
+        this.isDragOver = false
         return false
       },
       dragend($event) {
+        console.log(3333)
         return false
       },
       dragover($event) {
+        this.isDragOver = true
         return false
       },
       drop($event) {
+        this.isDragOver = false
         $event.preventDefault()
         this.$store.dispatch({
           type: 'UPLOAD_FILES',
