@@ -56,7 +56,7 @@
             <div class="column-file-size table-column" v-if="!isViewDetail"></div>
           </div>
           <div class="files-list-header">
-            <div class="file-info-item column-file-name" @click="sort('filename')">名称</div>
+            <div class="file-info-item column-file-name" @click="sort('filename')">名称 ↑</div>
             <div class="file-info-item column-last-modified" @click="sort('lastModified')">修改日期</div>
             <div class="file-info-item column-file-type" v-if="!isViewDetail" @click="sort('filetype')">类型</div>
             <div class="file-info-item column-file-size" v-if="!isViewDetail" @click="sort('size')">大小</div>
@@ -162,7 +162,7 @@
   export default {
     data() {
       return {
-        isViewDetail: true,
+        isViewDetail: false,
         isDragOver: false,
       }
     },
@@ -375,15 +375,14 @@
         })
       },
       // 查看详细信息
-      getFileDetail(uri = '') {
-        this.isViewDetail = true
-        if(this.uniqueSelectedUri || uri) {
-          this.$store.dispatch({
-            type: 'GET_FILE_DETAIL_INFO',
-            filePath: this.getUrl(uri),
-            basicInfo: this.findFileByUri(uri),
-          })
-        }
+      getFileDetail(uri = this.uniqueSelectedUri) {
+        this.$store.dispatch({
+          type: 'GET_FILE_DETAIL_INFO',
+          filePath: this.getUrl(uri),
+          basicInfo: this.findFileByUri(uri),
+        }).then(() => {
+          this.isViewDetail = true
+        })
       },
       getUrl(uri = this.uniqueSelectedUri) {
         const urlObj = new URL(uri, this.baseHref)
