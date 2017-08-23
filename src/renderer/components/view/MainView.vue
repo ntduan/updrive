@@ -3,39 +3,27 @@
     <div class="list-view-main" ref='listView' tabindex="-1" @keydown="keydown">
       <div class="list-operation">
         <div class="list-operation-item" @click="getLink" :class="listOperationSingelFileClass">
-          <svg class="svg-icon">
-            <use xlink:href="#icon-link"></use>
-          </svg>
+          <svg class="svg-icon"><use xlink:href="#icon-link"></use></svg>
           获取链接
         </div>
         <div class="list-operation-item" @click="downloadFile" :class="listOperationSingelItemClass">
-          <svg class="svg-icon">
-            <use xlink:href="#icon-icondownload"></use>
-          </svg>
+          <svg class="svg-icon"><use xlink:href="#icon-icondownload"></use></svg>
           下载
         </div>
         <div class="list-operation-item" @click="dblclickItem" :class="listOperationSingelFileClass">
-          <svg class="svg-icon">
-            <use xlink:href="#icon-browse"></use>
-          </svg>
+          <svg class="svg-icon"><use xlink:href="#icon-browse"></use></svg>
           查看
         </div>
         <div class="list-operation-item" @click="deleteFile" :class="listOperationItemClass">
-          <svg class="svg-icon">
-            <use xlink:href="#icon-delete"></use>
-          </svg>
+          <svg class="svg-icon"><use xlink:href="#icon-delete"></use></svg>
           删除
         </div>
         <div class="list-operation-item" @click="renameFile" :class="listOperationSingelFileClass">
-          <svg class="svg-icon">
-            <use xlink:href="#icon-edit"></use>
-          </svg>
+          <svg class="svg-icon"><use xlink:href="#icon-edit"></use></svg>
           修改路径
         </div>
-        <div class="list-operation-item" @click="getFileDetail" :class="listOperationItemClass">
-          <svg class="svg-icon">
-            <use xlink:href="#icon-information"></use>
-          </svg>
+        <div class="list-operation-item" @click="getFileDetail()" :class="listOperationItemClass">
+          <svg class="svg-icon"><use xlink:href="#icon-information"></use></svg>
           详情
         </div>
       </div>
@@ -56,7 +44,7 @@
             <div class="column-file-size table-column" v-if="!isViewDetail"></div>
           </div>
           <div class="files-list-header">
-            <div class="file-info-item column-file-name" @click="sort('filename')">名称 ↑</div>
+            <div class="file-info-item column-file-name" @click="sort('filename')">名称</div>
             <div class="file-info-item column-last-modified" @click="sort('lastModified')">修改日期</div>
             <div class="file-info-item column-file-type" v-if="!isViewDetail" @click="sort('filetype')">类型</div>
             <div class="file-info-item column-file-size" v-if="!isViewDetail" @click="sort('size')">大小</div>
@@ -100,9 +88,7 @@
           <div class="separate-line"></div>
         </div>
         <span class="list-view-detail-close" @click="toggleShowViewDetail">
-          <svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
-            <polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 "></polygon>
-          </svg>
+          <svg class="svg-icon"><use xlink:href="#icon-x"></use></svg>
         </span>
       </div>
       <div class="list-view-detail-content" v-if="fileDetail.basicInfo.folderType !== 'B'">

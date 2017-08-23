@@ -6,9 +6,7 @@
         <div class="modal-header">
           <span class="modal-title">创建文件夹</span>
           <span class="modal-close-button" @click="close">
-            <svg x="0px" y="0px" width="10px" height="10px" viewBox="0 0 10 10" focusable="false">
-              <polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 "></polygon>
-            </svg>
+            <svg class="svg-icon"><use xlink:href="#icon-x"></use></svg>
           </span>
         </div>
         <div class="modal-body">
