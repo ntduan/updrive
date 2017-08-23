@@ -44,10 +44,26 @@
             <div class="column-file-size table-column" v-if="!isViewDetail"></div>
           </div>
           <div class="files-list-header">
-            <div class="file-info-item column-file-name" @click="sort('filename')">名称</div>
-            <div class="file-info-item column-last-modified" @click="sort('lastModified')">修改日期</div>
-            <div class="file-info-item column-file-type" v-if="!isViewDetail" @click="sort('filetype')">类型</div>
-            <div class="file-info-item column-file-size" v-if="!isViewDetail" @click="sort('size')">大小</div>
+            <div class="file-info-item column-file-name" @click="sort('filename')">
+              名称
+              <svg v-show="list.sortInfo.key === 'filename' && !list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
+              <svg v-show="list.sortInfo.key === 'filename' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
+            </div>
+            <div class="file-info-item column-last-modified" @click="sort('lastModified')">
+              修改日期
+              <svg v-show="list.sortInfo.key === 'lastModified' && !list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
+              <svg v-show="list.sortInfo.key === 'lastModified' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
+            </div>
+            <div class="file-info-item column-file-type" v-if="!isViewDetail" @click="sort('filetype')">
+              类型
+              <svg v-show="list.sortInfo.key === 'filetype' && !list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
+              <svg v-show="list.sortInfo.key === 'filetype' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
+            </div>
+            <div class="file-info-item column-file-size" v-if="!isViewDetail" @click="sort('size')">
+              大小
+              <svg v-show="list.sortInfo.key === 'size' && !list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
+              <svg v-show="list.sortInfo.key === 'size' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
+            </div>
           </div>
           <div class="files-list-body">
             <div
