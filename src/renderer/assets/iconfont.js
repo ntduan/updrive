@@ -34,13 +34,13 @@
         <path d="M499.512194 318.439025C499.512194 332.232672 510.694157 343.414635 524.487806 343.414635 538.281453 343.414635 549.463415 332.232672 549.463415 318.439025L549.463415 274.731708C549.463415 260.938059 538.281453 249.756098 524.487806 249.756098 510.694157 249.756098 499.512194 260.938059 499.512194 274.731708L499.512194 318.439025Z"></path>
       </symbol>
       <symbol id="icon-x" x="0px" y="0px" width="10px" height="10px" viewBox="0 0 10 10" focusable="false">
-        <polygon fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 "></polygon>
+        <polygon points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 "></polygon>
       </symbol>
-      <symbol id="icon-arrow-up" x="0px" y="0px" width="18px" height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+      <symbol id="icon-arrow-up" x="0px" y="0px" width="18px" height="18px" viewBox="0 0 48 48" focusable="false">
         <path fill="none" d="M0 0h48v48H0V0z"></path>
         <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
       </symbol>
-      <symbol id="icon-arrow-down" x="0px" y="0px" width="18px" height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+      <symbol id="icon-arrow-down" x="0px" y="0px" width="18px" height="18px" viewBox="0 0 48 48" focusable="false">
         <path fill="none" d="M0 0h48v48H0V0z"></path>
         <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
       </symbol>
