@@ -21,3 +21,4 @@ yarn build
 ### TODO
 - [x] 拖曳上传功能
 - [x] 侧边查看详情
+- [ ] 添加 spinner
