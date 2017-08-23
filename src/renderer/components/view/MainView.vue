@@ -32,6 +32,12 @@
           </svg>
           修改路径
         </div>
+        <div class="list-operation-item" @click="getFileDetail" :class="listOperationItemClass">
+          <svg class="svg-icon">
+            <use xlink:href="#icon-information"></use>
+          </svg>
+          详情
+        </div>
       </div>
       <div class="list" :class="{'drag-over': isDragOver}" @contextmenu.prevent="contextmenu()">
         <div
@@ -46,14 +52,14 @@
           <div class="files-list-column">
             <div class="column-file-name table-column"></div>
             <div class="column-last-modified table-column"></div>
-            <div class="column-file-type table-column"></div>
-            <div class="column-file-size table-column"></div>
+            <div class="column-file-type table-column" v-if="!isViewDetail"></div>
+            <div class="column-file-size table-column" v-if="!isViewDetail"></div>
           </div>
           <div class="files-list-header">
             <div class="file-info-item column-file-name" @click="sort('filename')">名称</div>
             <div class="file-info-item column-last-modified" @click="sort('lastModified')">修改日期</div>
-            <div class="file-info-item column-file-type" @click="sort('filetype')">类型</div>
-            <div class="file-info-item column-file-size" @click="sort('size')">大小</div>
+            <div class="file-info-item column-file-type" v-if="!isViewDetail" @click="sort('filetype')">类型</div>
+            <div class="file-info-item column-file-size" v-if="!isViewDetail" @click="sort('size')">大小</div>
           </div>
           <div class="files-list-body">
             <div
@@ -85,7 +91,8 @@
     <div class="list-view-detail" v-show="isViewDetail">
       <div class="list-view-detail-header">
         <div>
-          <h4>
+          <h4 :title="fileDetail.basicInfo.filename">
+            <i class="res-icon" :class="getFileIconClass(fileDetail.basicInfo.folderType, fileDetail.basicInfo.filename)"></i>
             {{fileDetail.basicInfo.filename}}
           </h4>
         </div>
@@ -93,15 +100,46 @@
           <div class="separate-line"></div>
         </div>
         <span class="list-view-detail-close" @click="toggleShowViewDetail">
-          <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 10 10" focusable="false">
+          <svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
             <polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 "></polygon>
           </svg>
         </span>
       </div>
-      <div class="list-view-detail-content">
+      <div class="list-view-detail-content" v-if="fileDetail.basicInfo.folderType !== 'B'">
         <div>
-          <div v-for="(value, key) in fileDetail.headerInfo" class="list-view-detail-content-item">
-            <div class="list-view-detail-content-item-value"><span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}</div>
+          <div class="list-view-detail-content-item" v-if="fileDetail.basicInfo.folderType !== 'F'">
+            <div class="list-view-detail-content-item-label">
+              Response Headers
+            </div>
+            <div class="list-view-detail-content-item-value head-request-info">
+              <div v-for="(value, key) in fileDetail.headerInfo">
+                <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
+              </div>
+            </div>
+          </div>
+          <div class="list-view-detail-content-item">
+            <div class="list-view-detail-content-item-label">
+              修改日期
+            </div>
+            <div class="list-view-detail-content-item-value">
+              {{fileDetail.basicInfo.lastModified | timestamp}}
+            </div>
+          </div>
+          <div class="list-view-detail-content-item" v-if="fileDetail.basicInfo.folderType !== 'F'">
+            <div class="list-view-detail-content-item-label">
+              大小
+            </div>
+            <div class="list-view-detail-content-item-value">
+              {{(fileDetail.basicInfo.folderType === 'F' ? '-' : fileDetail.basicInfo.size) | digiUnit}}
+            </div>
+          </div>
+          <div class="list-view-detail-content-item" v-if="fileDetail.basicInfo.folderType !== 'F'">
+            <div class="list-view-detail-content-item-label">
+              链接
+            </div>
+            <div class="list-view-detail-content-item-value">
+              {{fileDetail.basicInfo.url}}
+            </div>
           </div>
         </div>
       </div>
@@ -111,8 +149,9 @@
 
 <script>
   import {
-    sort, nth, indexOf, equals, assocPath, map, compose, assoc, path, cond, and, prop, both, T, always, keys, filter, apply,
-    range, pick, merge, converge, length, not, __, reduce, identity, findIndex, last, pipe, propEq, slice, uri, pluck, concat, remove, append
+    sort, nth, indexOf, equals, assocPath, map, compose, assoc, path, cond, and, prop, both, T,
+    always, keys, filter, apply, range, pick, merge, converge, length, not, __, reduce, identity,
+    findIndex, last, pipe, propEq, slice, uri, pluck, concat, remove, append, isEmpty
   } from 'ramda'
   import { mapState, mapGetters, dispatch, commit } from 'vuex'
   import Path from 'path'
@@ -123,7 +162,7 @@
   export default {
     data() {
       return {
-        isViewDetail: false,
+        isViewDetail: true,
         isDragOver: false,
       }
     },
@@ -162,10 +201,27 @@
         return path(['list', 'dirInfo', 'path'], this)
       },
       fileDetail() {
-        return path(['list', 'fileDetail'], this, {
-          basicInfo: {},
-          headerInfo: {},
-        })
+        const fileDetail = path(
+          ['list', 'fileDetail'],
+          this,
+          { basicInfo: {}, headerInfo: {}}
+        )
+        if(isEmpty(fileDetail.basicInfo)) {
+          return {
+            ...fileDetail,
+            basicInfo: {
+              filename: this.user.bucketName,
+              folderType: 'B',
+            },
+          }
+        }
+        return {
+          ...fileDetail,
+          basicInfo: {
+            ...fileDetail.basicInfo,
+            url: this.getUrl(fileDetail.basicInfo.uri),
+          },
+        }
       },
       ...mapState(['user', 'list']),
       ...mapGetters(['baseHref', 'backUri', 'forwardUri']),
@@ -177,7 +233,7 @@
       getFileIconClass(folderType, filename = '') {
         const extensionName = Path.extname(filename).toLocaleLowerCase()
         return {
-          'icon-folder': folderType === 'F',
+          'icon-folder': folderType === 'F' || folderType === 'B',
           'icon-image': [ '.bmp', '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.gifv' ].includes(extensionName),
           'icon-audio': [ '.mp3', '.m4a', '.ogg' ].includes(extensionName),
           'icon-video': [ '.avi', '.mp4', '.flv', '.mov', '.3gp', '.asf', '.wmv', '.mpg', '.f4v', '.m4v', '.mkv' ].includes(extensionName),
@@ -187,7 +243,6 @@
         }
       },
       dragstart($event) {
-        console.log(1111)
         return false
       },
       dragleave($event) {
@@ -195,7 +250,6 @@
         return false
       },
       dragend($event) {
-        console.log(3333)
         return false
       },
       dragover($event) {
@@ -307,7 +361,7 @@
             { hide: !this.uniqueSelectedUri, label: '打开', click: () => this.dblclickItem(this.uniqueSelectedUri) },
             { hide: !isSingleFile, label: '在浏览器中打开', click: () => openExternal(this.getUrl()) },
             { hide: !this.uniqueSelectedUri, type: 'separator' },
-            { hide: !isSingleFile, label: '查看详细信息', click: () => this.getFileDetail() },
+            { hide: !this.uniqueSelectedUri, label: '查看详细信息', click: () => this.getFileDetail() },
             { hide: !isSingleFile, label: '获取链接', click: () => this.getLink() },
             { hide: !isSingleFile, label: '修改路径...', click: () => this.renameFile() },
             { hide: !this.selected.length, label: '下载', click: () => this.downloadFile() },
