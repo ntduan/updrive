@@ -27,15 +27,19 @@
           详情
         </div>
       </div>
-      <div class="list" :class="{'drag-over': isDragOver}" @contextmenu.prevent="contextmenu()">
+      <div
+        class="list"
+        :class="{'drag-over': isDragOver}"
+        @contextmenu.prevent="contextmenu()"
+        @dragstart="dragstart"
+        @dragleave="dragleave"
+        @dragend="dragend"
+        @dragover="dragover"
+        @drop="drop"
+      >
         <div
           class="files-list"
           v-if="list.dirInfo.data.length"
-          @dragstart="dragstart"
-          @dragleave="dragleave"
-          @dragend="dragend"
-          @dragover="dragover"
-          @drop="drop"
         >
           <div class="files-list-column">
             <div class="column-file-name table-column"></div>
