@@ -1,3 +1,5 @@
+@import "./custom.scss";
+
 @media (max-width: 1200px) {
   .hide-2000 {
     display: none !important;
@@ -105,12 +107,12 @@
       color: #cacaca;
       opacity: .7;
       .svg-icon {
-        color: #00e1b2;
+        opacity: 0.5;
       }
     }
     .svg-icon {
       margin-right: 3px;
-      color: #00b89c;
+      color: $upyunPrimaryColor;
     }
   }
 }

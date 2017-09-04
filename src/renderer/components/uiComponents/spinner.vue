@@ -21,8 +21,8 @@
     margin-left: -15px;
     border-radius: 50%;
     border: 2px solid transparent;
-    border-top-color: hsl(171, 100%, 41%);
-    border-bottom-color: hsl(171, 100%, 41%);
+    border-top-color: #33b5ff;
+    border-bottom-color: #33b5ff;
     animation: spinner .8s ease infinite;
   }
 </style>
