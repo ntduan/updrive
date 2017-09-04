@@ -390,13 +390,13 @@
       // 查看详细信息
       getFileDetail(uri = this.uniqueSelectedUri) {
         this.detailLoading = true
+        this.isViewDetail = true
         this.$store.dispatch({
           type: 'GET_FILE_DETAIL_INFO',
           filePath: this.getUrl(uri),
           basicInfo: this.findFileByUri(uri),
         }).then(() => {
           this.detailLoading = false
-          this.isViewDetail = true
         })
       },
       getUrl(uri = this.uniqueSelectedUri) {
