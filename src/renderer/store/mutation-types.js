@@ -4,6 +4,7 @@ export const CLEAR_USER_INFO = 'CLEAR_USER_INFO' // 清除用户信息
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' // 登录成功
 export const SET_USER_INFO = 'SET_USER_INFO' // 设置用户信息
+export const SET_LOADING_LIST = 'SET_LOADING_LIST' // 目录正在加载中
 export const SET_CURRENT_LIST = 'SET_CURRENT_LIST' // 设置当前目录列表
 export const SET_SORT_INFO = 'SET_SORT_INFO' // 排序key
 export const CHANGE_DIR = 'CHANGE_DIR' // 改变当前目录

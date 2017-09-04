@@ -4,6 +4,7 @@ import * as Types from '../mutation-types'
 const state = {
   dirInfo: {
     data: [],
+    loading: false,
     path: '',
   },
   sortInfo: {
@@ -58,7 +59,7 @@ const listSort = (data = [], key, isReverse) => {
         naturalCompareString(String(ObjA[key]), String(ObjB[key])) :
         naturalCompareString(ObjA.filename, ObjB.filename)
     }
-  }, state.dirInfo.data)
+  }, data)
 
   return isReverse ? reverse(sortData) : sortData
 }
@@ -70,8 +71,12 @@ const mutations = {
     let forwardStack = path(['history', 'forwardStack'], state)
     let backStack = path(['history', 'backStack'], state)
 
-    state.dirInfo = data
-    state.dirInfo = merge(state.dirInfo, { data: listSort(state.dirInfo.data, state.sortInfo.key, state.sortInfo.isReverse) })
+    state.dirInfo = {
+      ...data,
+      data: listSort(data.data, state.sortInfo.key, state.sortInfo.isReverse),
+      loading: false,
+    }
+
     state.selected = []
 
     // action 0 表示打开新目录
@@ -96,14 +101,20 @@ const mutations = {
       }
     }
   },
+  [Types.SET_LOADING_LIST](state, { data }) {
+    state.dirInfo.loading = data
+  },
   [Types.SHORTCUT_SELECT_ALL](state, data) {
     state.selected = pluck('uri', state.dirInfo.data)
   },
   [Types.SET_SORT_INFO](state, sortInfo) {
     state.sortInfo = sortInfo
-    state.dirInfo = merge(state.dirInfo, { data: listSort(state.dirInfo.data, state.sortInfo.key, state.sortInfo.isReverse) })
+    state.dirInfo = {
+      ...state.dirInfo,
+      data: listSort(state.dirInfo.data, state.sortInfo.key, state.sortInfo.isReverse),
+    }
   },
-  [Types.SET_SELECT_LIST](state, {selected}) {
+  [Types.SET_SELECT_LIST](state, { selected }) {
     state.selected = selected
   },
   [Types.SET_FILE_DETAIL_INFO](state, { data }) {

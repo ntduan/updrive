@@ -25,6 +25,7 @@ export default {
   },
   // 获取文件目录信息
   [Types.GET_LIST_DIR_INFO]({ state, commit }, { remotePath, action }) {
+    commit({ type: Types.SET_LOADING_LIST, data: true })
     return Upyun.getListDirInfo(remotePath)
       .then(result => {
         commit({

@@ -69,7 +69,7 @@
               <svg v-show="list.sortInfo.key === 'size' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
             </div>
           </div>
-          <div class="files-list-body">
+          <div class="files-list-body" v-if="!list.dirInfo.loading">
             <div
               class="files-list-item"
               v-for="(file, index) in list.dirInfo.data"
@@ -88,12 +88,13 @@
             </div>
           </div>
         </div>
-        <div v-if="!list.dirInfo.data.length" class="empty-list">
+        <div v-if="!list.dirInfo.data.length && !list.dirInfo.loading" class="empty-list">
           <div class="empty-list-content">
             <p>该文件夹为空</p>
             <p>拖动上传文件</p>
           </div>
         </div>
+        <spinner v-if="list.dirInfo.loading"/>
       </div>
     </div>
     <div class="list-view-detail" v-show="isViewDetail">
@@ -162,10 +163,14 @@
   import { mapState, mapGetters, dispatch, commit } from 'vuex'
   import Path from 'path'
 
+  import Spinner from '../uiComponents/spinner'
   import { timestamp, digiUnit, isDir } from '../../api/tool'
   import { uploadFileDialog, uploadDirectoryDialog, downloadFileDialog, messgaeDialog, createContextmenu, showContextmenu, openExternal, windowOpen, writeText } from '../../api/electron.js'
 
   export default {
+    components: {
+      Spinner,
+    },
     data() {
       return {
         isViewDetail: false,
