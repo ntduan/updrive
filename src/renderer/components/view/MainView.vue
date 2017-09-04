@@ -113,7 +113,8 @@
         </span>
       </div>
       <div class="list-view-detail-content" v-if="fileDetail.basicInfo.folderType !== 'B'">
-        <div>
+        <spinner v-if="detailLoading" />
+        <div v-if="!detailLoading">
           <div class="list-view-detail-content-item" v-if="fileDetail.basicInfo.folderType !== 'F'">
             <div class="list-view-detail-content-item-label">
               Response Headers
@@ -173,6 +174,7 @@
     },
     data() {
       return {
+        detailLoading: false,
         isViewDetail: false,
         isDragOver: false,
       }
@@ -387,11 +389,13 @@
       },
       // 查看详细信息
       getFileDetail(uri = this.uniqueSelectedUri) {
+        this.detailLoading = true
         this.$store.dispatch({
           type: 'GET_FILE_DETAIL_INFO',
           filePath: this.getUrl(uri),
           basicInfo: this.findFileByUri(uri),
         }).then(() => {
+          this.detailLoading = false
           this.isViewDetail = true
         })
       },
