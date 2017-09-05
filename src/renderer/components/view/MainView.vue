@@ -188,7 +188,7 @@
         return path(['list', 'sortInfo'], this) || {}
       },
       isSelectedSingleFile() {
-        return !this.uniqueSelectedUri || isDir(this.uniqueSelectedUri)
+        return this.uniqueSelectedUri && !isDir(this.uniqueSelectedUri)
       },
       uniqueSelectedUri() {
         const { selected } = this
