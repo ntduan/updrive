@@ -22,7 +22,11 @@
           <svg class="svg-icon"><use xlink:href="#icon-edit"></use></svg>
           修改路径
         </div>
-        <div class="list-operation-item" @click="isViewDetail ? toggleShowViewDetail() :  getFileDetail()" :class="{disabled: !selected.length}">
+        <div
+          class="list-operation-item"
+          @click="isViewDetail ? toggleShowViewDetail() :  getFileDetail()"
+          :class="{disabled: !selected.length, 'list-operation-item-hover': isViewDetail}"
+        >
           <svg class="svg-icon"><use xlink:href="#icon-information"></use></svg>
           详情
         </div>

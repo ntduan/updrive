@@ -103,6 +103,10 @@
       cursor: pointer;
       background-color: #EAEAEA;
     }
+    &.list-operation-item-hover {
+      cursor: pointer;
+      background-color: #EAEAEA;
+    }
     &.disabled {
       color: #cacaca;
       opacity: .7;
