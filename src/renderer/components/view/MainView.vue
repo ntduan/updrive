@@ -2,27 +2,27 @@
   <div class="list-view">
     <div class="list-view-main" ref='listView' tabindex="-1" @keydown="keydown">
       <div class="list-operation">
-        <div class="list-operation-item" @click="getLink" :class="listOperationSingelFileClass">
+        <div class="list-operation-item" @click="getLink" :class="{disabled: !isSelectedSingleFile}">
           <svg class="svg-icon"><use xlink:href="#icon-link"></use></svg>
           获取链接
         </div>
-        <div class="list-operation-item" @click="downloadFile" :class="listOperationSingelItemClass">
+        <div class="list-operation-item" @click="downloadFile()" :class="{disabled: !uniqueSelectedUri}">
           <svg class="svg-icon"><use xlink:href="#icon-icondownload"></use></svg>
           下载
         </div>
-        <div class="list-operation-item" @click="dblclickItem" :class="listOperationSingelFileClass">
+        <div class="list-operation-item" @click="dblclickItem()" :class="{disabled: !isSelectedSingleFile}">
           <svg class="svg-icon"><use xlink:href="#icon-browse"></use></svg>
           查看
         </div>
-        <div class="list-operation-item" @click="deleteFile" :class="listOperationItemClass">
+        <div class="list-operation-item" @click="deleteFile()" :class="{disabled: !selected.length}">
           <svg class="svg-icon"><use xlink:href="#icon-delete"></use></svg>
           删除
         </div>
-        <div class="list-operation-item" @click="renameFile" :class="listOperationSingelFileClass">
+        <div class="list-operation-item" @click="renameFile()" :class="{disabled: !isSelectedSingleFile}">
           <svg class="svg-icon"><use xlink:href="#icon-edit"></use></svg>
           修改路径
         </div>
-        <div class="list-operation-item" @click="getFileDetail()" :class="listOperationItemClass">
+        <div class="list-operation-item" @click="isViewDetail ? toggleShowViewDetail() :  getFileDetail()" :class="{disabled: !selected.length}">
           <svg class="svg-icon"><use xlink:href="#icon-information"></use></svg>
           详情
         </div>
@@ -108,7 +108,7 @@
         <div class="separate-line-wrap">
           <div class="separate-line"></div>
         </div>
-        <span class="list-view-detail-close" @click="toggleShowViewDetail">
+        <span class="list-view-detail-close" @click="toggleShowViewDetail()">
           <svg class="svg-icon"><use xlink:href="#icon-x"></use></svg>
         </span>
       </div>
@@ -180,23 +180,11 @@
       }
     },
     computed: {
-      listOperationItemClass() {
-        return {
-          disabled: !this.selected.length
-        }
-      },
       sortInfo() {
         return path(['list', 'sortInfo'], this) || {}
       },
-      listOperationSingelItemClass() {
-        return {
-          disabled: !this.uniqueSelectedUri
-        }
-      },
-      listOperationSingelFileClass() {
-        return {
-          disabled: !this.uniqueSelectedUri || isDir(this.uniqueSelectedUri)
-        }
+      isSelectedSingleFile() {
+        return !this.uniqueSelectedUri || isDir(this.uniqueSelectedUri)
       },
       uniqueSelectedUri() {
         const { selected } = this
@@ -367,16 +355,14 @@
       },
       // 显示菜单
       showContextMenu() {
-        const isSingleFile = this.uniqueSelectedUri && !isDir(this.uniqueSelectedUri)
-        // const isDir =
         showContextmenu({
           appendItems: [
             { hide: !this.uniqueSelectedUri, label: '打开', click: () => this.dblclickItem(this.uniqueSelectedUri) },
-            { hide: !isSingleFile, label: '在浏览器中打开', click: () => openExternal(this.getUrl()) },
+            { hide: !this.isSelectedSingleFile, label: '在浏览器中打开', click: () => openExternal(this.getUrl()) },
             { hide: !this.uniqueSelectedUri, type: 'separator' },
-            { hide: !this.uniqueSelectedUri, label: '查看详细信息', click: () => this.getFileDetail() },
-            { hide: !isSingleFile, label: '获取链接', click: () => this.getLink() },
-            { hide: !isSingleFile, label: '修改路径...', click: () => this.renameFile() },
+            { hide: !this.uniqueSelectedUri || this.isViewDetail, label: '查看详细信息', click: () => this.getFileDetail() },
+            { hide: !this.isSelectedSingleFile, label: '获取链接', click: () => this.getLink() },
+            { hide: !this.isSelectedSingleFile, label: '修改路径...', click: () => this.renameFile() },
             { hide: !this.selected.length, label: '下载', click: () => this.downloadFile() },
             { hide: !this.selected.length, type: 'separator' },
             { hide: false, label: '新建文件夹', click: () => this.createFolder() },
