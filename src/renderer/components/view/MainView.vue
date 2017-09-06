@@ -160,7 +160,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import {
     sort, nth, indexOf, equals, assocPath, map, compose, assoc, path, cond, and, prop, both, T,
     always, keys, filter, apply, range, pick, merge, converge, length, not, __, reduce, identity,
@@ -170,26 +169,8 @@
   import Path from 'path'
 
   import Spinner from '../uiComponents/spinner'
-  import Message from '../uiComponents/message'
   import { timestamp, digiUnit, isDir } from '../../api/tool'
   import { uploadFileDialog, uploadDirectoryDialog, downloadFileDialog, messgaeDialog, createContextmenu, showContextmenu, openExternal, windowOpen, writeText } from '../../api/electron.js'
-
-  const MessageComponent = Vue.extend(Message)
-
-  const openMessage = (propsData = {
-    title: '',
-    message: '',
-    type: '',
-    direction: '',
-    duration: 1500,
-    container: '.messages'
-  }) => {
-    return new MessageComponent({
-      el: document.createElement('div'),
-      propsData
-    })
-  }
-
 
   export default {
     components: {
@@ -251,14 +232,6 @@
       ...mapGetters(['baseHref', 'backUri', 'forwardUri']),
     },
     methods: {
-      test() {
-        openMessage({
-          message: 'Success lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit',
-          type: 'success',
-          duration: 0,
-          showCloseButton: true
-        })
-      },
       toggleShowViewDetail() {
         this.isViewDetail = !this.isViewDetail
       },
