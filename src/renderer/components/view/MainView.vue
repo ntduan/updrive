@@ -184,7 +184,7 @@
   } from 'ramda'
   import { mapState, mapGetters, dispatch, commit } from 'vuex'
   import Path from 'path'
-  import Tooltip from 'iview/src/components/tooltip';
+  import Message from 'iview/src/components/message'
 
   import Spinner from '../uiComponents/spinner'
   import { timestamp, digiUnit, isDir } from '../../api/tool'
@@ -193,7 +193,6 @@
   export default {
     components: {
       Spinner,
-      Tooltip,
     },
     data() {
       return {
@@ -420,6 +419,7 @@
       // 获取链接
       getLink(uri) {
         this.writeText(this.getUrl(uri))
+        Message.success('已复制！')
       },
       // 全选
       selectAll($event) {
