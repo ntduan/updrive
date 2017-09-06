@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import 'iview/dist/styles/iview.css'
+import iviewCSS from 'iview/dist/styles/iview.css'
+import balloonCss from 'balloon-css/balloon.css'
 
 import App from './App'
 import Router from './router'

@@ -2,7 +2,7 @@
   <div class="list-view">
     <div class="list-view-main" ref='listView' tabindex="-1" @keydown="keydown">
       <div class="list-operation">
-        <div class="list-operation-item" @click="getLink" :class="{disabled: !isSelectedSingleFile}">
+        <div class="list-operation-item" @click="getLink()" :class="{disabled: !isSelectedSingleFile}">
           <svg class="svg-icon"><use xlink:href="#icon-link"></use></svg>
           获取链接
         </div>
@@ -128,6 +128,11 @@
                 <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
               </div>
             </div>
+            <div class="list-view-detail-content-item-value head-request-info">
+              <div v-for="(value, key) in fileDetail.headerInfo">
+                <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
+              </div>
+            </div>
           </div>
           <div class="list-view-detail-content-item">
             <div class="list-view-detail-content-item-label">
@@ -150,7 +155,19 @@
               链接
             </div>
             <div class="list-view-detail-content-item-value">
-              {{fileDetail.basicInfo.url}}
+              <div class="field has-addons">
+                <p class="control is-expanded"><input class="input" type="text" :value="fileDetail.basicInfo.url" readonly /></p>
+                <p class="control"
+                  :data-balloon="copytext"
+                  data-balloon-pos="up"
+                  @mouseenter="() => {copytext = '点击复制'}"
+                  @click="() => {copytext = '已复制！';writeText(fileDetail.basicInfo.url)}"
+                >
+                  <a class="button">
+                    <i class="icon"><svg class="svg-icon"><use xlink:href="#icon-copy"></use></svg></i>
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -167,6 +184,7 @@
   } from 'ramda'
   import { mapState, mapGetters, dispatch, commit } from 'vuex'
   import Path from 'path'
+  import Tooltip from 'iview/src/components/tooltip';
 
   import Spinner from '../uiComponents/spinner'
   import { timestamp, digiUnit, isDir } from '../../api/tool'
@@ -175,9 +193,11 @@
   export default {
     components: {
       Spinner,
+      Tooltip,
     },
     data() {
       return {
+        copytext: '点击复制',
         detailLoading: false,
         isViewDetail: false,
         isDragOver: false,
@@ -393,9 +413,13 @@
         const urlObj = new URL(uri, this.baseHref)
         return urlObj.href
       },
-      // 链接
+      // 复制到剪切板
+      writeText(...args) {
+        return writeText(...args)
+      },
+      // 获取链接
       getLink(uri) {
-        writeText(this.getUrl())
+        this.writeText(this.getUrl(uri))
       },
       // 全选
       selectAll($event) {

@@ -1,4 +1,4 @@
-;(function(window) {
+; (function (window) {
 
   var svgSprite = `
     <svg>
@@ -33,6 +33,13 @@
         <path d="M499.512194 743.02439C499.512194 756.818039 510.694157 768 524.487806 768 538.281453 768 549.463415 756.818039 549.463415 743.02439L549.463415 424.585365C549.463415 410.791718 538.281453 399.609756 524.487806 399.609756 510.694157 399.609756 499.512194 410.791718 499.512194 424.585365L499.512194 743.02439Z"></path>
         <path d="M499.512194 318.439025C499.512194 332.232672 510.694157 343.414635 524.487806 343.414635 538.281453 343.414635 549.463415 332.232672 549.463415 318.439025L549.463415 274.731708C549.463415 260.938059 538.281453 249.756098 524.487806 249.756098 510.694157 249.756098 499.512194 260.938059 499.512194 274.731708L499.512194 318.439025Z"></path>
       </symbol>
+      <symbol id="icon-copy" viewBox="0 0 1024 1024">
+        <path d="M746.932 698.108"></path>
+        <path d="M925.731 288.698c-1.261-1.18-3.607-3.272-6.902-6.343-5.486-5.112-11.615-10.758-18.236-16.891-18.921-17.526-38.003-35.028-56.046-51.397-2.038-1.848-2.038-1.835-4.077-3.682-24.075-21.795-44.156-39.556-58.996-52.076-8.682-7.325-15.517-12.807-20.539-16.426-3.333-2.402-6.043-4.13-8.715-5.396-3.365-1.595-6.48-2.566-10.905-2.483C729.478 134.227 720 143.77 720 155.734l0 42.475 0 42.475 0 84.95L720 347l21.205 0L890 347l0 595L358.689 942C323.429 942 295 913.132 295 877.922L295 177l361.205 0c11.736 0 21.25-9.771 21.25-21.5s-9.514-21.5-21.25-21.5l-382.5 0L252 134l0 21.734L252 813l-52.421 0C166.646 813 140 786.928 140 754.678L140 72l566.286 0C739.29 72 766 98.154 766 130.404L766 134l40 0 0-3.596C806 76.596 761.271 33 706.286 33L119.958 33 100 33l0 19.506 0 702.172C100 808.463 144.642 852 199.579 852L252 852l0 25.922C252 936.612 299.979 984 358.689 984l552.515 0L932 984l0-21.237L932 325.635 932 304l0.433 0C932.432 299 930.196 292.878 925.731 288.698zM762 304l0-63.315L762 198.21l0-0.273c14 11.479 30.3 26.369 49.711 43.942 2.022 1.832 2.136 1.832 4.157 3.665 17.923 16.259 36.957 33.492 55.779 50.926 2.878 2.666 5.713 5.531 8.391 7.531L762 304.001z"></path>
+        <path d="M816.936 436 407.295 436c-10.996 0-19.91 8.727-19.91 19.5 0 10.77 8.914 19.5 19.91 19.5l409.641 0c11 0 19.914-8.73 19.914-19.5C836.85 444.727 827.936 436 816.936 436z"></path>
+        <path d="M816.936 553 407.295 553c-10.996 0-19.91 8.727-19.91 19.5 0 10.774 8.914 19.5 19.91 19.5l409.641 0c11 0 19.914-8.726 19.914-19.5C836.85 561.727 827.936 553 816.936 553z"></path>
+        <path d="M816.936 689 407.295 689c-10.996 0-19.91 8.729-19.91 19.503 0 10.769 8.914 19.497 19.91 19.497l409.641 0c11 0 19.914-8.729 19.914-19.497C836.85 697.729 827.936 689 816.936 689z"></path>
+      </symbol>
       <symbol id="icon-x" x="0px" y="0px" width="10px" height="10px" viewBox="0 0 10 10" focusable="false">
         <polygon points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 "></polygon>
       </symbol>
@@ -44,9 +51,8 @@
         <path fill="none" d="M0 0h48v48H0V0z"></path>
         <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
       </symbol>
-    </svg>
-  `
-  var script = function() {
+    </svg>`
+  var script = function () {
     var scripts = document.getElementsByTagName('script')
     return scripts[scripts.length - 1]
   }()
@@ -55,12 +61,12 @@
   /**
    * document ready
    */
-  var ready = function(fn) {
+  var ready = function (fn) {
     if (document.addEventListener) {
       if (~["complete", "loaded", "interactive"].indexOf(document.readyState)) {
         setTimeout(fn, 0)
       } else {
-        var loadFn = function() {
+        var loadFn = function () {
           document.removeEventListener("DOMContentLoaded", loadFn, false)
           fn()
         }
@@ -74,14 +80,14 @@
       var d = w.document,
         done = false,
         // only fire once
-        init = function() {
+        init = function () {
           if (!done) {
             done = true
             fn()
           }
         }
-        // polling for no errors
-      var polling = function() {
+      // polling for no errors
+      var polling = function () {
         try {
           // throws errors until after ondocumentready
           d.documentElement.doScroll('left')
@@ -95,8 +101,8 @@
       };
 
       polling()
-        // trying to always fire before onload
-      d.onreadystatechange = function() {
+      // trying to always fire before onload
+      d.onreadystatechange = function () {
         if (d.readyState == 'complete') {
           d.onreadystatechange = null
           init()
@@ -112,7 +118,7 @@
    * @param {Element} target
    */
 
-  var before = function(el, target) {
+  var before = function (el, target) {
     target.parentNode.insertBefore(el, target)
   }
 
@@ -123,7 +129,7 @@
    * @param {Element} target
    */
 
-  var prepend = function(el, target) {
+  var prepend = function (el, target) {
     if (target.firstChild) {
       before(el, target.firstChild)
     } else {

@@ -59,6 +59,7 @@
       padding: 10px;
       height: calc(100% - 40px);
       overflow: auto;
+      overflow-x: hidden;
       .list-view-detail-content-item {
         margin-bottom: 5px;
         .list-view-detail-content-item-label {
