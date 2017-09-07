@@ -251,6 +251,9 @@
       ...mapGetters(['baseHref', 'backUri', 'forwardUri']),
     },
     methods: {
+      refresh() {
+        this.$store.dispatch('REFRESH_LIST')
+      },
       toggleShowViewDetail() {
         this.isViewDetail = !this.isViewDetail
       },
@@ -388,6 +391,7 @@
             { hide: !this.isSelectedSingleFile, label: '修改路径...', click: () => this.renameFile() },
             { hide: !this.selected.length, label: '下载', click: () => this.downloadFile() },
             { hide: !this.selected.length, type: 'separator' },
+            { hide: false, label: '刷新目录', click: () => this.refresh() },
             { hide: false, label: '新建文件夹', click: () => this.createFolder() },
             { hide: false, label: '上传文件', click: () => this.uploadFile() },
             { hide: false, label: '上传文件夹', click: () => this.uploadDirectory() },
