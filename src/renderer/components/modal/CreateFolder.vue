@@ -1,25 +1,23 @@
 <template>
-  <transition name="fade" v-on:enter="enter">
-    <div class="modal modal-folder is-active" v-show="modal.createFolder.show" tabindex="1" @keyup.esc="close" @keyup.enter="submit">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <div class="modal-header">
-          <span class="modal-title">创建文件夹</span>
-          <span class="modal-close-button" @click="close">
-            <svg class="svg-icon"><use xlink:href="#icon-x"></use></svg>
-          </span>
-        </div>
-        <div class="modal-body">
-          <p class="control">
-            <input class="input" autofocus type="text" v-model="folderName" placeholder="请输入文件夹名称">
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button class="button is-primary" @click="submit">创建</button>
-        </div>
+  <div class="modal modal-folder is-active" v-show="modal.createFolder.show" tabindex="1" @keyup.esc="close" @keyup.enter="submit">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-title">创建文件夹</span>
+        <span class="modal-close-button" @click="close">
+          <svg class="svg-icon"><use xlink:href="#icon-x"></use></svg>
+        </span>
+      </div>
+      <div class="modal-body">
+        <p class="control">
+          <input class="input" autofocus type="text" v-model="folderName" placeholder="请输入文件夹名称">
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="button is-primary" @click="submit">创建</button>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -53,7 +51,11 @@
           .then(() => Message.success('文件夹创建成功'))
           .then(() => this.close())
           .then(() => this.$store.dispatch('REFRESH_LIST'))
-          .catch((error) => Message.error(error))
+          .catch((error) => {
+            console.log(error)
+            Message.error(error)
+
+          })
       }
     },
     computed: {
