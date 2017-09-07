@@ -34,12 +34,9 @@ export const checkAuth = user => {
     Request(
       getRequestOpts({ method: 'GET', search: '?usage', user }),
       (error, response, body) => {
-        if (error) reject(error)
-        if (response.statusCode === 200) {
-          resolve(user)
-        } else {
-          reject(body)
-        }
+        if (error) return reject(error)
+        if (response.statusCode !== 200) return reject(body)
+        resolve(user)
       })
   })
 }
@@ -50,11 +47,11 @@ export const getListDirInfo = (remotePath = '') => {
     Request(
       getRequestOpts({ method: 'GET', toUrl: remotePath }),
       (error, response, body) => {
-        if (error) reject(error)
+        if (error) return reject(error)
         if (response.statusCode !== 200) return reject(body)
         console.info(`目录: ${remotePath} 获取成功`, { body: response.body, statusCode: response.statusCode })
         try {
-          compose(
+          return compose(
             resolve,
             assoc('path', remotePath),
             ifElse(
@@ -72,7 +69,7 @@ export const getListDirInfo = (remotePath = '') => {
                   split(/\n/))))
           )(body)
         } catch (err) {
-          reject(err)
+          return reject(err)
         }
       })
   })
@@ -89,10 +86,10 @@ export const upload = (remotePath = '', localFilePath = '', relativePath = '') =
       .pipe(Request(
         getRequestOpts({ method: 'PUT', toUrl: remotePath + relativePath + Path.basename(localFilePath) }),
         (error, response, body) => {
-          if (error) reject(error)
-          if (response.statusCode !== 200) reject(error)
+          if (error) return reject(error)
+          if (response.statusCode !== 200) return reject(error)
           console.info(`文件: ${localFilePath} 上传成功`, { body: response.body, statusCode: response.statusCode })
-          resolve(body)
+          return resolve(body)
         }
       ))
   })
@@ -104,10 +101,10 @@ export const createFolder = (remotePath = '', folderName = '') => {
     Request(
       getRequestOpts({ method: 'POST', toUrl: remotePath + folderName + '/', headers: { folder: true } }),
       (error, response, body) => {
-        if (error) reject(error)
+        if (error) return reject(error)
         if (response.statusCode !== 200) return reject(error)
         console.info(`文件夹: ${folderName} 创建成功`, { body: response.body, statusCode: response.statusCode })
-        resolve(body)
+        return resolve(body)
       })
   })
 }
@@ -142,10 +139,10 @@ export const deleteFile = remotePath => {
     Request(
       getRequestOpts({ method: 'DELETE', toUrl: remotePath }),
       (error, response, body) => {
-        if (error) reject(error)
+        if (error) return reject(error)
         if (response.statusCode !== 200) return reject(body)
         console.info(`文件: ${remotePath} 删除成功`, { body: response.body, statusCode: response.statusCode })
-        resolve(body)
+        return resolve(body)
       }
     )
   })
@@ -223,7 +220,6 @@ export const polling = async (func, times = 10, space = 500) => {
 // @TODO 控制并发数量
 export const deleteFiles = async remotePaths => {
   const waitDeleteInit = await traverseDir(remotePaths, { reverse: true })
-  console.log(waitDeleteInit, 11111111)
   const deleteError = []
 
   for (const remoteFilePath of waitDeleteInit) {
@@ -234,7 +230,6 @@ export const deleteFiles = async remotePaths => {
       deleteError.push(remoteFilePath)
     }
   }
-  console.log('急急急急急急', deleteError)
   return deleteError
 }
 
@@ -301,7 +296,7 @@ export const getFileHead = (filePath) => {
       method: 'HEAD',
       url: filePath,
     }, (error, response, body) => {
-      if (error) reject(error)
+      if (error) return reject(error)
       if (response.statusCode !== 200) return reject(body)
       return resolve(response.headers)
     })
