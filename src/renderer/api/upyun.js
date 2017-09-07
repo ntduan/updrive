@@ -178,7 +178,8 @@ export const traverseDir = async (remotePaths = '', opts = {}) => {
 
   await parseDir(remotePaths)
 
-  if (opts.reverse === false) {
+  // 文件顺序
+  if (opts.reverse === true) {
     files = files.reverse()
   }
 
@@ -220,7 +221,7 @@ export const polling = async (func, times = 10, space = 500) => {
 // 删除多个文件
 // @TODO 控制并发数量
 export const deleteFiles = async remotePaths => {
-  const waitDeleteInit = await traverseDir(remotePaths)
+  const waitDeleteInit = await traverseDir(remotePaths, { reverse: true })
   const deleteError = []
 
   for (const remoteFilePath of waitDeleteInit) {
@@ -250,7 +251,6 @@ export const getLocalName = (fileName = '', init = true) => {
 // 下载单个文件
 export const downloadFile = (localPath, downloadPath) => {
   if (!downloadPath && !existsSync(localPath)) return Promise.resolve(mkdirSync(localPath))
-  console.log(downloadPath)
   // const writeStream = createWriteStream(localPath)
   return new Promise((resolve, reject) => {
     Request(downloadPath)
