@@ -421,10 +421,6 @@
         this.writeText(this.getUrl(uri))
         Message.success('已复制！')
       },
-      // 全选
-      selectAll($event) {
-        console.info($event)
-      },
       // 双击
       dblclickItem(uri) {
         // 如果是文件夹,则打开目录
