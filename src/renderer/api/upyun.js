@@ -118,6 +118,7 @@ export const uploadFiles = (remotePath, localFilePaths = []) => {
   const result = []
   // 广度优先遍历
   let list = localFilePaths.slice().map(path => ({ localFilePath: path, relativePath: '' }))
+
   while (list.length) {
     const node = list.shift()
     const { localFilePath, relativePath } = node
@@ -222,6 +223,7 @@ export const polling = async (func, times = 10, space = 500) => {
 // @TODO 控制并发数量
 export const deleteFiles = async remotePaths => {
   const waitDeleteInit = await traverseDir(remotePaths, { reverse: true })
+  console.log(waitDeleteInit, 11111111)
   const deleteError = []
 
   for (const remoteFilePath of waitDeleteInit) {
@@ -232,7 +234,7 @@ export const deleteFiles = async remotePaths => {
       deleteError.push(remoteFilePath)
     }
   }
-
+  console.log('急急急急急急', deleteError)
   return deleteError
 }
 
