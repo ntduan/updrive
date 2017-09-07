@@ -3,6 +3,16 @@ import Crypto from 'crypto'
 import Path from 'path'
 import { URL } from 'url'
 import Moment from 'moment'
+import Message from 'iview/src/components/message'
+
+export const errorHandler = (error) => {
+  if(error && error.message) {
+    Message.error(error.message)
+  } else {
+    Message.error(error)
+  }
+  return Promise.reject(error)
+}
 
 export const mandatory = (parameter) => {
   throw new Error(parameter ? `Missing parameter ${parameter}` : 'Missing parameter')

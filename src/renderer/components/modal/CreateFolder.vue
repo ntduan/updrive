@@ -24,7 +24,6 @@
   import {
     mapState
   } from 'vuex'
-  import Message from 'iview/src/components/message'
 
   export default {
     data() {
@@ -48,14 +47,7 @@
             folderName: this.folderName,
             remotePath: this.list.dirInfo.path
           })
-          .then(() => Message.success('文件夹创建成功'))
           .then(() => this.close())
-          .then(() => this.$store.dispatch('REFRESH_LIST'))
-          .catch((error) => {
-            console.log(error)
-            Message.error(error)
-
-          })
       }
     },
     computed: {

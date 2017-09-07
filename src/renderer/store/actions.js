@@ -1,5 +1,7 @@
 import { join, append, compose, unless, isEmpty } from 'ramda'
-import { md5sum } from '../api/tool.js'
+import message from 'iview/src/components/message'
+
+import { md5sum, errorHandler } from '../api/tool.js'
 import * as Types from './mutation-types'
 import * as Upyun from '../api/upyun.js'
 import * as UpyunFtp from '../api/upyunFtp.js'
@@ -43,10 +45,16 @@ export default {
   // 上传文件
   [Types.UPLOAD_FILES]({ state, commit, dispatch }, { remotePath, localFilePaths }) {
     return Upyun.uploadFiles(remotePath, localFilePaths)
+      .then(() => message.success('文件上传成功'))
+      .then(() => dispatch('REFRESH_LIST'))
+      .catch(errorHandler)
   },
   // 创建目录
   [Types.CREATE_FOLDER]({ state, commit, dispatch }, { remotePath, folderName }) {
     return Upyun.createFolder(remotePath, folderName)
+      .then(() => message.success('文件夹创建成功'))
+      .then(() => dispatch('REFRESH_LIST'))
+      .catch(errorHandler)
   },
   // 刷新当前目录
   [Types.REFRESH_LIST]({ state, commit, dispatch }, { remotePath } = {}) {

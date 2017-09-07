@@ -111,7 +111,7 @@ export const createFolder = (remotePath = '', folderName = '') => {
 
 // 上传文件
 // @TODO 控制并发数量
-export const uploadFiles = (remotePath, localFilePaths = []) => {
+export const uploadFiles = async (remotePath, localFilePaths = []) => {
   const result = []
   // 广度优先遍历
   let list = localFilePaths.slice().map(path => ({ localFilePath: path, relativePath: '' }))
@@ -129,8 +129,10 @@ export const uploadFiles = (remotePath, localFilePaths = []) => {
     }
   }
   for (const pathObj of result) statSync(pathObj.localFilePath).isFile() ?
-    upload(remotePath, pathObj.localFilePath, pathObj.relativePath) :
-    createFolder(remotePath, pathObj.relativePath + Path.basename(pathObj.localFilePath))
+    await upload(remotePath, pathObj.localFilePath, pathObj.relativePath) :
+    await createFolder(remotePath, pathObj.relativePath + Path.basename(pathObj.localFilePath))
+
+  return '11111111'
 }
 
 // 删除文件

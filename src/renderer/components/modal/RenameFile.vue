@@ -43,7 +43,6 @@
         this.$store
           .dispatch({ type: 'RENAME_FILE', oldPath: this.modal.renameFile.oldPath, newPath: this.filePath, isFolder: this.isFolder})
           .then(() => this.close())
-          .then(() => this.$store.dispatch('REFRESH_LIST'))
       }
     },
     created() {
