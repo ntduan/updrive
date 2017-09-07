@@ -34,8 +34,17 @@ body {
   background-color: #F5FBFF;
 }
 
-////////////////////////////////////////////////
-// 覆盖 balloon-css
+/*
+* 覆盖 bulma
+*/
+.breadcrumb li.is-active a {
+  cursor: pointer;
+  pointer-events: inherit;
+}
+
+/*
+* 覆盖 balloon-css
+*/
 [data-balloon]:after {
   font-family: inherit !important;
 }
