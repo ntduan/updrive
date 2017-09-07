@@ -87,7 +87,7 @@ export const upload = (remotePath = '', localFilePath = '', relativePath = '') =
         getRequestOpts({ method: 'PUT', toUrl: remotePath + relativePath + Path.basename(localFilePath) }),
         (error, response, body) => {
           if (error) return reject(error)
-          if (response.statusCode !== 200) return reject(error)
+          if (response.statusCode !== 200) return reject(body)
           console.info(`文件: ${localFilePath} 上传成功`, { body: response.body, statusCode: response.statusCode })
           return resolve(body)
         }
@@ -102,7 +102,7 @@ export const createFolder = (remotePath = '', folderName = '') => {
       getRequestOpts({ method: 'POST', toUrl: remotePath + folderName + '/', headers: { folder: true } }),
       (error, response, body) => {
         if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(error)
+        if (response.statusCode !== 200) return reject(body)
         console.info(`文件夹: ${folderName} 创建成功`, { body: response.body, statusCode: response.statusCode })
         return resolve(body)
       })
