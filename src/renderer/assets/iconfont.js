@@ -44,15 +44,9 @@
         <polygon points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 "></polygon>
       </symbol>
       <symbol id="icon-arrow-up" viewBox="0 0 48 48">
-        <path d="M0 0h48v48H0V0z"></path>
         <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
       </symbol>
       <symbol id="icon-arrow-down" viewBox="0 0 48 48">
-        <path d="M0 0h48v48H0V0z"></path>
-        <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-      </symbol>
-      <symbol id="icon-arrow-down" viewBox="0 0 48 48">
-        <path d="M0 0h48v48H0V0z"></path>
         <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
       </symbol>
       <symbol id="icon-angle-down" viewBox="0 0 24 24">
