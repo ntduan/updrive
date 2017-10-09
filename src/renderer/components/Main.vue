@@ -11,6 +11,7 @@
   import PageMain from './layout/PageMain'
 
   export default {
+    name: 'Main',
     components: {
       PageNav,
       PageMain,

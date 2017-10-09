@@ -45,6 +45,7 @@
   import { uploadFileDialog, uploadDirectoryDialog } from '../../api/electron.js'
 
   export default {
+    name: 'PageNav',
     computed: {
       pathArray() {
         return compose(filter(identity), split('/'))(this.list.dirInfo.path)

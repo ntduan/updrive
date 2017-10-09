@@ -40,16 +40,26 @@
         <path d="M816.936 553 407.295 553c-10.996 0-19.91 8.727-19.91 19.5 0 10.774 8.914 19.5 19.91 19.5l409.641 0c11 0 19.914-8.726 19.914-19.5C836.85 561.727 827.936 553 816.936 553z"></path>
         <path d="M816.936 689 407.295 689c-10.996 0-19.91 8.729-19.91 19.503 0 10.769 8.914 19.497 19.91 19.497l409.641 0c11 0 19.914-8.729 19.914-19.497C836.85 697.729 827.936 689 816.936 689z"></path>
       </symbol>
-      <symbol id="icon-x" x="0px" y="0px" width="10px" height="10px" viewBox="0 0 10 10" focusable="false">
+      <symbol id="icon-x" viewBox="0 0 10 10">
         <polygon points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 "></polygon>
       </symbol>
-      <symbol id="icon-arrow-up" x="0px" y="0px" width="18px" height="18px" viewBox="0 0 48 48" focusable="false">
-        <path fill="none" d="M0 0h48v48H0V0z"></path>
+      <symbol id="icon-arrow-up" viewBox="0 0 48 48">
+        <path d="M0 0h48v48H0V0z"></path>
         <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
       </symbol>
-      <symbol id="icon-arrow-down" x="0px" y="0px" width="18px" height="18px" viewBox="0 0 48 48" focusable="false">
-        <path fill="none" d="M0 0h48v48H0V0z"></path>
+      <symbol id="icon-arrow-down" viewBox="0 0 48 48">
+        <path d="M0 0h48v48H0V0z"></path>
         <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+      </symbol>
+      <symbol id="icon-arrow-down" viewBox="0 0 48 48">
+        <path d="M0 0h48v48H0V0z"></path>
+        <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+      </symbol>
+      <symbol id="icon-angle-down" viewBox="0 0 24 24">
+        <path d="M21.17,5.17L12,14.34l-9.17-9.17L0,8l12,12,12-12z"></path>
+      </symbol>
+      <symbol id="icon-angle-up" viewBox="0 0 24 24">
+        <path d="M2.83,18.83L12,9.66l9.17,9.17L24,16,12,4,0,16z"></path>
       </symbol>
     </svg>`
   var script = function () {

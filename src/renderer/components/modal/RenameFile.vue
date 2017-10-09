@@ -32,6 +32,7 @@
   import { mapState } from 'vuex'
 
   export default {
+    name: 'RenameFile',
     computed: {
       ...mapState(['user', 'modal', 'list']),
     },

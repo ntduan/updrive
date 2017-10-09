@@ -4,6 +4,7 @@
     <main-view></main-view>
     <create-folder></create-folder>
     <rename-file :key="modal.renameFile.oldPath"></rename-file>
+    <file-progress></file-progress>
   </div>
 </template>
 
@@ -14,15 +15,17 @@
   import MainMenu from '../view/MainMenu'
   import CreateFolder from '../modal/CreateFolder'
   import RenameFile from '../modal/RenameFile'
+  import FileProgress from '../modal/FileProgress'
 
   export default {
+    name: 'PageMain',
     components: {
       MainView,
       MainMenu,
       CreateFolder,
       RenameFile,
+      FileProgress,
     },
-    name: 'PageMain',
     computed: {
       ...mapState(['modal']),
     },

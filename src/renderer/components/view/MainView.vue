@@ -191,6 +191,7 @@
   import { uploadFileDialog, uploadDirectoryDialog, downloadFileDialog, messgaeDialog, createContextmenu, showContextmenu, openExternal, windowOpen, writeText } from '../../api/electron.js'
 
   export default {
+    name: 'MainView',
     components: {
       Spinner,
     },

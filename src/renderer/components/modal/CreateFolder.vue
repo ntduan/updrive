@@ -26,6 +26,7 @@
   } from 'vuex'
 
   export default {
+    name: 'CreateFolder',
     data() {
       return {
         folderName: '',
