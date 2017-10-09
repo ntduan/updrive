@@ -5,7 +5,7 @@ import {
   remote,
 } from 'electron'
 
-import Router from '../router'
+import Router from '@/router'
 
 const { dialog, Menu, MenuItem, BrowserWindow, getCurrentWindow } = remote
 

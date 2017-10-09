@@ -11,11 +11,11 @@
 <script>
   import { mapState } from 'vuex'
 
-  import MainView from '../view/MainView'
-  import MainMenu from '../view/MainMenu'
-  import CreateFolder from '../modal/CreateFolder'
-  import RenameFile from '../modal/RenameFile'
-  import FileProgress from '../modal/FileProgress'
+  import MainView from '@/components/view/MainView'
+  import MainMenu from '@/components/view/MainMenu'
+  import CreateFolder from '@/components/modal/CreateFolder'
+  import RenameFile from '@/components/modal/RenameFile'
+  import FileProgress from '@/components/modal/FileProgress'
 
   export default {
     name: 'PageMain',

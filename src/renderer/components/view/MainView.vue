@@ -186,9 +186,9 @@
   import Path from 'path'
   import Message from 'iview/src/components/message'
 
-  import Spinner from '../uiComponents/spinner'
-  import { timestamp, digiUnit, isDir } from '../../api/tool'
-  import { uploadFileDialog, uploadDirectoryDialog, downloadFileDialog, messgaeDialog, createContextmenu, showContextmenu, openExternal, windowOpen, writeText } from '../../api/electron.js'
+  import Spinner from '@/components/uiComponents/spinner'
+  import { timestamp, digiUnit, isDir } from '@/api/tool'
+  import { uploadFileDialog, uploadDirectoryDialog, downloadFileDialog, messgaeDialog, createContextmenu, showContextmenu, openExternal, windowOpen, writeText } from '@/api/electron.js'
 
   export default {
     name: 'MainView',

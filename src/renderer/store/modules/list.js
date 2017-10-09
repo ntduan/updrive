@@ -1,5 +1,5 @@
 import { last, dropLast, path, pipe, reverse, merge, sort, sortBy, filter, identity, split, compose, append, pluck } from 'ramda'
-import * as Types from '../mutation-types'
+import * as Types from '@/store/mutation-types'
 
 const state = {
   dirInfo: {

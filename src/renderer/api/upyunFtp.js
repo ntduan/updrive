@@ -2,7 +2,7 @@ import { path, split, map, zipObj, compose, objOf, ifElse, isEmpty, assoc, repla
 import Moment from 'moment'
 import Ftp from 'ftp'
 
-import Store from '../store'
+import Store from '@/store'
 import { traverseDir } from './upyun'
 
 const client = new Ftp()

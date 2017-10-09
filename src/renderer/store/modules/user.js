@@ -1,4 +1,4 @@
-import * as Types from '../mutation-types'
+import * as Types from '@/store/mutation-types'
 import { pickAll } from 'ramda'
 
 const state = JSON.parse(sessionStorage.getItem('user')) || {

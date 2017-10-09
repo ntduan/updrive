@@ -1,4 +1,4 @@
-import * as Types from '../mutation-types'
+import * as Types from '@/store/mutation-types'
 
 const state = {
   createFolder: {

@@ -1,10 +1,10 @@
 import { join, append, compose, unless, isEmpty } from 'ramda'
 import message from 'iview/src/components/message'
 
-import { md5sum, errorHandler } from '../api/tool.js'
-import * as Types from './mutation-types'
-import * as Upyun from '../api/upyun.js'
-import * as UpyunFtp from '../api/upyunFtp.js'
+import { md5sum, errorHandler } from '@/api/tool.js'
+import * as Types from '@/store/mutation-types'
+import * as Upyun from '@/api/upyun.js'
+import * as UpyunFtp from '@/api/upyunFtp.js'
 
 export default {
   // 登录

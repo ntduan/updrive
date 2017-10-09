@@ -42,7 +42,7 @@
   import { path, take, split, identity, filter, compose, concat, join } from 'ramda'
   import { mapState } from 'vuex'
 
-  import { uploadFileDialog, uploadDirectoryDialog } from '../../api/electron.js'
+  import { uploadFileDialog, uploadDirectoryDialog } from '@/api/electron.js'
 
   export default {
     name: 'PageNav',

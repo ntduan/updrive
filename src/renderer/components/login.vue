@@ -46,7 +46,7 @@
 
   import {
     md5sum
-  } from '../api/tool.js'
+  } from '@/api/tool.js'
 
   export default {
     name: 'login',
