@@ -31,6 +31,9 @@
         folderName: '',
       }
     },
+    computed: {
+      ...mapState(['modal', 'list']),
+    },
     methods: {
       close() {
         this.$store.commit('CLOSE_CREATE_FOLDER_MODAL')
@@ -50,8 +53,5 @@
           .then(() => this.close())
       }
     },
-    computed: {
-      ...mapState(['modal', 'list']),
-    }
   }
 </script>

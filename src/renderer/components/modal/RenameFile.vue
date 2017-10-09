@@ -32,6 +32,9 @@
   import { mapState } from 'vuex'
 
   export default {
+    computed: {
+      ...mapState(['user', 'modal', 'list']),
+    },
     methods: {
       close() {
         this.$store.commit('CLOSE_RENAME_FILE_MODAL')
@@ -55,8 +58,5 @@
         this.isFolder = false
       }
     },
-    computed: {
-      ...mapState(['user', 'modal', 'list']),
-    }
   }
 </script>
