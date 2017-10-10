@@ -1,6 +1,6 @@
 <template>
   <div class="page-main">
-    <main-menu></main-menu>
+    <!-- <main-menu></main-menu> -->
     <main-view></main-view>
     <create-folder></create-folder>
     <rename-file :key="modal.renameFile.oldPath"></rename-file>
