@@ -26,8 +26,8 @@ export default {
       })
   },
   // 获取文件目录信息
-  [Types.GET_LIST_DIR_INFO]({ state, commit }, { remotePath, action }) {
-    commit({ type: Types.SET_LOADING_LIST, data: true })
+  [Types.GET_LIST_DIR_INFO]({ state, commit }, { remotePath, spinner = true, action }) {
+    if(spinner) commit({ type: Types.SET_LOADING_LIST, data: true })
     return Upyun.getListDirInfo(remotePath)
       .then(result => {
         commit({
@@ -46,27 +46,44 @@ export default {
   [Types.UPLOAD_FILES]({ state, commit, dispatch }, { remotePath, localFilePaths }) {
     return Upyun.uploadFiles(remotePath, localFilePaths)
       .then(() => message.success('文件上传成功'))
-      .then(() => dispatch('REFRESH_LIST'))
+      .then(() => dispatch({type: 'REFRESH_LIST', spinner: false}))
       .catch(errorHandler)
   },
   // 创建目录
   [Types.CREATE_FOLDER]({ state, commit, dispatch }, { remotePath, folderName }) {
     return Upyun.createFolder(remotePath, folderName)
       .then(() => message.success('文件夹创建成功'))
-      .then(() => dispatch('REFRESH_LIST'))
+      .then(() => dispatch({type: 'REFRESH_LIST', spinner: false}))
       .catch(errorHandler)
   },
   // 刷新当前目录
-  [Types.REFRESH_LIST]({ state, commit, dispatch }, { remotePath } = {}) {
-    return dispatch({ type: 'GET_LIST_DIR_INFO', remotePath: remotePath || state.list.dirInfo.path })
+  [Types.REFRESH_LIST]({ state, commit, dispatch }, { remotePath, spinner = true } = {}) {
+    return dispatch({ type: 'GET_LIST_DIR_INFO', remotePath: remotePath || state.list.dirInfo.path, spinner })
   },
   // 删除文件
   [Types.DELETE_FILE]({ state, commit, dispatch }, { selectedPaths } = {}) {
     return Upyun.deleteFiles(selectedPaths)
+    .then(() => message.success('操作成功'))
+    .then(() => dispatch({type: 'REFRESH_LIST', spinner: false}))
+    .catch(errorHandler)
   },
   // 修改路径
   [Types.RENAME_FILE]({ state, commit, dispatch }, { oldPath, newPath, isFolder } = {}) {
-    return isFolder ? UpyunFtp.renameFolder(oldPath, newPath) : UpyunFtp.renameFile(oldPath, newPath)
+    const renameFolder = (oldPath, newPath) => {
+      return UpyunFtp.renameFolder(oldPath, newPath)
+        .then(() => message.success('操作成功'))
+        .then(() => dispatch({type: 'REFRESH_LIST', spinner: false}))
+        .catch(errorHandler)
+    }
+
+    const renameFile = (oldPath, newPath) => {
+      return UpyunFtp.renameFile(oldPath, newPath)
+        .then(() => message.success('操作成功'))
+        .then(() => dispatch({type: 'REFRESH_LIST', spinner: false}))
+        .catch(errorHandler)
+    }
+
+    return isFolder ? renameFolder(oldPath, newPath) : renameFile(oldPath, newPath)
   },
   // 下载文件
   [Types.DOWNLOAD_FILES]({ state, commit, dispatch }, { destPath, downloadPath } = {}) {

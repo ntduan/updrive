@@ -5,7 +5,7 @@ import Path from 'path'
 import { URL } from 'url'
 import mime from 'mime'
 
-import { mandatory, getAuthorizationHeader, md5sum, getUri, standardUri, sleep, getFilenameFromUrl, isDir } from './tool.js'
+import { mandatory, getAuthorizationHeader, base64, md5sum, getUri, standardUri, sleep, getFilenameFromUrl, isDir } from './tool.js'
 import Store from '@/store' // 不能解构, 因为这时 store 还没完成初始化
 
 mime.default_type = ''
@@ -77,18 +77,33 @@ export const getListDirInfo = (remotePath = '') => {
 
 // 上传文件
 // relativePath 是相对当前目录的路径
-export const upload = (remotePath = '', localFilePath = '', relativePath = '') => {
+export const upload = (remotePath = '', localFilePath = '', relativePath = '', localFileStat = {}) => {
+  const size = localFileStat.size
+  let total = 0
+  let percentage = 0
+  const filename = Path.basename(localFilePath)
+  const toUrl = remotePath + relativePath + filename
+  const id = base64(`file:${toUrl};date:${+(new Date())}`)
+
+  Store.commit({ type: 'ADD_TASK', data: { id, type: 'upload', status: '1',localFilePath, remoteQuery: toUrl, filename, percentage } })
   return new Promise((resolve, reject) => {
     createReadStream(localFilePath)
       .on('data', function (chunk) {
-        console.info(chunk.length, +new Date());
+        total += chunk.length
+        const newPercentage = Math.floor(((total / size) * 100)) / 100
+        if (percentage !== newPercentage) {
+          percentage = newPercentage
+          console.info(filename, percentage)
+          Store.commit({ type: 'UPDATE_TASK', data: { id, percentage } })
+        }
       })
       .pipe(Request(
-        getRequestOpts({ method: 'PUT', toUrl: remotePath + relativePath + Path.basename(localFilePath) }),
+        getRequestOpts({ method: 'PUT', toUrl }),
         (error, response, body) => {
           if (error) return reject(error)
           if (response.statusCode !== 200) return reject(body)
           console.info(`文件: ${localFilePath} 上传成功`, { body: response.body, statusCode: response.statusCode })
+          Store.commit({ type: 'UPDATE_TASK', data: { id, percentage } })
           return resolve(body)
         }
       ))
@@ -128,11 +143,14 @@ export const uploadFiles = async (remotePath, localFilePaths = []) => {
       result.push(node)
     }
   }
-  for (const pathObj of result) statSync(pathObj.localFilePath).isFile() ?
-    await upload(remotePath, pathObj.localFilePath, pathObj.relativePath) :
-    await createFolder(remotePath, pathObj.relativePath + Path.basename(pathObj.localFilePath))
 
-  return '11111111'
+
+  for (const pathObj of result) {
+    const localFileStat = statSync(pathObj.localFilePath)
+    localFileStat.isFile() ?
+      await upload(remotePath, pathObj.localFilePath, pathObj.relativePath, localFileStat) :
+      await createFolder(remotePath, pathObj.relativePath + Path.basename(pathObj.localFilePath))
+  }
 }
 
 // 删除文件
@@ -221,6 +239,7 @@ export const polling = async (func, times = 10, space = 500) => {
 // 删除多个文件
 // @TODO 控制并发数量
 export const deleteFiles = async remotePaths => {
+  console.log(remotePaths)
   const waitDeleteInit = await traverseDir(remotePaths, { reverse: true })
   const deleteError = []
 

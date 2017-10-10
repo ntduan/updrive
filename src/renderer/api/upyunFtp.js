@@ -98,6 +98,7 @@ export const renameFile = async (oldPath, newPath) => {
     .then(() => {
       console.info('路径修改成功', `${oldPath} => ${newPath}`)
       end()
+      return Promise.resolve(newPath)
     })
     .catch((err) => {
       end()
@@ -110,6 +111,7 @@ export const renameFolder = async (oldPath, newPath) => {
   await connect()
   try {
     return new Promise(async (resolve, reject) => {
+      console.log(oldPath)
       const dir = await traverseDir(oldPath)
       for (const remoteFilePath of dir) {
         client.rename(oldPath, newPath, err => {
