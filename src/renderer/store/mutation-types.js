@@ -20,6 +20,13 @@ export const CLOSE_RENAME_FILE_MODAL = 'CLOSE_RENAME_FILE_MODAL' // 关闭修改
 export const RENAME_FILE_SET_OLD_PATH = 'RENAME_FILE_SET_OLD_PATH' // 设置 oldpath
 export const RENAME_FILE_CLEAR_OLD_PATH = 'RENAME_FILE_CLEAR_OLD_PATH' // 清除 oldpath
 
+export const SHOW_TASK_MODAL = 'SHOW_TASK_MODAL' // 显示任务框
+export const HIDE_TASK_MODAL = 'HIDE_TASK_MODAL' // 隐藏任务框
+export const ADD_TASK = 'ADD_TASK' // 添加任务
+export const DELETE_TASK = 'DELETE_TASK' // 删除任务
+export const UPDATE_TASK = 'UPDATE_TASK' // 更新任务
+export const CANCEL_TASK = 'CANCEL_TASK' // 取消任务
+
 // actions
 export const VERIFICATION_ACCOUNT = 'VERIFICATION_ACCOUNT' // 验证账号
 export const GET_LIST_DIR_INFO = 'GET_LIST_DIR_INFO' // 获取列表信息

@@ -44,6 +44,7 @@ export default {
   },
   // 上传文件
   [Types.UPLOAD_FILES]({ state, commit, dispatch }, { remotePath, localFilePaths }) {
+    commit('SHOW_TASK_MODAL')
     return Upyun.uploadFiles(remotePath, localFilePaths)
       .then(() => message.success('文件上传成功'))
       .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
@@ -91,6 +92,7 @@ export default {
   },
   // 下载文件
   [Types.DOWNLOAD_FILES]({ state, commit, dispatch }, { destPath, downloadPath } = {}) {
+    commit('SHOW_TASK_MODAL')
     return Upyun.downloadFiles(destPath, downloadPath)
       .then(() => message.success('下载完成'))
       .catch(errorHandler)

@@ -503,7 +503,6 @@
       timestamp,
       digiUnit,
     },
-    name: 'ListView'
   }
 
 </script>

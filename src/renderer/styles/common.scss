@@ -57,11 +57,26 @@ body {
   position: absolute;
   width: 360px;
   right: 12px;
+  font-size: 12px;
   bottom: 0;
   z-index: 10;
   box-shadow: 0 2px 8px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   .card-block {
     cursor: pointer;
+    .card-block-title {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+    }
+    .card-block-icon {
+      padding-right: 8px;
+      padding-left: 8px;
+    }
+  }
+  .progress-bar {
+    width: 20px;
+    height: 20px;
   }
 }
 

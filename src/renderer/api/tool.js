@@ -6,7 +6,7 @@ import Moment from 'moment'
 import Message from 'iview/src/components/message'
 
 export const errorHandler = (error) => {
-  if(error && error.message) {
+  if (error && error.message) {
     Message.error(error.message)
   } else {
     Message.error(error)
@@ -91,4 +91,8 @@ export const digiUnit = (input) => {
   const getUnitIndex = (sizes = []) => index => (index > (sizes.length - 1) ? (sizes.length - 1) : index)
   const getResult = sizes => byte => index => `${(byte / Math.pow(1024, index)).toFixed(1)} ${sizes[index]}`
   return compose(compose(compose(getResult, getSizes)(), getByte)(input), compose(compose(getUnitIndex, getSizes)(), getIndex, getByte))(input)
+}
+
+export const uploadStatus = (input) => {
+  return ({ '0': '未开始', '1': '进行中', '2': '已完成', '-1': '出错', '-2': '已取消' })[input]
 }

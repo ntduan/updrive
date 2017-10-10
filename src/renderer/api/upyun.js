@@ -84,30 +84,60 @@ export const upload = (remotePath = '', localFilePath = '', relativePath = '', l
   const filename = Path.basename(localFilePath)
   const toUrl = remotePath + relativePath + filename
   const id = base64(`file:${toUrl};date:${+(new Date())}`)
-
-  Store.commit({ type: 'ADD_TASK', data: { id, type: 'upload', status: '1',localFilePath, remoteQuery: toUrl, filename, percentage } })
+  const localFilePathReadStream = createReadStream(localFilePath)
+  Store.commit({
+    type: 'ADD_TASK',
+    data: {
+      id,
+      type: 'upload',
+      status: '1',
+      localFilePath,
+      remoteQuery: toUrl,
+      filename,
+      percentage,
+      size,
+      done: total,
+      abort: localFilePathReadStream.destroy.bind(localFilePathReadStream)
+    }
+  })
   return new Promise((resolve, reject) => {
-    createReadStream(localFilePath)
-      .on('data', function (chunk) {
+    const _request = Request(
+      getRequestOpts({ method: 'PUT', toUrl }),
+      (error, response, body) => {
+        if (error) return reject(error)
+        if (response.statusCode !== 200) return reject(body)
+        console.info(`文件: ${localFilePath} 上传成功`, { body: response.body, statusCode: response.statusCode })
+        return resolve(body)
+      }
+    )
+
+    let isEnd = false // close 时 是否需要中断 request
+    localFilePathReadStream
+      .on('data', chunk => {
         total += chunk.length
         const newPercentage = Math.floor(((total / size) * 100)) / 100
         if (percentage !== newPercentage) {
           percentage = newPercentage
-          console.info(filename, percentage)
-          Store.commit({ type: 'UPDATE_TASK', data: { id, percentage } })
+          console.info(`正在上传：${filename} ${percentage}`)
+          Store.commit({ type: 'UPDATE_TASK', data: { id, percentage, done: total } })
         }
       })
-      .pipe(Request(
-        getRequestOpts({ method: 'PUT', toUrl }),
-        (error, response, body) => {
-          if (error) return reject(error)
-          if (response.statusCode !== 200) return reject(body)
-          console.info(`文件: ${localFilePath} 上传成功`, { body: response.body, statusCode: response.statusCode })
-          Store.commit({ type: 'UPDATE_TASK', data: { id, percentage } })
-          return resolve(body)
-        }
-      ))
+      .on('close', (arg) => {
+        if (!isEnd) _request.abort()
+      })
+      .on('end', (arg) => {
+        isEnd = true
+      })
+      .pipe(_request)
   })
+    .then(body => {
+      Store.commit({ type: 'UPDATE_TASK', data: { id, status: '2' } })
+      return Promise.resolve(body)
+    })
+    .catch(error => {
+      Store.commit({ type: 'UPDATE_TASK', data: { id, status: '-1' } })
+      return Promise.reject(error)
+    })
 }
 
 // 创建目录
@@ -268,22 +298,56 @@ export const getLocalName = (fileName = '', init = true) => {
 // 下载单个文件
 export const downloadFile = (localPath, downloadPath) => {
   if (!downloadPath && !existsSync(localPath)) return Promise.resolve(mkdirSync(localPath))
-  // const writeStream = createWriteStream(localPath)
+
+  let total = 0
+  let percentage = 0
+  const filename = Path.basename(localPath)
+  const id = base64(`file:${downloadPath};date:${+(new Date())}`)
+
   return new Promise((resolve, reject) => {
     Request(downloadPath)
-      .on('data', (chunk) => {
-        console.info(chunk.length, +new Date());
-      })
-      .on('error', err => {
-        console.error(err);
-      })
-      .pipe(createWriteStream(localPath)
-        .on('close', () => {
-          resolve()
-          console.info('下载完成')
+      .on('response', res => {
+        const size = parseInt(res.headers['content-length'], 10)
+        Store.commit({
+          type: 'ADD_TASK',
+          data: {
+            id,
+            type: 'upload',
+            status: '1',
+            localPath,
+            remoteQuery: downloadPath,
+            filename,
+            percentage,
+            size,
+            done: total,
+          }
         })
-      )
+
+        res.on('data', chunk => {
+          total += chunk.length
+          const newPercentage = Math.floor(((total / size) * 100)) / 100
+          if (percentage !== newPercentage) {
+            percentage = newPercentage
+            console.info(`正在下载：${filename} ${percentage}`)
+            Store.commit({ type: 'UPDATE_TASK', data: { id, percentage, done: total } })
+          }
+        })
+          .pipe(createWriteStream(localPath)
+            .on('close', () => {
+              resolve()
+              console.info('下载完成')
+            })
+          )
+      })
   })
+    .then(result => {
+      Store.commit({ type: 'UPDATE_TASK', data: { id, status: '2' } })
+      return Promise.resolve(result)
+    })
+    .catch(error => {
+      Store.commit({ type: 'UPDATE_TASK', data: { id, status: '-1' } })
+      return Promise.reject(error)
+    })
 }
 
 // 下载文件
