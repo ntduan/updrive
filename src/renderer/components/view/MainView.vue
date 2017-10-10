@@ -389,7 +389,7 @@
             { hide: !this.uniqueSelectedUri, type: 'separator' },
             { hide: !this.uniqueSelectedUri || this.isViewDetail, label: '查看详细信息', click: () => this.getFileDetail() },
             { hide: !this.isSelectedSingleFile, label: '获取链接', click: () => this.getLink() },
-            { hide: !this.selected.length, label: '修改路径...', click: () => this.renameFile() },
+            { hide: !this.isSelectedSingleFile, label: '修改路径...', click: () => this.renameFile() },
             { hide: !this.selected.length, label: '下载', click: () => this.downloadFile() },
             { hide: !this.selected.length, type: 'separator' },
             { hide: false, label: '刷新目录', click: () => this.refresh() },

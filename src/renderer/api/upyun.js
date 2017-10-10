@@ -239,7 +239,6 @@ export const polling = async (func, times = 10, space = 500) => {
 // 删除多个文件
 // @TODO 控制并发数量
 export const deleteFiles = async remotePaths => {
-  console.log(remotePaths)
   const waitDeleteInit = await traverseDir(remotePaths, { reverse: true })
   const deleteError = []
 

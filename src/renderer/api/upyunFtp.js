@@ -106,24 +106,23 @@ export const renameFile = async (oldPath, newPath) => {
     })
 }
 
-
-export const renameFolder = async (oldPath, newPath) => {
-  await connect()
-  try {
-    return new Promise(async (resolve, reject) => {
-      console.log(oldPath)
-      const dir = await traverseDir(oldPath)
-      for (const remoteFilePath of dir) {
-        client.rename(oldPath, newPath, err => {
-          if (err) throw err
-          console.info('路径修改成功', `${oldPath} => ${newPath}`)
-          resolve()
-          end()
-        })
-      }
-    })
-  } catch (err) {
-    end()
-    return Promise.reject(err)
-  }
-}
+// @TODO 完成重命名文件夹的功能
+// export const renameFolder = async (oldPath, newPath) => {
+//   await connect()
+//   try {
+//     return new Promise(async (resolve, reject) => {
+//       const dir = await traverseDir([oldPath], { reverse: true })
+//       for (const remoteFilePath of dir) {
+//         client.rename(oldPath, newPath, err => {
+//           if (err) throw err
+//           console.info('路径修改成功', `${oldPath} => ${newPath}`)
+//           resolve()
+//           end()
+//         })
+//       }
+//     })
+//   } catch (err) {
+//     end()
+//     return Promise.reject(err)
+//   }
+// }
