@@ -24,6 +24,23 @@ export const setApplicationMenu = () => {
       ]
     },
     {
+      label: ' 编辑',
+      submenu: [
+        {
+          label: '复制',
+          role: 'copy'
+        },
+        {
+          label: '粘贴',
+          role: 'paste'
+        },
+        {
+          label: '剪切',
+          role: 'cut'
+        },
+      ]
+    },
+    {
       label: '查看',
       submenu: [
         {
