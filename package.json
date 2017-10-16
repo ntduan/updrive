@@ -69,6 +69,7 @@
     "ramda": "^0.24.1",
     "request": "^2.81.0",
     "sass-loader": "^6.0.6",
+    "upyun": "^3.2.6",
     "vue": "^2.4.2",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.7.0",
