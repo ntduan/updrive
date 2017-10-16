@@ -16,9 +16,9 @@ export default {
       passwordMd5: md5sum(payload.password),
     }
     return Upyun.checkAuth(user)
-      .then(result => {
-        commit(Types.SET_USER_INFO, result)
-        return result
+      .then(() => {
+        commit(Types.SET_USER_INFO, user)
+        return user
       })
       .catch(error => {
         commit(Types.CLEAR_USER_INFO)

@@ -5,8 +5,9 @@ import Path from 'path'
 import { URL } from 'url'
 import mime from 'mime'
 
-import { mandatory, getAuthorizationHeader, base64, md5sum, getUri, standardUri, sleep, getFilenameFromUrl, isDir } from './tool.js'
+import { mandatory, getAuthorizationHeader, base64, md5sum, getUri, standardUri, sleep, getFilenameFromUrl, isDir, getHeaderSign } from './tool.js'
 import Store from '@/store' // 不能解构, 因为这时 store 还没完成初始化
+import upyun from 'upyun'
 
 mime.default_type = ''
 
@@ -30,15 +31,9 @@ export const getRequestOpts = ({ user = path(['state', 'user'], Store), search =
 
 // 授权认证
 export const checkAuth = user => {
-  return new Promise((resolve, reject) => {
-    Request(
-      getRequestOpts({ method: 'GET', search: '?usage', user }),
-      (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        resolve(user)
-      })
-  })
+  const service = new upyun.Service(user.bucketName, user.operatorName, user.password)
+  const client = new upyun.Client(service, getHeaderSign)
+  return client.usage();
 }
 
 // 获取目录列表信息

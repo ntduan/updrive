@@ -4,6 +4,7 @@ import Path from 'path'
 import { URL } from 'url'
 import Moment from 'moment'
 import Message from 'iview/src/components/message'
+import { sign } from 'upyun'
 
 export const errorHandler = (error) => {
   if (error && error.message) {
@@ -44,6 +45,10 @@ export const makeSign = ({
 
 export const getUri = (bucketName = '') => (path = '') => {
   return `/${bucketName}${standardUri(path)}`
+}
+
+export function getHeaderSign(service, method, path) {
+  return Promise.resolve(sign.getHeaderSign(service, method, path))
 }
 
 // @TODO 实现 Content-MD5 校验
