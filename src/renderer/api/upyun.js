@@ -29,44 +29,50 @@ export const getRequestOpts = ({ user = path(['state', 'user'], Store), search =
   }
 }
 
-// 授权认证
-export const checkAuth = user => {
+const clients = {}
+
+function getClient(user = path(['state', 'user'], Store)) {
+  if (clients[user.bucketName]) {
+    return clients[user.bucketName]
+  }
+
   const service = new upyun.Service(user.bucketName, user.operatorName, user.password)
   const client = new upyun.Client(service, getHeaderSign)
+  clients[user.bucketName] = client
+  return client
+}
+
+// 授权认证
+export const checkAuth = user => {
+  const client = getClient(user)
   return client.usage();
 }
 
 // 获取目录列表信息
-export const getListDirInfo = (remotePath = '') => {
-  return new Promise((resolve, reject) => {
-    Request(
-      getRequestOpts({ method: 'GET', toUrl: remotePath }),
-      (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        console.info(`目录: ${remotePath} 获取成功`, { body: response.body, statusCode: response.statusCode })
-        try {
-          return compose(
-            resolve,
-            assoc('path', remotePath),
-            ifElse(
-              isEmpty,
-              () => ({ data: [] }),
-              compose(
-                objOf('data'),
-                compose(
-                  map(obj => {
-                    obj.filetype = obj.folderType === 'F' ? '' : mime.lookup(obj.filename)
-                    obj.uri = remotePath + obj.filename + (obj.folderType === 'F' ? '/' : '')
-                    return obj
-                  }),
-                  map(compose(zipObj(['filename', 'folderType', 'size', 'lastModified']), split(/\t/))),
-                  split(/\n/))))
-          )(body)
-        } catch (err) {
-          return reject(err)
-        }
-      })
+export const getListDirInfo = (remotePath = '/') => {
+  const client = getClient()
+  return client.listDir(remotePath).then(data => {
+    return compose(
+      assoc('path', remotePath),
+      ifElse(
+        isEmpty,
+        () => ({ data: []}) ,
+        compose(
+          objOf('data'),
+          map(file => {
+            const isDir = file.type === 'F' 
+            return {
+              filetype: isDir ? '' : mime.lookup(file.name),
+              filename: file.name,
+              folderType: file.type,
+              size: file.size,
+              lastModified: file.time,
+              uri: remotePath + file.name + (isDir ? '/' : '')
+            }
+          }),
+        )
+      )
+    )(data.files)
   })
 }
 
