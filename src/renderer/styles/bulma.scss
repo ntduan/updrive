@@ -1,5 +1,5 @@
-@import "../../../node_modules/bulma/sass/utilities/initial-variables";
-@import "./custom.scss";
+@import "~bulma/sass/utilities/initial-variables";
+@import "~@/styles/custom.scss";
 
 @font-face {
   font-family: SourceHanSansCN-Light;
@@ -27,4 +27,4 @@ $family-primary: $family-sans-serif;
 
 $primary: $upyunPrimaryColor;
 
-@import '../../../node_modules/bulma/bulma.sass';
+@import '~bulma/bulma.sass';
