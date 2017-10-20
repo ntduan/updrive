@@ -1,5 +1,6 @@
 <template>
   <section class="page">
+    <!-- <main-menu></main-menu> -->
     <page-nav></page-nav>
     <page-main></page-main>
   </section>
@@ -7,14 +8,16 @@
 
 <script>
   import { mapState } from 'vuex'
-  import PageNav from './layout/PageNav'
-  import PageMain from './layout/PageMain'
+  import PageNav from '@/components/layout/PageNav'
+  import PageMain from '@/components/layout/PageMain'
+  import MainMenu from '@/components/view/MainMenu'
 
   export default {
     name: 'Main',
     components: {
       PageNav,
       PageMain,
+      MainMenu,
     },
     created() {
       this.$store.dispatch({ type: 'GET_LIST_DIR_INFO' })

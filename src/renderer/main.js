@@ -2,9 +2,9 @@ import Vue from 'vue'
 import iviewCSS from 'iview/dist/styles/iview.css'
 import balloonCss from 'balloon-css/balloon.css'
 
-import App from './App'
-import Router from './router'
-import Store from './store'
+import App from '@/App'
+import Router from '@/router'
+import Store from '@/store'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false

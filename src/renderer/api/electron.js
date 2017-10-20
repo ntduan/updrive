@@ -59,7 +59,7 @@ export const setApplicationMenu = () => {
         },
         {
           label: '报告一个问题',
-          click() { shell.openExternal('https://github.com/gynantimdt/updrive/issues') }
+          click() { shell.openExternal('https://github.com/aniiantt/updrive/issues') }
         },
         {
           type: 'separator'
