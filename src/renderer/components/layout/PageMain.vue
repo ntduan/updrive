@@ -1,6 +1,5 @@
 <template>
   <div class="page-main">
-    <!-- <main-menu></main-menu> -->
     <main-view></main-view>
     <create-folder></create-folder>
     <rename-file :key="modal.renameFile.oldPath"></rename-file>
@@ -12,7 +11,6 @@
   import { mapState } from 'vuex'
 
   import MainView from '@/components/view/MainView'
-  import MainMenu from '@/components/view/MainMenu'
   import CreateFolder from '@/components/modal/CreateFolder'
   import RenameFile from '@/components/modal/RenameFile'
   import FileProgress from '@/components/modal/FileProgress'
@@ -21,7 +19,6 @@
     name: 'PageMain',
     components: {
       MainView,
-      MainMenu,
       CreateFolder,
       RenameFile,
       FileProgress,
