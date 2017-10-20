@@ -1,10 +1,8 @@
 <template>
   <section class="page">
-    <main-menu></main-menu>
-    <div>
-      <page-nav></page-nav>
-      <page-main></page-main>
-    </div>
+    <!-- <main-menu></main-menu> -->
+    <page-nav></page-nav>
+    <page-main></page-main>
   </section>
 </template>
 
