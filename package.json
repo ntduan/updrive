@@ -55,6 +55,9 @@
     },
     "linux": {
       "icon": "build/icons"
+    },
+    "nsis": {
+      "createDesktopShortcut": true
     }
   },
   "dependencies": {
