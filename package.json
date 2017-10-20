@@ -51,7 +51,10 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.ico",
+      "target": [
+        "zip"
+      ]
     },
     "linux": {
       "icon": "build/icons"
