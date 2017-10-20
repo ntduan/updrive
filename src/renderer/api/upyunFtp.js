@@ -3,7 +3,7 @@ import Moment from 'moment'
 import Ftp from 'ftp'
 
 import Store from '@/store'
-import { traverseDir } from './upyun'
+import { traverseDir } from '@/api/upyun'
 
 const client = new Ftp()
 

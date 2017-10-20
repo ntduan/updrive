@@ -7,12 +7,12 @@
     commit
   } from 'vuex'
 
-  import Store from './store'
+  import Store from '@/store'
   import {
     listenSelectAll,
     setApplicationMenu,
-  } from './api/electron.js'
-  import './assets/iconfont.js'
+  } from '@/api/electron.js'
+  import '@/assets/iconfont.js'
 
   setApplicationMenu()
 
@@ -27,5 +27,5 @@
 </script>
 
 <style lang="scss">
-  @import './styles/index.scss';
+  @import '~@/styles/index.scss';
 </style>
