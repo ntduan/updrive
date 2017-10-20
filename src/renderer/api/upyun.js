@@ -5,7 +5,7 @@ import Path from 'path'
 import { URL } from 'url'
 import mime from 'mime'
 
-import { mandatory, getAuthorizationHeader, base64, md5sum, getUri, standardUri, sleep, getFilenameFromUrl, isDir } from './tool.js'
+import { mandatory, getAuthorizationHeader, base64, md5sum, getUri, standardUri, sleep, getFilenameFromUrl, isDir } from '@/api/tool.js'
 import Store from '@/store' // 不能解构, 因为这时 store 还没完成初始化
 
 mime.default_type = ''
