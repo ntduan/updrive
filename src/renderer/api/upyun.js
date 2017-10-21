@@ -4,8 +4,7 @@ import Request from 'request'
 import Path from 'path'
 import { URL, parse } from 'url'
 import mime from 'mime'
-
-import { mandatory, base64, md5sum, sleep, isDir } from './tool.js'
+import { mandatory, base64, md5sum, sleep, isDir } from '@/api/tool.js'
 import Store from '@/store' // 不能解构, 因为这时 store 还没完成初始化
 import upyun from 'upyun'
 

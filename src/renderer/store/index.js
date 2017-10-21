@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import Actions from './actions'
-import * as Getters from './getters'
-import Modules from './modules'
+import Actions from '@/store/actions'
+import * as Getters from '@/store/getters'
+import Modules from '@/store/modules'
 
 
 Vue.use(Vuex)
