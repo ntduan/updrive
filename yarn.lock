@@ -6015,9 +6015,9 @@ upper-case@^1.0.3, upper-case@^1.1.0, upper-case@^1.1.1, upper-case@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/upper-case/-/upper-case-1.1.3.tgz#f6b4501c2ec4cdd26ba78be7222961de77621598"
 
-upyun@^3.2.6:
-  version "3.2.6"
-  resolved "https://registry.yarnpkg.com/upyun/-/upyun-3.2.6.tgz#91e51788b2867d35df495740b2c2cf9a04581116"
+upyun@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/upyun/-/upyun-3.3.0.tgz#0b41f8e8b59f111941e35448d2fc35a733131975"
   dependencies:
     axios "^0.16.1"
     base-64 "^0.1.0"
