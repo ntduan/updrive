@@ -261,7 +261,8 @@ export const downloadFile = (localPath, downloadPath) => {
   const filename = Path.basename(localPath)
   const id = base64(`file:${downloadPath};date:${+(new Date())}`)
   let timer = null
-  getFileHead(downloadPath).then((data) => {
+  const pathname = parse(downloadPath).pathname
+  headFile(pathname).then((data) => {
     const size = data.size
     Store.commit({
       type: 'ADD_TASK',
@@ -288,8 +289,7 @@ export const downloadFile = (localPath, downloadPath) => {
       }
     }, 100)
     const client = getClient()
-    const parsed = parse(downloadPath)
-    return client.getFile(parsed.pathname, saveStream)
+    return client.getFile(pathname, saveStream)
   }).then(result => {
       clearInterval(timer)
       Store.commit({ type: 'UPDATE_TASK', data: { id, status: '2' } })
@@ -327,10 +327,23 @@ export const downloadFiles = async (destPath, downloadPath) => {
 
 // HEAD 请求
 export const getFileHead = (filePath) => {
+  return new Promise((resolve, reject) => {
+    Request({
+      method: 'HEAD',
+      url: filePath,
+    }, (error, response, body) => {
+      if (error) return reject(error)
+      if (response.statusCode !== 200) return reject(body)
+      return resolve(response.headers)
+    })
+  })
+}
+
+// 避免服务关闭外链影响
+function headFile(path) {
   const client = getClient()
 
-  const parsed = parse(filePath)
-  return client.headFile(parsed.pathname).then((data) => {
+  return client.headFile(path).then((data) => {
     if (data !== false) {
       return data
     }
