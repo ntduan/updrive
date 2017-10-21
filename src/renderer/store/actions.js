@@ -64,8 +64,10 @@ export default {
   // 删除文件
   [Types.DELETE_FILE]({ state, commit, dispatch }, { selectedPaths } = {}) {
     return Upyun.deleteFiles(selectedPaths)
-      .then(() => message.success('操作成功'))
-      .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
+      .then(() => {
+        message.success('操作成功')
+        dispatch({ type: 'REFRESH_LIST', spinner: false })
+      })
       .catch(errorHandler)
   },
   // 修改路径
