@@ -5,29 +5,11 @@ import Path from 'path'
 import { URL, parse } from 'url'
 import mime from 'mime'
 
-import { mandatory, getAuthorizationHeader, base64, md5sum, getUri, standardUri, sleep, getFilenameFromUrl, isDir, getHeaderSign } from './tool.js'
+import { mandatory, base64, md5sum, sleep, isDir } from './tool.js'
 import Store from '@/store' // 不能解构, 因为这时 store 还没完成初始化
 import upyun from 'upyun'
 
 mime.default_type = ''
-
-export const getRequestOpts = ({ user = path(['state', 'user'], Store), search = '', toUrl = '', method = 'GET', headers = {} } = {}) => {
-  const urlObject = new URL(toUrl, `http://${Store.getters.apiHost}/${user.bucketName}/`)
-  if (search) urlObject.search = search
-
-  const url = urlObject.href
-
-  const authHeader = getAuthorizationHeader({ ...user, method: method, url })
-
-  return {
-    method,
-    url,
-    headers: {
-      ...authHeader,
-      ...headers,
-    },
-  }
-}
 
 const clients = {}
 
