@@ -2,6 +2,7 @@
   <div class="page-main">
     <main-view></main-view>
     <create-folder></create-folder>
+    <!-- 改变key，可以触发 created 生命周期  -->
     <rename-file :key="modal.renameFile.oldPath"></rename-file>
     <file-progress></file-progress>
   </div>
