@@ -57,7 +57,7 @@
     },
     methods: {
       goto(index) {
-        const remotePath = index === undefined ? '' : concat(join('/', take(index + 1)(this.pathArray)), '/')
+        const remotePath = index === undefined ? '/' : concat(join('/', take(index + 1)(this.pathArray)), '/')
         return this.$store.dispatch({ type: 'GET_LIST_DIR_INFO', remotePath, action: 0 })
       },
       // 新建文件夹

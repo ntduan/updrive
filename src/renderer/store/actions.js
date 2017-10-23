@@ -16,9 +16,9 @@ export default {
       passwordMd5: md5sum(payload.password),
     }
     return Upyun.checkAuth(user)
-      .then(result => {
-        commit(Types.SET_USER_INFO, result)
-        return result
+      .then(() => {
+        commit(Types.SET_USER_INFO, user)
+        return user
       })
       .catch(error => {
         commit(Types.CLEAR_USER_INFO)
@@ -64,8 +64,10 @@ export default {
   // 删除文件
   [Types.DELETE_FILE]({ state, commit, dispatch }, { selectedPaths } = {}) {
     return Upyun.deleteFiles(selectedPaths)
-      .then(() => message.success('操作成功'))
-      .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
+      .then(() => {
+        message.success('操作成功')
+        dispatch({ type: 'REFRESH_LIST', spinner: false })
+      })
       .catch(errorHandler)
   },
   // 修改路径
