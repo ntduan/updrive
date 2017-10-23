@@ -1,4 +1,4 @@
-import { tail, head, pipe, uniq, range, path, split, map, zipObj, compose, objOf, ifElse, isEmpty, assoc, replace, converge, always, prop, concat, identity, __, equals } from 'ramda';
+import { tail, head, pipe, uniq, range, path, split, map, zipObj, compose, objOf, ifElse, isEmpty, assoc, replace, converge, always, prop, concat, identity, __, equals } from 'ramda'
 import { createReadStream, createWriteStream, readdirSync, statSync, existsSync, mkdirSync } from 'fs'
 import Request from 'request'
 import Path from 'path'
@@ -10,23 +10,16 @@ import upyun from 'upyun'
 
 mime.default_type = ''
 
-const clients = {}
-
 function getClient(user = path(['state', 'user'], Store)) {
-  if (clients[user.bucketName]) {
-    return clients[user.bucketName]
-  }
-
   const service = new upyun.Service(user.bucketName, user.operatorName, user.password)
   const client = new upyun.Client(service)
-  clients[user.bucketName] = client
   return client
 }
 
 // 授权认证
 export const checkAuth = user => {
   const client = getClient(user)
-  return client.usage();
+  return client.usage()
 }
 
 // 获取目录列表信息
@@ -41,7 +34,7 @@ export const getListDirInfo = (remotePath = '/') => {
         compose(
           objOf('data'),
           map(file => {
-            const isDir = file.type === 'F' 
+            const isDir = file.type === 'F'
             return {
               filetype: isDir ? '' : mime.lookup(file.name),
               filename: file.name,
@@ -65,7 +58,7 @@ export const upload = (remotePath = '', localFilePath = '', relativePath = '', l
   let percentage = 0
   const filename = Path.basename(localFilePath)
   const toUrl = remotePath + relativePath + filename
-  const id = base64(`file:${toUrl};date:${+(new Date())}`)
+  const id = base64(`file:${toUrl}date:${+(new Date())}`)
   const localFilePathReadStream = createReadStream(localFilePath)
   Store.commit({
     type: 'ADD_TASK',
@@ -259,7 +252,7 @@ export const downloadFile = (localPath, downloadPath) => {
 
   let percentage = 0
   const filename = Path.basename(localPath)
-  const id = base64(`file:${downloadPath};date:${+(new Date())}`)
+  const id = base64(`file:${downloadPath}date:${+(new Date())}`)
   let timer = null
   const pathname = parse(downloadPath).pathname
   headFile(pathname).then((data) => {
