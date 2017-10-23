@@ -5,7 +5,9 @@
       <div class="modal-header">
         <span class="modal-title">创建文件夹</span>
         <span class="modal-close-button" @click="close">
-          <svg class="svg-icon"><use xlink:href="#icon-x"></use></svg>
+          <svg class="svg-icon">
+            <use xlink:href="#icon-x"></use>
+          </svg>
         </span>
       </div>
       <div class="modal-body">
@@ -14,7 +16,7 @@
         </p>
       </div>
       <div class="modal-footer">
-        <button class="button is-primary" @click="submit">创建</button>
+        <button class="button is-primary" :class="{'is-loading': isSubmitting}" @click="submit">创建</button>
       </div>
     </div>
   </div>
@@ -30,6 +32,7 @@
     data() {
       return {
         folderName: '',
+        isSubmitting: false,
       }
     },
     computed: {
@@ -45,13 +48,22 @@
         })
       },
       submit() {
+        if (this.isSubmitting) return false
+        this.isSubmitting = true
         this.$store
           .dispatch({
             type: 'CREATE_FOLDER',
             folderName: this.folderName,
             remotePath: this.list.dirInfo.path
           })
+          .then(() => {
+            this.folderName = ''
+            this.isSubmitting = false
+          })
           .then(() => this.close())
+          .catch(() => {
+            this.isSubmitting = false
+          })
       }
     },
   }

@@ -1,6 +1,6 @@
 {
   "name": "updrive",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "author": "nsso <nsso@foxmail.com>",
   "description": "upyun file manager",
   "license": null,
@@ -51,10 +51,16 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.ico",
+      "target": [
+        "zip"
+      ]
     },
     "linux": {
       "icon": "build/icons"
+    },
+    "nsis": {
+      "createDesktopShortcut": true
     }
   },
   "dependencies": {
@@ -69,6 +75,7 @@
     "ramda": "^0.24.1",
     "request": "^2.81.0",
     "sass-loader": "^6.0.6",
+    "upyun": "^3.3.1",
     "vue": "^2.4.2",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.7.0",

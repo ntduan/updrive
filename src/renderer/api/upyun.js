@@ -2,76 +2,58 @@ import { tail, head, pipe, uniq, range, path, split, map, zipObj, compose, objOf
 import { createReadStream, createWriteStream, readdirSync, statSync, existsSync, mkdirSync } from 'fs'
 import Request from 'request'
 import Path from 'path'
-import { URL } from 'url'
+import { URL, parse } from 'url'
 import mime from 'mime'
-
-import { mandatory, getAuthorizationHeader, base64, md5sum, getUri, standardUri, sleep, getFilenameFromUrl, isDir } from '@/api/tool.js'
+import { mandatory, base64, md5sum, sleep, isDir } from '@/api/tool.js'
 import Store from '@/store' // 不能解构, 因为这时 store 还没完成初始化
+import upyun from 'upyun'
 
 mime.default_type = ''
 
-export const getRequestOpts = ({ user = path(['state', 'user'], Store), search = '', toUrl = '', method = 'GET', headers = {} } = {}) => {
-  const urlObject = new URL(toUrl, `http://${Store.getters.apiHost}/${user.bucketName}/`)
-  if (search) urlObject.search = search
+const clients = {}
 
-  const url = urlObject.href
-
-  const authHeader = getAuthorizationHeader({ ...user, method: method, url })
-
-  return {
-    method,
-    url,
-    headers: {
-      ...authHeader,
-      ...headers,
-    },
+function getClient(user = path(['state', 'user'], Store)) {
+  if (clients[user.bucketName]) {
+    return clients[user.bucketName]
   }
+
+  const service = new upyun.Service(user.bucketName, user.operatorName, user.password)
+  const client = new upyun.Client(service)
+  clients[user.bucketName] = client
+  return client
 }
 
 // 授权认证
 export const checkAuth = user => {
-  return new Promise((resolve, reject) => {
-    Request(
-      getRequestOpts({ method: 'GET', search: '?usage', user }),
-      (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        resolve(user)
-      })
-  })
+  const client = getClient(user)
+  return client.usage();
 }
 
 // 获取目录列表信息
-export const getListDirInfo = (remotePath = '') => {
-  return new Promise((resolve, reject) => {
-    Request(
-      getRequestOpts({ method: 'GET', toUrl: remotePath }),
-      (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        console.info(`目录: ${remotePath} 获取成功`, { body: response.body, statusCode: response.statusCode })
-        try {
-          return compose(
-            resolve,
-            assoc('path', remotePath),
-            ifElse(
-              isEmpty,
-              () => ({ data: [] }),
-              compose(
-                objOf('data'),
-                compose(
-                  map(obj => {
-                    obj.filetype = obj.folderType === 'F' ? '' : mime.lookup(obj.filename)
-                    obj.uri = remotePath + obj.filename + (obj.folderType === 'F' ? '/' : '')
-                    return obj
-                  }),
-                  map(compose(zipObj(['filename', 'folderType', 'size', 'lastModified']), split(/\t/))),
-                  split(/\n/))))
-          )(body)
-        } catch (err) {
-          return reject(err)
-        }
-      })
+export const getListDirInfo = (remotePath = '/') => {
+  const client = getClient()
+  return client.listDir(remotePath).then(data => {
+    return compose(
+      assoc('path', remotePath),
+      ifElse(
+        isEmpty,
+        () => ({ data: []}) ,
+        compose(
+          objOf('data'),
+          map(file => {
+            const isDir = file.type === 'F' 
+            return {
+              filetype: isDir ? '' : mime.lookup(file.name),
+              filename: file.name,
+              folderType: file.type,
+              size: file.size,
+              lastModified: file.time,
+              uri: remotePath + file.name + (isDir ? '/' : '')
+            }
+          }),
+        )
+      )
+    )(data.files)
   })
 }
 
@@ -100,57 +82,38 @@ export const upload = (remotePath = '', localFilePath = '', relativePath = '', l
       abort: localFilePathReadStream.destroy.bind(localFilePathReadStream)
     }
   })
-  return new Promise((resolve, reject) => {
-    const _request = Request(
-      getRequestOpts({ method: 'PUT', toUrl }),
-      (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        console.info(`文件: ${localFilePath} 上传成功`, { body: response.body, statusCode: response.statusCode })
-        return resolve(body)
+  const client = getClient()
+  localFilePathReadStream
+    .on('data', chunk => {
+      // TODO: progress is imprecise, now is read from disk progress
+      total += chunk.length
+      const newPercentage = Math.floor(((total / size) * 100)) / 100
+      if (percentage !== newPercentage) {
+        percentage = newPercentage
+        console.info(`正在上传：${filename} ${percentage}`)
+        Store.commit({ type: 'UPDATE_TASK', data: { id, percentage, done: total } })
       }
-    )
-
-    let isEnd = false // close 时 是否需要中断 request
-    localFilePathReadStream
-      .on('data', chunk => {
-        total += chunk.length
-        const newPercentage = Math.floor(((total / size) * 100)) / 100
-        if (percentage !== newPercentage) {
-          percentage = newPercentage
-          console.info(`正在上传：${filename} ${percentage}`)
-          Store.commit({ type: 'UPDATE_TASK', data: { id, percentage, done: total } })
-        }
-      })
-      .on('close', (arg) => {
-        if (!isEnd) _request.abort()
-      })
-      .on('end', (arg) => {
-        isEnd = true
-      })
-      .pipe(_request)
-  })
-    .then(body => {
+    })
+  const result = client.putFile(toUrl, localFilePathReadStream)
+    .then(result => {
       Store.commit({ type: 'UPDATE_TASK', data: { id, status: '2' } })
-      return Promise.resolve(body)
+      return Promise.resolve(result)
     })
     .catch(error => {
       Store.commit({ type: 'UPDATE_TASK', data: { id, status: '-1' } })
       return Promise.reject(error)
     })
+  return result
 }
 
 // 创建目录
 export const createFolder = (remotePath = '', folderName = '') => {
-  return new Promise((resolve, reject) => {
-    Request(
-      getRequestOpts({ method: 'POST', toUrl: remotePath + folderName + '/', headers: { folder: true } }),
-      (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        console.info(`文件夹: ${folderName} 创建成功`, { body: response.body, statusCode: response.statusCode })
-        return resolve(body)
-      })
+  const client = getClient()
+  const dirPath = remotePath + folderName + '/'
+  return client.makeDir(dirPath).then((result) => {
+    if (result !== true) {
+      throw new Error(`create floder: ${folderName} failed`)
+    }
   })
 }
 
@@ -185,16 +148,11 @@ export const uploadFiles = async (remotePath, localFilePaths = []) => {
 
 // 删除文件
 export const deleteFile = remotePath => {
-  return new Promise((resolve, reject) => {
-    Request(
-      getRequestOpts({ method: 'DELETE', toUrl: remotePath }),
-      (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        console.info(`文件: ${remotePath} 删除成功`, { body: response.body, statusCode: response.statusCode })
-        return resolve(body)
-      }
-    )
+  const client = getClient()
+  return client.deleteFile(remotePath).then((result) => {
+    if (result !== true) {
+      throw new Error(`delete file: ${remotePath} failed.`)
+    }
   })
 }
 
@@ -299,52 +257,46 @@ export const getLocalName = (fileName = '', init = true) => {
 export const downloadFile = (localPath, downloadPath) => {
   if (!downloadPath && !existsSync(localPath)) return Promise.resolve(mkdirSync(localPath))
 
-  let total = 0
   let percentage = 0
   const filename = Path.basename(localPath)
   const id = base64(`file:${downloadPath};date:${+(new Date())}`)
-
-  return new Promise((resolve, reject) => {
-    Request(downloadPath)
-      .on('response', res => {
-        const size = parseInt(res.headers['content-length'], 10)
-        Store.commit({
-          type: 'ADD_TASK',
-          data: {
-            id,
-            type: 'upload',
-            status: '1',
-            localPath,
-            remoteQuery: downloadPath,
-            filename,
-            percentage,
-            size,
-            done: total,
-          }
-        })
-
-        res.on('data', chunk => {
-          total += chunk.length
-          const newPercentage = Math.floor(((total / size) * 100)) / 100
-          if (percentage !== newPercentage) {
-            percentage = newPercentage
-            console.info(`正在下载：${filename} ${percentage}`)
-            Store.commit({ type: 'UPDATE_TASK', data: { id, percentage, done: total } })
-          }
-        })
-          .pipe(createWriteStream(localPath)
-            .on('close', () => {
-              resolve()
-              console.info('下载完成')
-            })
-          )
-      })
-  })
-    .then(result => {
+  let timer = null
+  const pathname = parse(downloadPath).pathname
+  headFile(pathname).then((data) => {
+    const size = data.size
+    Store.commit({
+      type: 'ADD_TASK',
+      data: {
+        id,
+        type: 'upload',
+        status: '1',
+        localPath,
+        remoteQuery: downloadPath,
+        filename,
+        percentage,
+        size,
+        done: 0,
+      }
+    })
+    const saveStream = createWriteStream(localPath)
+    timer = setInterval(() => {
+      const total = saveStream.bytesWritten
+      const newPercentage = Math.floor(((total / size) * 100)) / 100
+      if (percentage !== newPercentage) {
+        percentage = newPercentage
+        console.info(`正在下载：${filename} ${percentage}`)
+        Store.commit({ type: 'UPDATE_TASK', data: { id, percentage, done: total } })
+      }
+    }, 100)
+    const client = getClient()
+    return client.getFile(pathname, saveStream)
+  }).then(result => {
+      clearInterval(timer)
       Store.commit({ type: 'UPDATE_TASK', data: { id, status: '2' } })
       return Promise.resolve(result)
     })
     .catch(error => {
+      clearInterval(timer)
       Store.commit({ type: 'UPDATE_TASK', data: { id, status: '-1' } })
       return Promise.reject(error)
     })
@@ -384,5 +336,17 @@ export const getFileHead = (filePath) => {
       if (response.statusCode !== 200) return reject(body)
       return resolve(response.headers)
     })
+  })
+}
+
+// 避免服务关闭外链影响
+function headFile(path) {
+  const client = getClient()
+
+  return client.headFile(path).then((data) => {
+    if (data !== false) {
+      return data
+    }
+    throw new Error('get file info failed.')
   })
 }

@@ -5,7 +5,9 @@
       <div class="modal-header">
         <span class="modal-title">修改路径</span>
         <span class="modal-close-button" @click="close">
-          <svg class="svg-icon"><use xlink:href="#icon-x"></use></svg>
+          <svg class="svg-icon">
+            <use xlink:href="#icon-x"></use>
+          </svg>
         </span>
       </div>
       <div class="modal-body">
@@ -22,17 +24,24 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="button is-primary" @click="submit">保存</button>
+        <button class="button is-primary" :class="{'is-loading': isSubmitting}" @click="submit">保存</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import {
+    mapState
+  } from 'vuex'
 
   export default {
     name: 'RenameFile',
+    data() {
+      return {
+        isSubmitting: false,
+      }
+    },
     computed: {
       ...mapState(['user', 'modal', 'list']),
     },
@@ -41,17 +50,32 @@
         this.$store.commit('CLOSE_RENAME_FILE_MODAL')
       },
       enter(el) {
-        this.$nextTick(() => { el.querySelector('input[autofocus]').focus()})
+        this.$nextTick(() => {
+          el.querySelector('input[autofocus]').focus()
+        })
       },
       submit() {
+        if (this.isSubmitting) return false
+        this.isSubmitting = true
         this.$store
-          .dispatch({ type: 'RENAME_FILE', oldPath: this.modal.renameFile.oldPath, newPath: this.filePath, isFolder: this.isFolder})
+          .dispatch({
+            type: 'RENAME_FILE',
+            oldPath: this.modal.renameFile.oldPath,
+            newPath: this.filePath,
+            isFolder: this.isFolder
+          })
+          .then(() => {
+            this.isSubmitting = false
+          })
           .then(() => this.close())
+          .catch(() => {
+            this.isSubmitting = false
+          })
       }
     },
     created() {
       const tailReg = /\/$/
-      if(tailReg.test(this.modal.renameFile.oldPath)) {
+      if (tailReg.test(this.modal.renameFile.oldPath)) {
         this.filePath = this.modal.renameFile.oldPath.replace(tailReg, '')
         this.isFolder = true
       } else {
