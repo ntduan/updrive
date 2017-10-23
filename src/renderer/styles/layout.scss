@@ -1,4 +1,13 @@
 // page main
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #fcfcfc;
+}
+
 .page-main {
   display: flex;
   flex: 1;

@@ -1,5 +1,6 @@
 <template>
   <div class="page-main">
+    <!-- <main-menu></main-menu> -->
     <main-view></main-view>
     <create-folder></create-folder>
     <!-- 改变key，可以触发 created 生命周期  -->
@@ -12,6 +13,7 @@
   import { mapState } from 'vuex'
 
   import MainView from '@/components/view/MainView'
+  import MainMenu from '@/components/view/MainMenu'
   import CreateFolder from '@/components/modal/CreateFolder'
   import RenameFile from '@/components/modal/RenameFile'
   import FileProgress from '@/components/modal/FileProgress'
@@ -20,6 +22,7 @@
     name: 'PageMain',
     components: {
       MainView,
+      MainMenu,
       CreateFolder,
       RenameFile,
       FileProgress,
