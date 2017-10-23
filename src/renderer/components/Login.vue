@@ -44,10 +44,6 @@
     mapState
   } from 'vuex'
 
-  import {
-    md5sum
-  } from '@/api/tool.js'
-
   export default {
     name: 'login',
     data() {

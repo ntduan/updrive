@@ -27,6 +27,17 @@ export const setApplicationMenu = () => {
       label: ' 编辑',
       submenu: [
         {
+          label: '撤销',
+          role: 'undo'
+        },
+        {
+          label: '恢复',
+          role: 'redo'
+        },
+        {
+          type: 'separator'
+        },
+        {
           label: '复制',
           role: 'copy'
         },
