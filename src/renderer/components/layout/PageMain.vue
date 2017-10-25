@@ -1,6 +1,6 @@
 <template>
   <div class="page-main">
-    <!-- <main-menu></main-menu> -->
+    <main-menu></main-menu>
     <main-view></main-view>
     <create-folder></create-folder>
     <!-- 改变key，可以触发 created 生命周期  -->

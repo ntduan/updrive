@@ -16,8 +16,13 @@
 }
 
 .menu {
+  padding-top: 10px;
   width: 160px;
-  display: flex;
+  background: #FFFFFF;
+  .menu-list a {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }
 
 // page-header
