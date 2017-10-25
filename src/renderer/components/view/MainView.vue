@@ -2,23 +2,23 @@
   <div class="list-view">
     <div class="list-view-main" ref='listView' tabindex="-1" @keydown="keydown">
       <div class="list-operation">
-        <div class="list-operation-item" @click="getLink()" :class="{disabled: !isSelectedSingleFile}">
+        <div class="list-operation-item" @click="isSelectedSingleFile && getLink()" :class="{disabled: !isSelectedSingleFile}">
           <svg class="svg-icon"><use xlink:href="#icon-link"></use></svg>
           获取链接
         </div>
-        <div class="list-operation-item" @click="downloadFile()" :class="{disabled: !uniqueSelectedUri}">
+        <div class="list-operation-item" @click="uniqueSelectedUri && downloadFile()" :class="{disabled: !uniqueSelectedUri}">
           <svg class="svg-icon"><use xlink:href="#icon-icondownload"></use></svg>
           下载
         </div>
-        <div class="list-operation-item" @click="dblclickItem()" :class="{disabled: !isSelectedSingleFile}">
+        <div class="list-operation-item" @click="isSelectedSingleFile && dblclickItem()" :class="{disabled: !isSelectedSingleFile}">
           <svg class="svg-icon"><use xlink:href="#icon-browse"></use></svg>
           查看
         </div>
-        <div class="list-operation-item" @click="deleteFile()" :class="{disabled: !selected.length}">
+        <div class="list-operation-item" @click="selected.length && deleteFile()" :class="{disabled: !selected.length}">
           <svg class="svg-icon"><use xlink:href="#icon-delete"></use></svg>
           删除
         </div>
-        <div class="list-operation-item" @click="renameFile()" :class="{disabled: !isSelectedSingleFile}">
+        <div class="list-operation-item" @click="isSelectedSingleFile && renameFile()" :class="{disabled: !isSelectedSingleFile}">
           <svg class="svg-icon"><use xlink:href="#icon-edit"></use></svg>
           修改路径
         </div>
