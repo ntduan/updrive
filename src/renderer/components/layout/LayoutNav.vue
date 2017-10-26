@@ -34,6 +34,9 @@
         </ul>
       </nav>
     </div>
+    <div class="bar-right">
+      设置
+    </div>
   </div>
 </template>
 

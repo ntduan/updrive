@@ -9,7 +9,6 @@
 .list-view {
   flex: 1;
   display: flex;
-  background: #fafafa;
   .list-view-main {
     position: relative;
     border-left: 1px solid #e1e1e1;
@@ -24,8 +23,9 @@
     background: #FFF;
     position: relative;
     -webkit-user-select: auto;
+    box-shadow: 0 3px 4px 0 rgba(0,0,0,0.14);
+    border-left: 1px solid #e1e1e1;
     .list-view-detail-header {
-      background: #FAFAFA;
       padding-left: 10px;
       padding-right: 10px;
       .res-icon {

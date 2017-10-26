@@ -119,21 +119,6 @@
         <div class="list-view-detail-content" v-if="fileDetail.basicInfo.folderType !== 'B'">
           <spinner v-if="detailLoading" />
           <div v-if="!detailLoading">
-            <div class="list-view-detail-content-item" v-if="fileDetail.basicInfo.folderType !== 'F'">
-              <div class="list-view-detail-content-item-label">
-                Response Headers
-              </div>
-              <div class="list-view-detail-content-item-value head-request-info">
-                <div v-for="(value, key) in fileDetail.headerInfo">
-                  <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
-                </div>
-              </div>
-              <div class="list-view-detail-content-item-value head-request-info">
-                <div v-for="(value, key) in fileDetail.headerInfo">
-                  <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
-                </div>
-              </div>
-            </div>
             <div class="list-view-detail-content-item">
               <div class="list-view-detail-content-item-label">
                 修改日期
@@ -167,6 +152,21 @@
                       <i class="icon"><svg class="svg-icon"><use xlink:href="#icon-copy"></use></svg></i>
                     </a>
                   </p>
+                </div>
+              </div>
+            </div>
+            <div class="list-view-detail-content-item" v-if="fileDetail.basicInfo.folderType !== 'F'">
+              <div class="list-view-detail-content-item-label">
+                Response Headers
+              </div>
+              <div class="list-view-detail-content-item-value head-request-info">
+                <div v-for="(value, key) in fileDetail.headerInfo">
+                  <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
+                </div>
+              </div>
+              <div class="list-view-detail-content-item-value head-request-info">
+                <div v-for="(value, key) in fileDetail.headerInfo">
+                  <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
                 </div>
               </div>
             </div>

@@ -61,6 +61,9 @@
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0,0,0,.2);
   background: #fafafa;
+  .bar-right {
+    display: flex;
+  }
 }
 
 .button-zone {
