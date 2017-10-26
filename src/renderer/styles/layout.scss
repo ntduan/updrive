@@ -1,18 +1,19 @@
-// page main
-.page {
+.layout {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
   overflow: hidden;
   background: #fcfcfc;
-}
-
-.page-main {
-  display: flex;
-  flex: 1;
-  border-top: 1px solid #ccc;
-  background: #eee;
+  .layout-inner {
+    display: flex;
+    flex: 1;
+    background: #eee;
+  }
+  .layout-body {
+    display: flex;
+    flex: 1;
+  }
 }
 
 .menu {

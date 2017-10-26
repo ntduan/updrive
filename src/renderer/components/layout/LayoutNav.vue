@@ -45,7 +45,7 @@
   import { uploadFileDialog, uploadDirectoryDialog } from '@/api/electron.js'
 
   export default {
-    name: 'PageNav',
+    name: 'LayoutNav',
     computed: {
       pathArray() {
         return compose(filter(identity), split('/'))(this.list.dirInfo.path)
@@ -89,7 +89,7 @@
                 localFilePaths: folderPaths,
               })
           })
-      }
+      },
     }
   }
 </script>

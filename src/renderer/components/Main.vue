@@ -1,20 +1,25 @@
 <template>
-  <section class="page">
-    <page-nav></page-nav>
-    <page-main></page-main>
+  <section class="layout">
+    <layout-nav></layout-nav>
+    <div class="layout-inner">
+      <layout-menu></layout-menu>
+      <layout-body></layout-body>
+    </div>
   </section>
 </template>
 
 <script>
   import { mapState } from 'vuex'
-  import PageNav from '@/components/layout/PageNav'
-  import PageMain from '@/components/layout/PageMain'
+  import LayoutNav from '@/components/layout/LayoutNav'
+  import LayoutMenu from '@/components/layout/LayoutMenu'
+  import LayoutBody from '@/components/layout/LayoutBody'
 
   export default {
     name: 'Main',
     components: {
-      PageNav,
-      PageMain,
+      LayoutNav,
+      LayoutMenu,
+      LayoutBody,
     },
     created() {
       this.$store.dispatch({ type: 'GET_LIST_DIR_INFO' })
