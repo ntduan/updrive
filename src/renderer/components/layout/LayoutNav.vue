@@ -35,7 +35,9 @@
       </nav>
     </div>
     <div class="bar-right">
-      设置
+      <div data-balloon="设置" data-balloon-pos="left" style="cursor: pointer;">
+        <svg class="svg-icon"><use xlink:href="#icon-setting"></use></svg>
+      </div>
     </div>
   </div>
 </template>
