@@ -26,7 +26,7 @@
       <nav class="breadcrumb is-medium">
         <ul>
           <li :class="{'is-active': !pathArray.length}">
-            <a @click.prevent.stop="goto()">{{user.bucketName}}</a>
+            <a @click.prevent.stop="goto()">{{bucketName}}</a>
           </li>
           <li :class="{'is-active': index === pathArray.length - 1}" v-for="(name, index) in pathArray">
             <a @click.prevent.stop="goto(index)">{{name}}</a>
@@ -34,18 +34,39 @@
         </ul>
       </nav>
     </div>
+    <div class="bar-right">
+      <div data-balloon="设置" data-balloon-pos="left" style="cursor: pointer;" @click.prevent="setProfile">
+        <svg class="svg-icon">
+          <use xlink:href="#icon-setting"></use>
+        </svg>
+      </div>
+    </div>
   </div>
 </template>
 
-
 <script>
-  import { path, take, split, identity, filter, compose, concat, join } from 'ramda'
-  import { mapState } from 'vuex'
+  import {
+    path,
+    take,
+    split,
+    identity,
+    filter,
+    compose,
+    concat,
+    join
+  } from 'ramda'
+  import {
+    mapState,
+    mapGetters,
+  } from 'vuex'
 
-  import { uploadFileDialog, uploadDirectoryDialog } from '@/api/electron.js'
+  import {
+    uploadFileDialog,
+    uploadDirectoryDialog
+  } from '@/api/electron.js'
 
   export default {
-    name: 'PageNav',
+    name: 'LayoutNav',
     computed: {
       pathArray() {
         return compose(filter(identity), split('/'))(this.list.dirInfo.path)
@@ -53,14 +74,23 @@
       currentDirPath() {
         return path(['list', 'dirInfo', 'path'], this)
       },
-      ...mapState(['user', 'list']),
+      ...mapState(['list']),
+      ...mapGetters(['bucketName']),
     },
     methods: {
       goto(index) {
         const remotePath = index === undefined ? '/' : concat(join('/', take(index + 1)(this.pathArray)), '/')
-        return this.$store.dispatch({ type: 'GET_LIST_DIR_INFO', remotePath, action: 0 })
+        return this.$store.dispatch({
+          type: 'GET_LIST_DIR_INFO',
+          remotePath,
+          action: 0,
+        })
       },
       // 新建文件夹
+      setProfile() {
+        return this.$store.commit('OPEN_PROFILE_MODAL')
+      },
+      //
       createFolder() {
         return this.$store.commit('OPEN_CREATE_FOLDER_MODAL')
       },
@@ -89,7 +119,7 @@
                 localFilePaths: folderPaths,
               })
           })
-      }
+      },
     }
   }
 </script>

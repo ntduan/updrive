@@ -6,6 +6,7 @@ import Store from '@/store'
 
 import Login from '@/components/Login'
 import Main from '@/components/Main'
+import Domain from '@/components/view/Domain'
 
 Vue.use(Router)
 
@@ -15,6 +16,11 @@ const router = new Router({
       path: '/',
       name: 'main',
       component: Main,
+    },
+    {
+      path: '/domain',
+      name: 'domain',
+      component: Domain,
     },
     {
       path: '/login',

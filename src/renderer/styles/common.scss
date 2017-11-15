@@ -42,6 +42,14 @@ body {
   pointer-events: inherit;
 }
 
+.breadcrumb a {
+  padding: 0.5em 0.5em;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
 /*
 * 覆盖 balloon-css
 */

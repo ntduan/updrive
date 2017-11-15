@@ -8,6 +8,9 @@ const state = {
     show: false,
     oldPath: '',
   },
+  profile: {
+    show: false,
+  },
 }
 
 const mutations = {
@@ -16,6 +19,12 @@ const mutations = {
   },
   [Types.CLOSE_CREATE_FOLDER_MODAL](state) {
     state.createFolder.show = false
+  },
+  [Types.OPEN_PROFILE_MODAL](state) {
+    state.profile.show = true
+  },
+  [Types.CLOSE_PROFILE_MODAL](state) {
+    state.profile.show = false
   },
   [Types.OPEN_RENAME_FILE_MODAL](state) {
     state.renameFile.show = true

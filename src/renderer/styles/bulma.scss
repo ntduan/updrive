@@ -27,4 +27,14 @@ $family-primary: $family-sans-serif;
 
 $primary: $upyunPrimaryColor;
 
+$menu-item-hover-background-color: #edf4fc;
+$menu-item-color: #000;
+$menu-item-active-background-color: #cce8ff;
+$menu-item-active-color: #000;
+
+$dropdown-item-hover-background-color: #edf4fc;
 @import '~bulma/bulma.sass';
+
+.menu {
+  color: findColorInvert(#000)
+}

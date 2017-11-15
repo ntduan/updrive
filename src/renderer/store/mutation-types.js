@@ -11,18 +11,19 @@ export const CHANGE_DIR = 'CHANGE_DIR' // 改变当前目录
 export const SHORTCUT_SELECT_ALL = 'SHORTCUT_SELECT_ALL' // 选择所有文件
 export const SET_SELECT_LIST = 'SET_SELECT_LIST' // 选择所有文件
 
+export const OPEN_PROFILE_MODAL = 'OPEN_PROFILE_MODAL' // 打开用户设置 modal
 export const OPEN_CREATE_FOLDER_MODAL = 'OPEN_CREATE_FOLDER_MODAL' // 打开创建文件夹 modal
 export const CLOSE_CREATE_FOLDER_MODAL = 'CLOSE_CREATE_FOLDER_MODAL' // 关闭创建文件夹 modal
 
-export const OPEN_RENAME_FILE_MODAL = 'OPEN_RENAME_FILE_MODAL' // 打开修改路径 modal
-export const CLOSE_RENAME_FILE_MODAL = 'CLOSE_RENAME_FILE_MODAL' // 关闭修改路径 modal
+export const CLOSE_PROFILE_MODAL = 'CLOSE_PROFILE_MODAL' // 关闭用户设置 modal
+export const OPEN_RENAME_FILE_MODAL = 'OPEN_RENAME_FILE_MODAL' // 打开重命名 modal
+export const CLOSE_RENAME_FILE_MODAL = 'CLOSE_RENAME_FILE_MODAL' // 关闭重命名 modal
 
 export const RENAME_FILE_SET_OLD_PATH = 'RENAME_FILE_SET_OLD_PATH' // 设置 oldpath
 export const RENAME_FILE_CLEAR_OLD_PATH = 'RENAME_FILE_CLEAR_OLD_PATH' // 清除 oldpath
 
 export const SHOW_TASK_MODAL = 'SHOW_TASK_MODAL' // 显示任务框
 export const HIDE_TASK_MODAL = 'HIDE_TASK_MODAL' // 隐藏任务框
-export const ADD_TASK = 'ADD_TASK' // 添加任务
 export const DELETE_TASK = 'DELETE_TASK' // 删除任务
 export const UPDATE_TASK = 'UPDATE_TASK' // 更新任务
 export const CANCEL_TASK = 'CANCEL_TASK' // 取消任务

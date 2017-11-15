@@ -9,11 +9,9 @@
 .list-view {
   flex: 1;
   display: flex;
-  background: #fafafa;
   .list-view-main {
     position: relative;
     border-left: 1px solid #e1e1e1;
-    border-right: 1px solid #e1e1e1;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -25,8 +23,9 @@
     background: #FFF;
     position: relative;
     -webkit-user-select: auto;
+    box-shadow: 0 3px 4px 0 rgba(0,0,0,0.14);
+    border-left: 1px solid #e1e1e1;
     .list-view-detail-header {
-      background: #FAFAFA;
       padding-left: 10px;
       padding-right: 10px;
       .res-icon {
@@ -88,7 +87,6 @@
 
 .list-operation {
   height: 40px;
-  background-color: #FAFAFA;
   display: flex;
   border-bottom: 1px solid #eee;
   align-items: center;
@@ -102,11 +100,11 @@
     margin-right: 8px;
     &:hover:not(.disabled) {
       cursor: pointer;
-      background-color: #EAEAEA;
+      background-color: #edf4fc;
     }
     &.list-operation-item-hover {
       cursor: pointer;
-      background-color: #EAEAEA;
+      background-color: #edf4fc;
     }
     &.disabled {
       color: #cacaca;
@@ -203,11 +201,10 @@
     display: table-row;
     outline: none;
     &:hover {
-      background: #e5f3ff;
+      background: #edf4fc;
     }
     &.item-selected {
       background: #cce8ff;
-      outline: 1px solid #99d1ff;
     }
   }
 

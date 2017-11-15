@@ -1,28 +1,27 @@
 <template>
-  <div class="page-main">
-    <!-- <main-menu></main-menu> -->
-    <main-view></main-view>
-    <create-folder></create-folder>
+  <div class="layout-body">
+    <list />
     <!-- 改变key，可以触发 created 生命周期  -->
-    <rename-file :key="modal.renameFile.oldPath"></rename-file>
-    <file-progress></file-progress>
+    <rename-file :key="modal.renameFile.oldPath" />
+    <file-progress />
+    <create-folder />
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import {
+    mapState
+  } from 'vuex'
 
-  import MainView from '@/components/view/MainView'
-  import MainMenu from '@/components/view/MainMenu'
+  import List from '@/components/view/List'
   import CreateFolder from '@/components/modal/CreateFolder'
   import RenameFile from '@/components/modal/RenameFile'
   import FileProgress from '@/components/modal/FileProgress'
 
   export default {
-    name: 'PageMain',
+    name: 'LayoutBody',
     components: {
-      MainView,
-      MainMenu,
+      List,
       CreateFolder,
       RenameFile,
       FileProgress,
