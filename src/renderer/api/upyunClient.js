@@ -9,8 +9,6 @@ import upyun from 'upyun'
 import { mandatory, base64, md5sum, sleep, isDir, getLocalName } from '@/api/tool'
 import UpyunFtp from '@/api/upyunFtp'
 
-mime.default_type = ''
-
 export default class UpyunClient {
   constructor(bucketName, operatorName, password) {
     const service = new upyun.Service(bucketName, operatorName, password)
@@ -205,7 +203,7 @@ export default class UpyunClient {
             map(file => {
               const isDir = file.type === 'F'
               return {
-                filetype: isDir ? '' : mime.lookup(file.name),
+                filetype: isDir ? '' : mime.getType(file.name),
                 filename: file.name,
                 folderType: file.type,
                 size: file.size,
