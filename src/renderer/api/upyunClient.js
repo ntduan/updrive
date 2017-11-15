@@ -230,6 +230,7 @@ export default class UpyunClient {
   // 上传文件
   // @TODO 控制并发数量
   async uploadFiles(remotePath, localFilePaths = [], onChange) {
+    const errorStack = []
     const result = []
     // 广度优先遍历
     let list = localFilePaths.slice().map(path => ({ localFilePath: path, relativePath: '' }))
@@ -248,34 +249,40 @@ export default class UpyunClient {
     }
 
     for (const pathObj of result) {
-      const localFileStat = statSync(pathObj.localFilePath)
-      localFileStat.isFile() ?
-        await this.upload(remotePath, pathObj.localFilePath, pathObj.relativePath, localFileStat, onChange) :
-        await this.createFolder(remotePath, pathObj.relativePath + Path.basename(pathObj.localFilePath))
+      try {
+        const localFileStat = statSync(pathObj.localFilePath)
+        localFileStat.isFile() ?
+          await this.upload(remotePath, pathObj.localFilePath, pathObj.relativePath, localFileStat, onChange) :
+          await this.createFolder(remotePath, pathObj.relativePath + Path.basename(pathObj.localFilePath))
+      } catch (err) {
+        console.error(`上传失败：${err}`)
+        errorStack.push(remotePath)
+      }
     }
+    return errorStack
   }
 
   // 删除多个文件
   // @TODO 控制并发数量
   async deleteFiles(remotePaths) {
+    const errorStack = []
     const waitDeleteInit = await this.traverseDir(remotePaths, { reverse: true })
-    const deleteError = []
 
     for (const remoteFilePath of waitDeleteInit) {
       try {
         await this.deleteFile(remoteFilePath)
       } catch (err) {
-        console.error(`删除失败：path: ${remoteFilePath}, error: ${err}`)
-        deleteError.push(remoteFilePath)
+        console.error(`删除失败：${err}`)
+        errorStack.push(remoteFilePath)
       }
     }
-    return deleteError
+    return errorStack
   }
 
   // 下载文件
   // @TODO 控制并发数量
   async downloadFiles(destPath, downloadPath, baseHref, onChange) {
-    const deleteError = []
+    const errorStack = []
     const dir = await this.traverseDir(downloadPath, { relative: true })
     const dirAll = dir.map(pathObj => {
       return {
@@ -295,11 +302,11 @@ export default class UpyunClient {
       try {
         await this.downloadFile(pathObj.localPath, pathObj.downloadPath, onChange)
       } catch (err) {
-        console.error(`下载失败：path: ${downloadPath}, error: ${err}`)
-        deleteError.push(downloadPath)
+        console.error(`下载失败：${err}`)
+        errorStack.push(downloadPath)
       }
     }
-    return deleteError
+    return errorStack
   }
 
   // 重命名文件

@@ -45,8 +45,14 @@ export default {
   // 上传文件
   [Types.UPLOAD_FILES]({ getters, commit, dispatch }, { remotePath, localFilePaths }) {
     commit('SHOW_TASK_MODAL')
-    return getters.upyunClient.uploadFiles(remotePath, localFilePaths, payload => commit({ type: 'UPDATE_TASK', payload}))
-      .then(() => Message.success('文件上传成功'))
+    return getters.upyunClient.uploadFiles(remotePath, localFilePaths, payload => commit({ type: 'UPDATE_TASK', payload }))
+      .then(errorStack => {
+        if (!errorStack.length) {
+          Message.success('文件上传成功')
+        } else {
+          Message.warning(`上传失败文件：${errorStack.join('、')}`)
+        }
+      })
       .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
       .catch(errorHandler)
   },
@@ -64,14 +70,14 @@ export default {
   // 删除文件
   [Types.DELETE_FILE]({ getters, commit, dispatch }, { selectedPaths } = {}) {
     return getters.upyunClient.deleteFiles(selectedPaths)
-      .then((errorStack) => {
+      .then(errorStack => {
         if (!errorStack.length) {
           Message.success('操作成功')
         } else {
           Message.warning(`操作失败文件：${errorStack.join('、')}`)
         }
-        dispatch({ type: 'REFRESH_LIST', spinner: false })
       })
+      .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
       .catch(errorHandler)
   },
   // 重命名
@@ -84,8 +90,8 @@ export default {
   // 下载文件
   [Types.DOWNLOAD_FILES]({ getters, commit, dispatch }, { destPath, downloadPath } = {}) {
     commit('SHOW_TASK_MODAL')
-    return getters.upyunClient.downloadFiles(destPath, downloadPath, getters.baseHref, payload => commit({ type: 'UPDATE_TASK', payload}))
-      .then((errorStack) => {
+    return getters.upyunClient.downloadFiles(destPath, downloadPath, getters.baseHref, payload => commit({ type: 'UPDATE_TASK', payload }))
+      .then(errorStack => {
         if (!errorStack.length) {
           Message.success('下载完成')
         } else {
