@@ -3,7 +3,8 @@ import Crypto from 'crypto'
 import Path from 'path'
 import { URL } from 'url'
 import Moment from 'moment'
-import Message from 'iview/src/components/message'
+import { existsSync } from 'fs'
+import Message from '@/api/message'
 
 export const errorHandler = (error) => {
   if (error && error.message) {
@@ -51,4 +52,15 @@ export const digiUnit = (input) => {
 
 export const uploadStatus = (input) => {
   return ({ '0': '未开始', '1': '进行中', '2': '已完成', '-1': '出错', '-2': '已取消' })[input]
+}
+
+// 递归获取不重复名字
+export const getLocalName = (fileName = '', init = true) => {
+  if (!existsSync(fileName)) return fileName
+  const match = /\((\d+)\)$/
+  if (init && match.test(fileName)) {
+    return getLocalName(fileName.replace(match, (match, p1) => `(${parseInt(p1) + 1})`), false)
+  } else {
+    return getLocalName(fileName + '(1)', false)
+  }
 }

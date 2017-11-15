@@ -31,16 +31,13 @@ const mutations = {
     })
     state.showModal = false
   },
-  [Types.ADD_TASK](state, { data = {} }) {
-    state.taskList = append(data, state.taskList)
-  },
-  [Types.UPDATE_TASK](state, { data = {} }) {
-    state.taskList = state.taskList.map(item => {
-      if (item.id === data.id) {
-        return { ...item, ...data }
-      }
-      return item
-    })
+  [Types.UPDATE_TASK](state, { payload = {} }) {
+    const task = state.taskList.find(item => item.id === payload.id)
+    if (task) {
+      Object.assign(task, payload)
+    } else {
+      state.taskList = append(payload, state.taskList)
+    }
   },
   [Types.DELETE_TASK](state, { data = {} }) {
     state.taskList = state.taskList.filter(item => item.id !== data.id)

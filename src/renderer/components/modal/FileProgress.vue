@@ -25,10 +25,6 @@
         <div class="card-block-icon" v-show="data.status === '0' || data.status === '1'">
           <progress-bar :progress='data.percentage' class="progress-bar"></progress-bar>
         </div>
-        <!-- <div class="card-block-icon" style="width:40px;white-space:nowrap;">
-          <a @click.prevent="cancelTask(data)" v-show="data.status === '0' || data.status === '1'">取消</a>
-          <a @click.prevent="retryTask(data)" v-show="data.status === '-2'">重试</a>
-        </div> -->
       </div>
     </div>
   </div>
@@ -75,11 +71,17 @@
         this.isFold = !this.isFold
       },
       cancelTask(data) {
-        this.$store.commit({ type: 'CANCEL_TASK', data })
+        this.$store.commit({
+          type: 'CANCEL_TASK',
+          data
+        })
       },
       retryTask(data) {
         // @TODO 增加重试操作
-        this.$store.commit({ type: 'RETRY_TASK', data })
+        this.$store.commit({
+          type: 'RETRY_TASK',
+          data
+        })
       },
     },
     filters: {

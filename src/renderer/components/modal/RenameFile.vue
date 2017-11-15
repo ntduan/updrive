@@ -3,7 +3,7 @@
     <div class="modal-background"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <span class="modal-title">修改路径</span>
+        <span class="modal-title">重命名</span>
         <span class="modal-close-button" @click="close">
           <svg class="svg-icon">
             <use xlink:href="#icon-x"></use>
@@ -11,15 +11,15 @@
         </span>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom: 10px;">请输入新的文件路径：</p>
+        <p style="margin-bottom: 10px;">请输入新的文件名：</p>
         <div class="field has-addons">
           <p class="control">
             <a class="button is-static" disabled>
-              {{user.bucketName}}/
+              {{bucketName}}
             </a>
           </p>
           <p class="control is-expanded">
-            <input class="input" autofocus type="text" v-model="filePath" placeholder="请输入新的文件路径">
+            <input class="input" autofocus type="text" v-model="filePath" placeholder="请输入新的文件名">
           </p>
         </div>
       </div>
@@ -32,7 +32,8 @@
 
 <script>
   import {
-    mapState
+    mapState,
+    mapGetters,
   } from 'vuex'
 
   export default {
@@ -43,7 +44,8 @@
       }
     },
     computed: {
-      ...mapState(['user', 'modal', 'list']),
+      ...mapState(['modal', 'list']),
+      ...mapGetters(['bucketName']),
     },
     methods: {
       close() {
@@ -74,9 +76,9 @@
       }
     },
     created() {
-      const tailReg = /\/$/
-      if (tailReg.test(this.modal.renameFile.oldPath)) {
-        this.filePath = this.modal.renameFile.oldPath.replace(tailReg, '')
+      const tailSlashReg = /\/$/
+      if (tailSlashReg.test(this.modal.renameFile.oldPath)) {
+        this.filePath = this.modal.renameFile.oldPath.replace(tailSlashReg, '')
         this.isFolder = true
       } else {
         this.filePath = this.modal.renameFile.oldPath

@@ -1,17 +1,11 @@
-import { path } from 'ramda'
-import { last } from 'ramda'
+import { path, last } from 'ramda'
+
+export const bucketName = state => {
+  return (path(['user', 'user', 'bucketName'], state) || '')
+}
 
 export const baseHref = state => {
-  const bucketName = path(['user', 'bucketName'], state)
-  return 'http://' + bucketName + '.b0.upaiyun.com/'
-}
-
-export const apiHost = state => {
-  return 'v0.api.upyun.com'
-}
-
-export const ftpHost = state => {
-  return 'v0.ftp.upyun.com'
+  return 'http://' + bucketName(state) + '.b0.upaiyun.com/'
 }
 
 export const backUri = state => {
@@ -22,4 +16,8 @@ export const backUri = state => {
 export const forwardUri = state => {
   const forwardStack = path(['list', 'history', 'forwardStack'], state) || []
   return last(forwardStack)
+}
+
+export const upyunClient = state => {
+  return (path(['user', 'user', 'client'], state) || null)
 }

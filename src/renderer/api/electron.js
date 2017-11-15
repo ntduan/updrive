@@ -16,7 +16,7 @@ export const setApplicationMenu = () => {
       label: '文件',
       submenu: [
         {
-          label: '新连接',
+          label: '切换账号',
           click() {
             Router.push({ name: 'login' })
           },

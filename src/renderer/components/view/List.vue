@@ -20,7 +20,7 @@
           </div>
           <div class="list-operation-item" @click="isSelectedSingleFile && renameFile()" :class="{disabled: !isSelectedSingleFile}">
             <svg class="svg-icon"><use xlink:href="#icon-edit"></use></svg>
-            修改路径
+            重命名
           </div>
           <div
             class="list-operation-item"
@@ -235,7 +235,7 @@
             return {
               ...fileDetail,
               basicInfo: {
-                filename: this.user.bucketName,
+                filename: this.bucketName,
                 folderType: 'B',
               },
             }
@@ -248,8 +248,8 @@
             },
           }
         },
-        ...mapState(['user', 'list']),
-        ...mapGetters(['baseHref', 'backUri', 'forwardUri']),
+        ...mapState(['list']),
+        ...mapGetters(['bucketName', 'baseHref', 'backUri', 'forwardUri']),
       },
       methods: {
         refresh() {
@@ -389,7 +389,7 @@
               { hide: !this.uniqueSelectedUri, type: 'separator' },
               { hide: !this.uniqueSelectedUri || this.isViewDetail, label: '查看详细信息', click: () => this.getFileDetail() },
               { hide: !this.isSelectedSingleFile, label: '获取链接', click: () => this.getLink() },
-              { hide: !this.isSelectedSingleFile, label: '修改路径...', click: () => this.renameFile() },
+              { hide: !this.isSelectedSingleFile, label: '重命名', click: () => this.renameFile() },
               { hide: !this.selected.length, label: '下载', click: () => this.downloadFile() },
               // { hide: !this.selected.length, type: 'separator' },
               // { hide: false, label: '刷新目录', click: () => this.refresh() },
@@ -462,7 +462,7 @@
               this.$store.dispatch({ type: 'DOWNLOAD_FILES', downloadPath: this.selected, destPath: path })
             })
         },
-        // 修改路径
+        // 重命名
         renameFile() {
           if (!this.uniqueSelectedUri) return
           this.$store.commit('RENAME_FILE_SET_OLD_PATH', this.uniqueSelectedUri)
