@@ -77,7 +77,7 @@ export const setApplicationMenu = () => {
         },
         {
           label: '关于',
-          click() { }
+          click() { shell.openExternal('https://github.com/aniiantt/updrive') }
         },
       ]
     },
