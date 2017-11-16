@@ -18,10 +18,6 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": ""
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:aniiantt/updrive.git"
-  },
   "build": {
     "productName": "updrive",
     "appId": "org.upyun.updrive",
@@ -52,7 +48,8 @@
     "win": {
       "icon": "build/icons/icon.ico",
       "target": [
-        "zip"
+        "nsis",
+        "portable"
       ]
     },
     "linux": {
