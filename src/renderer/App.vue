@@ -6,6 +6,7 @@
   import {
     commit
   } from 'vuex'
+  import localforage from 'localforage'
 
   import Store from '@/store'
   import {
@@ -19,10 +20,15 @@
   export default {
     store: Store,
     created() {
+      this.preventDefaultDragEvent()
+    },
+    methods: {
       // 阻止默认的拖动事件
-      document.addEventListener('drop', event => event.preventDefault(), false)
-      document.addEventListener('dragover', event => event.preventDefault(), false)
-    }
+      preventDefaultDragEvent() {
+        document.addEventListener('drop', event => event.preventDefault(), false)
+        document.addEventListener('dragover', event => event.preventDefault(), false)
+      },
+    },
   }
 </script>
 

@@ -21,6 +21,10 @@ export const setApplicationMenu = () => {
             Router.push({ name: 'login' })
           },
         },
+        {
+          label: '退出',
+          role: 'close'
+        },
       ]
     },
     {

@@ -7,6 +7,7 @@ import Store from '@/store'
 import Login from '@/components/Login'
 import Main from '@/components/Main'
 import Domain from '@/components/view/Domain'
+import Session from '@/api/session.js'
 
 Vue.use(Router)
 
@@ -40,7 +41,19 @@ router.beforeEach((to, from, next) => {
   if (to.name === 'login' || isLogined) {
     next()
   } else {
-    next('/login')
+    const userInfo = Session.getUser()
+    if (userInfo) {
+      Store.dispatch({
+        type: 'VERIFICATION_ACCOUNT',
+        ...userInfo,
+      }).then(() => {
+        next()
+      }).catch(() => {
+        next('/login')
+      })
+    } else {
+      next('/login')
+    }
   }
 })
 

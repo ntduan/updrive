@@ -1,6 +1,6 @@
 {
   "name": "updrive",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "author": "nsso <nsso@foxmail.com>",
   "description": "upyun file manager",
   "engines": {
@@ -64,6 +64,7 @@
     "bulma": "^0.6.1",
     "ftp": "^0.3.10",
     "iview": "^2.7.2",
+    "localforage": "^1.5.3",
     "mime": "^2.0.3",
     "moment": "^2.19.2",
     "node-sass": "^4.6.1",

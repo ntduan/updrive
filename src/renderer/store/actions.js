@@ -6,30 +6,33 @@ import * as Types from '@/store/mutation-types'
 import * as UpyunFtp from '@/api/upyunFtp.js'
 import UpyunClient from '@/api/upyunClient.js'
 import Message from '@/api/message.js'
+import Session from '@/api/session.js'
 
 export default {
   // 登录
   [Types.VERIFICATION_ACCOUNT]({ getters, commit }, payload) {
-    commit(Types.SET_USER_INFO, {
+    const userInfo = {
       bucketName: payload.bucketName,
       operatorName: payload.operatorName,
       password: payload.password,
-    })
+    }
+    commit(Types.SET_USER_INFO, userInfo)
 
-    return Promise.resolve()
-    // return getters.upyunClient.checkAuth()
-    //   .then(() => {
-    //     return user
-    //   })
-    //   .catch(error => {
-    //     commit(Types.CLEAR_USER_INFO)
-    //     return Promise.reject(error)
-    //   })
+    return getters.upyunClient.checkAuth()
+      .then(() => {
+        Session.setUser(userInfo)
+        return userInfo
+      })
+      .catch(error => {
+        commit(Types.CLEAR_USER_INFO)
+        Session.clear()
+        return Promise.reject(error)
+      })
   },
   // 获取文件目录信息
   [Types.GET_LIST_DIR_INFO]({ getters, commit }, { remotePath, spinner = true, action }) {
     if (spinner) commit({ type: Types.SET_LOADING_LIST, data: true })
-    return getters.upyunClient.getListDirInfo(remotePath)
+    return  getters.upyunClient.getListDirInfo(remotePath)
       .then(result => {
         commit({
           type: Types.SET_CURRENT_LIST,
