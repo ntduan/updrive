@@ -77,6 +77,7 @@
               <div
                 class="files-list-item"
                 v-for="(file, index) in list.dirInfo.data"
+                :key="file.filename"
                 :class="{ 'item-selected': (listItemState[file.uri] && listItemState[file.uri].selected) }"
                 :tabindex="getListTabIndex(file.uri)"
                 @click.stop="selectItem(file, $event, index)"
@@ -160,12 +161,12 @@
                 Response Headers
               </div>
               <div class="list-view-detail-content-item-value head-request-info">
-                <div v-for="(value, key) in fileDetail.headerInfo">
+                <div v-for="(value, key) in fileDetail.headerInfo" :key="key">
                   <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
                 </div>
               </div>
               <div class="list-view-detail-content-item-value head-request-info">
-                <div v-for="(value, key) in fileDetail.headerInfo">
+                <div v-for="(value, key) in fileDetail.headerInfo" :key="key">
                   <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
                 </div>
               </div>

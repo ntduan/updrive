@@ -6,7 +6,6 @@
   import {
     commit
   } from 'vuex'
-  import localforage from 'localforage'
 
   import Store from '@/store'
   import {
