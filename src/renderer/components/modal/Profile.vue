@@ -23,48 +23,46 @@
 </template>
 
 <script>
-  import {
-    mapState
-  } from 'vuex'
+import { mapState } from 'vuex'
 
-  export default {
-    name: 'Profile',
-    data() {
-      return {
-        folderName: '',
-        isSubmitting: false,
-      }
+export default {
+  name: 'Profile',
+  data() {
+    return {
+      folderName: '',
+      isSubmitting: false,
+    }
+  },
+  computed: {
+    ...mapState(['modal', 'list']),
+  },
+  methods: {
+    close() {
+      this.$store.commit('CLOSE_PROFILE_MODAL')
     },
-    computed: {
-      ...mapState(['modal', 'list']),
+    enter(el) {
+      this.$nextTick(() => {
+        el.querySelector('input[autofocus]').focus()
+      })
     },
-    methods: {
-      close() {
-        this.$store.commit('CLOSE_PROFILE_MODAL')
-      },
-      enter(el) {
-        this.$nextTick(() => {
-          el.querySelector('input[autofocus]').focus()
+    submit() {
+      if (this.isSubmitting) return false
+      this.isSubmitting = true
+      this.$store
+        .dispatch({
+          type: 'CREATE_FOLDER',
+          folderName: this.folderName,
+          remotePath: this.list.dirInfo.path,
         })
-      },
-      submit() {
-        if (this.isSubmitting) return false
-        this.isSubmitting = true
-        this.$store
-          .dispatch({
-            type: 'CREATE_FOLDER',
-            folderName: this.folderName,
-            remotePath: this.list.dirInfo.path
-          })
-          .then(() => {
-            this.folderName = ''
-            this.isSubmitting = false
-          })
-          .then(() => this.close())
-          .catch(() => {
-            this.isSubmitting = false
-          })
-      }
+        .then(() => {
+          this.folderName = ''
+          this.isSubmitting = false
+        })
+        .then(() => this.close())
+        .catch(() => {
+          this.isSubmitting = false
+        })
     },
-  }
+  },
+}
 </script>

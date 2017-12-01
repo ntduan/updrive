@@ -30,9 +30,9 @@ const router = new Router({
     },
     {
       path: '*',
-      redirect: '/'
+      redirect: '/',
     },
-  ]
+  ],
 })
 
 router.beforeEach((to, from, next) => {
@@ -46,11 +46,13 @@ router.beforeEach((to, from, next) => {
       Store.dispatch({
         type: 'VERIFICATION_ACCOUNT',
         ...userInfo,
-      }).then(() => {
-        next()
-      }).catch(() => {
-        next('/login')
       })
+        .then(() => {
+          next()
+        })
+        .catch(() => {
+          next('/login')
+        })
     } else {
       next('/login')
     }

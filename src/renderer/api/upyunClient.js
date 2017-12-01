@@ -1,4 +1,27 @@
-import { tail, head, pipe, uniq, range, path, split, map, zipObj, compose, objOf, ifElse, isEmpty, assoc, replace, converge, always, prop, concat, identity, __, equals } from 'ramda'
+import {
+  tail,
+  head,
+  pipe,
+  uniq,
+  range,
+  path,
+  split,
+  map,
+  zipObj,
+  compose,
+  objOf,
+  ifElse,
+  isEmpty,
+  assoc,
+  replace,
+  converge,
+  always,
+  prop,
+  concat,
+  identity,
+  __,
+  equals,
+} from 'ramda'
 import { createReadStream, createWriteStream, readdirSync, statSync, mkdirSync, existsSync } from 'fs'
 import Request from 'request'
 import Path from 'path'
@@ -29,7 +52,8 @@ export default class UpyunClient {
               relativePath: fromPath + Path.basename(_path) + '/',
             })
             const dirData = await this.getListDirInfo(_path)
-            if (dirData && dirData.data && dirData.data.length) await parseDir(dirData.data.map(fileObj => fileObj.uri), fromPath + Path.basename(_path) + '/')
+            if (dirData && dirData.data && dirData.data.length)
+              await parseDir(dirData.data.map(fileObj => fileObj.uri), fromPath + Path.basename(_path) + '/')
           } else {
             files.push({
               absolutePath: _path,
@@ -72,7 +96,7 @@ export default class UpyunClient {
     let percentage = 0
     const filename = Path.basename(localFilePath)
     const toUrl = remotePath + relativePath + filename
-    const id = base64(`file:${toUrl}date:${+(new Date())}`)
+    const id = base64(`file:${toUrl}date:${+new Date()}`)
     const localFilePathReadStream = createReadStream(localFilePath)
     onChange({
       id,
@@ -84,21 +108,21 @@ export default class UpyunClient {
       percentage,
       size,
       done: total,
-      abort: localFilePathReadStream.destroy.bind(localFilePathReadStream)
+      abort: localFilePathReadStream.destroy.bind(localFilePathReadStream),
     })
 
-    localFilePathReadStream
-      .on('data', chunk => {
-        // TODO: progress is imprecise, now is read from disk progress
-        total += chunk.length
-        const newPercentage = Math.floor(((total / size) * 100)) / 100
-        if (percentage !== newPercentage) {
-          percentage = newPercentage
-          console.info(`正在上传：${filename} ${percentage}`)
-          onChange({ id, percentage, done: total })
-        }
-      })
-    const result = this.api.putFile(toUrl, localFilePathReadStream)
+    localFilePathReadStream.on('data', chunk => {
+      // TODO: progress is imprecise, now is read from disk progress
+      total += chunk.length
+      const newPercentage = Math.floor(total / size * 100) / 100
+      if (percentage !== newPercentage) {
+        percentage = newPercentage
+        console.info(`正在上传：${filename} ${percentage}`)
+        onChange({ id, percentage, done: total })
+      }
+    })
+    const result = this.api
+      .putFile(toUrl, localFilePathReadStream)
       .then(result => {
         onChange({ id, status: '2' })
         return Promise.resolve(result)
@@ -112,7 +136,7 @@ export default class UpyunClient {
 
   // 删除文件
   async deleteFile(remotePath) {
-    return this.api.deleteFile(remotePath).then((result) => {
+    return this.api.deleteFile(remotePath).then(result => {
       if (result !== true) {
         return Promise.reject(new Error(`delete file: ${remotePath} failed.`))
       }
@@ -126,40 +150,40 @@ export default class UpyunClient {
     let total = 0
     let percentage = 0
     const filename = Path.basename(localPath)
-    const id = base64(`file:${downloadPath};date:${+(new Date())}`)
+    const id = base64(`file:${downloadPath};date:${+new Date()}`)
 
     return new Promise((resolve, reject) => {
-      Request(downloadPath)
-        .on('response', res => {
-          const size = parseInt(res.headers['content-length'], 10)
-          onChange({
-            id,
-            type: 'upload',
-            status: '1',
-            localPath,
-            remoteQuery: downloadPath,
-            filename,
-            percentage,
-            size,
-            done: total,
-          })
+      Request(downloadPath).on('response', res => {
+        const size = parseInt(res.headers['content-length'], 10)
+        onChange({
+          id,
+          type: 'upload',
+          status: '1',
+          localPath,
+          remoteQuery: downloadPath,
+          filename,
+          percentage,
+          size,
+          done: total,
+        })
 
-          res.on('data', chunk => {
+        res
+          .on('data', chunk => {
             total += chunk.length
-            const newPercentage = Math.floor(((total / size) * 100)) / 100
+            const newPercentage = Math.floor(total / size * 100) / 100
             if (percentage !== newPercentage) {
               percentage = newPercentage
               console.info(`正在下载：${filename} ${percentage}`)
               onChange({ id, percentage, done: total })
             }
           })
-            .pipe(createWriteStream(localPath)
-              .on('close', () => {
-                resolve()
-                console.info('下载完成')
-              })
-            )
-        })
+          .pipe(
+            createWriteStream(localPath).on('close', () => {
+              resolve()
+              console.info('下载完成')
+            }),
+          )
+      })
     })
       .then(result => {
         onChange({ id, status: '2' })
@@ -174,14 +198,17 @@ export default class UpyunClient {
   // HEAD 请求
   async getFileHead(filePath) {
     return new Promise((resolve, reject) => {
-      Request({
-        method: 'HEAD',
-        url: filePath,
-      }, (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        return resolve(response.headers)
-      })
+      Request(
+        {
+          method: 'HEAD',
+          url: filePath,
+        },
+        (error, response, body) => {
+          if (error) return reject(error)
+          if (response.statusCode !== 200) return reject(body)
+          return resolve(response.headers)
+        },
+      )
     })
   }
 
@@ -208,11 +235,11 @@ export default class UpyunClient {
                 folderType: file.type,
                 size: file.size,
                 lastModified: file.time,
-                uri: remotePath + file.name + (isDir ? '/' : '')
+                uri: remotePath + file.name + (isDir ? '/' : ''),
               }
             }),
-          )
-        )
+          ),
+        ),
       )(data.files)
     })
   }
@@ -220,7 +247,7 @@ export default class UpyunClient {
   // 创建目录
   async createFolder(remotePath = '', folderName = '') {
     const dirPath = remotePath + folderName + '/'
-    return this.api.makeDir(dirPath).then((result) => {
+    return this.api.makeDir(dirPath).then(result => {
       if (result !== true) {
         return Promise.reject(new Error(`create floder: ${folderName} failed`))
       }
@@ -239,10 +266,12 @@ export default class UpyunClient {
       const node = list.shift()
       const { localFilePath, relativePath } = node
       if (statSync(localFilePath).isDirectory() && readdirSync(localFilePath).length) {
-        list = list.concat(readdirSync(localFilePath).map(name => ({
-          localFilePath: Path.join(localFilePath, name),
-          relativePath: relativePath + Path.basename(localFilePath) + '/',
-        })))
+        list = list.concat(
+          readdirSync(localFilePath).map(name => ({
+            localFilePath: Path.join(localFilePath, name),
+            relativePath: relativePath + Path.basename(localFilePath) + '/',
+          })),
+        )
       } else {
         result.push(node)
       }
@@ -251,9 +280,9 @@ export default class UpyunClient {
     for (const pathObj of result) {
       try {
         const localFileStat = statSync(pathObj.localFilePath)
-        localFileStat.isFile() ?
-          await this.upload(remotePath, pathObj.localFilePath, pathObj.relativePath, localFileStat, onChange) :
-          await this.createFolder(remotePath, pathObj.relativePath + Path.basename(pathObj.localFilePath))
+        localFileStat.isFile()
+          ? await this.upload(remotePath, pathObj.localFilePath, pathObj.relativePath, localFileStat, onChange)
+          : await this.createFolder(remotePath, pathObj.relativePath + Path.basename(pathObj.localFilePath))
       } catch (err) {
         console.error(`上传失败：${err}`)
         errorStack.push(remotePath)
@@ -286,16 +315,11 @@ export default class UpyunClient {
     const dir = await this.traverseDir(downloadPath, { relative: true })
     const dirAll = dir.map(pathObj => {
       return {
-        downloadPath: isDir(pathObj.absolutePath) ? '' : (new URL(pathObj.absolutePath, baseHref).href),
+        downloadPath: isDir(pathObj.absolutePath) ? '' : new URL(pathObj.absolutePath, baseHref).href,
         localPath: Path.join(
-          getLocalName(
-            Path.join(
-              destPath,
-              pipe(prop('relativePath'), split('/'), head)(pathObj),
-            )
-          ),
-          ...pipe(prop('relativePath'), split('/'), tail)(pathObj)
-        )
+          getLocalName(Path.join(destPath, pipe(prop('relativePath'), split('/'), head)(pathObj))),
+          ...pipe(prop('relativePath'), split('/'), tail)(pathObj),
+        ),
       }
     })
     for (const pathObj of dirAll) {
@@ -313,8 +337,4 @@ export default class UpyunClient {
   async renameFile(oldPath, newPath) {
     await this.ftp.renameFile(oldPath, newPath)
   }
-
 }
-
-
-

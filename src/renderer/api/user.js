@@ -13,45 +13,44 @@ export default class User {
   }
 
   save() {
-    this.getAuthHistory()
-      .then(data => {
-        const authHistory = data
-        const key = `${this.operatorName}/${this.bucketName}`
-        const record = {
-          bucketName: this.bucketName,
-          operatorName: this.operatorName,
-          password: this.password,
-          key: key,
+    this.getAuthHistory().then(data => {
+      const authHistory = data
+      const key = `${this.operatorName}/${this.bucketName}`
+      const record = {
+        bucketName: this.bucketName,
+        operatorName: this.operatorName,
+        password: this.password,
+        key: key,
+      }
+      const existRecord = authHistory.data.find(u => u.key === key)
+      if (existRecord) {
+        if (existRecord.password !== this.password) {
+          existRecord.password = this.password
         }
-        const existRecord = authHistory.data.find(u => u.key === key)
-        if (existRecord) {
-          if (existRecord.password !== this.password) {
-            existRecord.password = this.password
-          }
-        } else {
-          authHistory.data.push(record)
-        }
+      } else {
+        authHistory.data.push(record)
+      }
 
-        return localforage.setItem('authHistory', authHistory)
-      })
+      return localforage.setItem('authHistory', authHistory)
+    })
   }
 
   getAuthHistory() {
-    return localforage.getItem('authHistory')
-      .then(data => {
-        return data || {
-          data: []
+    return localforage.getItem('authHistory').then(data => {
+      return (
+        data || {
+          data: [],
         }
-      })
+      )
+    })
   }
 
   deleteAuthHistory(key) {
-    return this.getAuthHistory()
-      .then(data => {
-        const authHistory = data
-        authHistory.data = authHistory.data.filter(u => u.key !== key)
-        console.log(authHistory)
-        return localforage.setItem('authHistory', authHistory)
-      })
+    return this.getAuthHistory().then(data => {
+      const authHistory = data
+      authHistory.data = authHistory.data.filter(u => u.key !== key)
+      console.log(authHistory)
+      return localforage.setItem('authHistory', authHistory)
+    })
   }
 }

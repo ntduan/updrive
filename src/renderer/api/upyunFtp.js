@@ -1,4 +1,22 @@
-import { path, split, map, zipObj, compose, objOf, ifElse, isEmpty, assoc, replace, converge, always, prop, concat, identity, __, equals } from 'ramda'
+import {
+  path,
+  split,
+  map,
+  zipObj,
+  compose,
+  objOf,
+  ifElse,
+  isEmpty,
+  assoc,
+  replace,
+  converge,
+  always,
+  prop,
+  concat,
+  identity,
+  __,
+  equals,
+} from 'ramda'
 import Moment from 'moment'
 import Ftp from 'ftp'
 
@@ -40,7 +58,7 @@ export default class UpyunFtp {
           ftpClient.end()
           return Promise.resolve(newPath)
         })
-        .catch((err) => {
+        .catch(err => {
           ftpClient.end()
           return Promise.reject(err)
         })

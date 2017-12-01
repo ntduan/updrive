@@ -31,62 +31,55 @@
 </template>
 
 <script>
-  import {
-    mapState
-  } from 'vuex'
-  import {
-    reverse
-  } from 'ramda'
+import { mapState } from 'vuex'
+import { reverse } from 'ramda'
 
-  import ProgressBar from '@/components/uiComponents/progressBar'
-  import {
+import ProgressBar from '@/components/uiComponents/progressBar'
+import { digiUnit, uploadStatus } from '@/api/tool'
+
+export default {
+  components: {
+    ProgressBar,
+  },
+  data() {
+    return {
+      isFold: false,
+      folderName: '',
+    }
+  },
+  computed: {
+    ...mapState(['task']),
+    taskList() {
+      return reverse(this.task.taskList)
+    },
+    showModal() {
+      return this.task.showModal
+    },
+  },
+  methods: {
+    close() {
+      this.$store.commit('HIDE_TASK_MODAL')
+    },
+    foldProgress() {
+      this.isFold = !this.isFold
+    },
+    cancelTask(data) {
+      this.$store.commit({
+        type: 'CANCEL_TASK',
+        data,
+      })
+    },
+    retryTask(data) {
+      // @TODO 增加重试操作
+      this.$store.commit({
+        type: 'RETRY_TASK',
+        data,
+      })
+    },
+  },
+  filters: {
     digiUnit,
-    uploadStatus
-  } from '@/api/tool'
-
-  export default {
-    components: {
-      ProgressBar
-    },
-    data() {
-      return {
-        isFold: false,
-        folderName: '',
-      }
-    },
-    computed: {
-      ...mapState(['task']),
-      taskList() {
-        return reverse(this.task.taskList)
-      },
-      showModal() {
-        return this.task.showModal
-      },
-    },
-    methods: {
-      close() {
-        this.$store.commit('HIDE_TASK_MODAL')
-      },
-      foldProgress() {
-        this.isFold = !this.isFold
-      },
-      cancelTask(data) {
-        this.$store.commit({
-          type: 'CANCEL_TASK',
-          data
-        })
-      },
-      retryTask(data) {
-        // @TODO 增加重试操作
-        this.$store.commit({
-          type: 'RETRY_TASK',
-          data
-        })
-      },
-    },
-    filters: {
-      digiUnit,
-      uploadStatus,
-    },
-  }
+    uploadStatus,
+  },
+}
 </script>

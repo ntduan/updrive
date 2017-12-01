@@ -45,81 +45,62 @@
 </template>
 
 <script>
-  import {
-    path,
-    take,
-    split,
-    identity,
-    filter,
-    compose,
-    concat,
-    join
-  } from 'ramda'
-  import {
-    mapState,
-    mapGetters,
-  } from 'vuex'
+import { path, take, split, identity, filter, compose, concat, join } from 'ramda'
+import { mapState, mapGetters } from 'vuex'
 
-  import {
-    uploadFileDialog,
-    uploadDirectoryDialog
-  } from '@/api/electron.js'
+import { uploadFileDialog, uploadDirectoryDialog } from '@/api/electron.js'
 
-  export default {
-    name: 'LayoutNav',
-    computed: {
-      pathArray() {
-        return compose(filter(identity), split('/'))(this.list.dirInfo.path)
-      },
-      currentDirPath() {
-        return path(['list', 'dirInfo', 'path'], this)
-      },
-      ...mapState(['list']),
-      ...mapGetters(['bucketName']),
+export default {
+  name: 'LayoutNav',
+  computed: {
+    pathArray() {
+      return compose(filter(identity), split('/'))(this.list.dirInfo.path)
     },
-    methods: {
-      goto(index) {
-        const remotePath = index === undefined ? '/' : concat(join('/', take(index + 1)(this.pathArray)), '/')
+    currentDirPath() {
+      return path(['list', 'dirInfo', 'path'], this)
+    },
+    ...mapState(['list']),
+    ...mapGetters(['bucketName']),
+  },
+  methods: {
+    goto(index) {
+      const remotePath = index === undefined ? '/' : concat(join('/', take(index + 1)(this.pathArray)), '/')
+      return this.$store.dispatch({
+        type: 'GET_LIST_DIR_INFO',
+        remotePath,
+        action: 0,
+      })
+    },
+    // 新建文件夹
+    setProfile() {
+      return this.$store.commit('OPEN_PROFILE_MODAL')
+    },
+    //
+    createFolder() {
+      return this.$store.commit('OPEN_CREATE_FOLDER_MODAL')
+    },
+    // 上传文件
+    uploadFile() {
+      return uploadFileDialog().then(filePaths => {
+        if (!filePaths || !filePaths.length) return
         return this.$store.dispatch({
-          type: 'GET_LIST_DIR_INFO',
-          remotePath,
-          action: 0,
+          type: 'UPLOAD_FILES',
+          remotePath: this.currentDirPath,
+          localFilePaths: filePaths,
         })
-      },
-      // 新建文件夹
-      setProfile() {
-        return this.$store.commit('OPEN_PROFILE_MODAL')
-      },
-      //
-      createFolder() {
-        return this.$store.commit('OPEN_CREATE_FOLDER_MODAL')
-      },
-      // 上传文件
-      uploadFile() {
-        return uploadFileDialog()
-          .then(filePaths => {
-            if (!filePaths || !filePaths.length) return
-            return this.$store
-              .dispatch({
-                type: 'UPLOAD_FILES',
-                remotePath: this.currentDirPath,
-                localFilePaths: filePaths,
-              })
-          })
-      },
-      // 上传文件夹
-      uploadDirectory() {
-        return uploadDirectoryDialog()
-          .then(folderPaths => {
-            if (!folderPaths || !folderPaths.length) return
-            return this.$store
-              .dispatch({
-                type: 'UPLOAD_FILES',
-                remotePath: this.currentDirPath,
-                localFilePaths: folderPaths,
-              })
-          })
-      },
-    }
-  }
+      })
+    },
+    // 上传文件夹
+    uploadDirectory() {
+      return uploadDirectoryDialog().then(folderPaths => {
+        if (!folderPaths || !folderPaths.length) return
+        return this.$store.dispatch({
+          type: 'UPLOAD_FILES',
+          remotePath: this.currentDirPath,
+          localFilePaths: folderPaths,
+        })
+      })
+    },
+  },
+}
 </script>

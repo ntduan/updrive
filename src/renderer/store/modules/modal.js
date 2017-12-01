@@ -2,7 +2,7 @@ import * as Types from '@/store/mutation-types'
 
 const state = {
   createFolder: {
-    show: false
+    show: false,
   },
   renameFile: {
     show: false,
@@ -37,10 +37,10 @@ const mutations = {
   },
   [Types.RENAME_FILE_CLEAR_OLD_PATH](state) {
     state.renameFile.oldPath = ''
-  }
+  },
 }
 
 export default {
   state,
-  mutations
+  mutations,
 }
