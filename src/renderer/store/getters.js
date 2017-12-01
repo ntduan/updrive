@@ -1,7 +1,7 @@
 import { path, last } from 'ramda'
 
 export const bucketName = state => {
-  return (path(['user', 'user', 'bucketName'], state) || '')
+  return (path(['auth', 'user', 'bucketName'], state) || '')
 }
 
 export const baseHref = state => {
@@ -19,5 +19,5 @@ export const forwardUri = state => {
 }
 
 export const upyunClient = state => {
-  return (path(['user', 'user', 'client'], state) || null)
+  return (path(['auth', 'user', 'client'], state) || null)
 }

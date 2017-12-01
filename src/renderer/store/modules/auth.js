@@ -4,7 +4,7 @@ import { pickAll } from 'ramda'
 import User from '@/api/user'
 
 const state = {
-  user: null,
+  user: new User('', '', ''),
   isLogined: false,
 }
 

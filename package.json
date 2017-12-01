@@ -1,6 +1,6 @@
 {
   "name": "updrive",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "author": "nsso <nsso@foxmail.com>",
   "description": "upyun file manager",
   "engines": {
@@ -17,10 +17,6 @@
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": ""
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:aniiantt/updrive.git"
   },
   "build": {
     "productName": "updrive",
@@ -52,7 +48,8 @@
     "win": {
       "icon": "build/icons/icon.ico",
       "target": [
-        "zip"
+        "nsis",
+        "portable"
       ]
     },
     "linux": {
@@ -67,6 +64,7 @@
     "bulma": "^0.6.1",
     "ftp": "^0.3.10",
     "iview": "^2.7.2",
+    "localforage": "^1.5.3",
     "mime": "^2.0.3",
     "moment": "^2.19.2",
     "node-sass": "^4.6.1",

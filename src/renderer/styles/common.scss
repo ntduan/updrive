@@ -34,9 +34,11 @@ body {
   background-color: #F5FBFF;
 }
 
+
 /*
 * 覆盖 bulma
 */
+
 .breadcrumb li.is-active a {
   cursor: pointer;
   pointer-events: inherit;
@@ -50,12 +52,15 @@ body {
   max-width: 150px;
 }
 
+
 /*
 * 覆盖 balloon-css
 */
+
 [data-balloon]:after {
   font-family: inherit !important;
 }
+
 
 /*
 * 进度条提示
@@ -94,4 +99,28 @@ body {
   height: 50px;
   padding: 0.5em 0.7em;
   border-bottom: 1px solid #dbdbdb;
+}
+
+.account-history {
+  .account-history-list {
+    max-height: 320px;
+    overflow: auto;
+  }
+  .record {
+    cursor: default;
+    &:hover .record-delete {
+      display: block;
+    }
+    .record-delete {
+      &:hover {
+        text-decoration: underline;
+      }
+      color: #3273dc;
+      display: none;
+      cursor: pointer;
+      float: right;
+      font-size: 12px;
+      line-height: 18px;
+    }
+  }
 }

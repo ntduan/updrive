@@ -9,7 +9,6 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
   import LayoutNav from '@/components/layout/LayoutNav'
   import LayoutMenu from '@/components/layout/LayoutMenu'
   import LayoutBody from '@/components/layout/LayoutBody'
@@ -23,9 +22,6 @@
     },
     created() {
       this.$store.dispatch({ type: 'GET_LIST_DIR_INFO' })
-    },
-    computed: {
-      ...mapState(['user']),
     }
   }
 </script>
