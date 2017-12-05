@@ -307,13 +307,16 @@ export default {
         'icon-image': ['.bmp', '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.gifv'].includes(
           extensionName,
         ),
-        'icon-audio': ['.mp3', '.m4a', '.ogg'].includes(extensionName),
-        'icon-video': ['.avi', '.mp4', '.flv', '.mov', '.3gp', '.asf', '.wmv', '.mpg', '.f4v', '.m4v', '.mkv'].includes(
+        'icon-music': ['.mp3', '.m4a', '.ogg'].includes(extensionName),
+        'icon-zip': ['.zip', '.rar', '.7z'].includes(extensionName),
+        'icon-movie': ['.avi', '.mp4', '.flv', '.mov', '.3gp', '.asf', '.wmv', '.mpg', '.f4v', '.m4v', '.mkv'].includes(
           extensionName,
         ),
         'icon-html': ['.htm', '.html', '.vue'].includes(extensionName),
-        'icon-js': ['.js', '.jsx'].includes(extensionName),
+        'icon-json': ['.json'].includes(extensionName),
+        'icon-javascript': ['.js', '.jsx'].includes(extensionName),
         'icon-style': ['.css', '.sass', '.less', '.stylus'].includes(extensionName),
+        'icon-markdown': ['.md', '.markdown'].includes(extensionName),
       }
     },
     dragstart($event) {
