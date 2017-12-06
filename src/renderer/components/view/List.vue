@@ -165,11 +165,6 @@
                 <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
               </div>
             </div>
-            <div class="list-view-detail-content-item-value head-request-info">
-              <div v-for="(value, key) in fileDetail.headerInfo" :key="key">
-                <span style="font-weight:bold">{{key}} →&nbsp;&nbsp;</span>{{value}}
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -459,7 +454,7 @@ export default {
       this.$store
         .dispatch({
           type: 'GET_FILE_DETAIL_INFO',
-          filePath: this.getUrl(uri),
+          uri: uri,
           basicInfo: this.findFileByUri(uri),
         })
         .then(() => {
