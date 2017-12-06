@@ -1,6 +1,6 @@
 import { join, append, compose, unless, isEmpty } from 'ramda'
 
-import { md5sum, errorHandler } from '@/api/tool.js'
+import { errorHandler } from '@/api/tool.js'
 import * as Types from '@/store/mutation-types'
 import * as UpyunFtp from '@/api/upyunFtp.js'
 import UpyunClient from '@/api/upyunClient.js'
@@ -99,7 +99,7 @@ export default {
   [Types.DOWNLOAD_FILES]({ getters, commit, dispatch }, { destPath, downloadPath } = {}) {
     commit('SHOW_TASK_MODAL')
     return getters.upyunClient
-      .downloadFiles(destPath, downloadPath, getters.baseHref, payload => commit({ type: 'UPDATE_TASK', payload }))
+      .downloadFiles(destPath, downloadPath, payload => commit({ type: 'UPDATE_TASK', payload }))
       .then(errorStack => {
         if (!errorStack.length) {
           Message.success('下载完成')
@@ -110,11 +110,11 @@ export default {
       .catch(errorHandler)
   },
   // 获取文件详情信息
-  [Types.GET_FILE_DETAIL_INFO]({ getters, commit }, { filePath, basicInfo } = {}) {
+  [Types.GET_FILE_DETAIL_INFO]({ getters, commit }, { uri, basicInfo } = {}) {
     return Promise.resolve()
       .then(() => {
         if (basicInfo.folderType === 'F') return Promise.resolve()
-        return getters.upyunClient.getFileHead(filePath)
+        return getters.upyunClient.head(uri)
       })
       .then(data => {
         commit({
