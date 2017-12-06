@@ -31,59 +31,56 @@
 </template>
 
 <script>
-  import {
-    mapState,
-    mapGetters,
-  } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
-  export default {
-    name: 'RenameFile',
-    data() {
-      return {
-        isSubmitting: false,
-      }
+export default {
+  name: 'RenameFile',
+  data() {
+    return {
+      isSubmitting: false,
+    }
+  },
+  computed: {
+    ...mapState(['modal', 'list']),
+    ...mapGetters(['bucketName']),
+  },
+  methods: {
+    close() {
+      this.$store.commit('CLOSE_RENAME_FILE_MODAL')
     },
-    computed: {
-      ...mapState(['modal', 'list']),
-      ...mapGetters(['bucketName']),
+    enter(el) {
+      this.$nextTick(() => {
+        el.querySelector('input[autofocus]').focus()
+      })
     },
-    methods: {
-      close() {
-        this.$store.commit('CLOSE_RENAME_FILE_MODAL')
-      },
-      enter(el) {
-        this.$nextTick(() => {
-          el.querySelector('input[autofocus]').focus()
+    submit() {
+      if (this.isSubmitting) return false
+      this.isSubmitting = true
+      this.$store
+        .dispatch({
+          type: 'RENAME_FILE',
+          oldPath: this.modal.renameFile.oldPath,
+          newPath: this.filePath,
+          isFolder: this.isFolder,
         })
-      },
-      submit() {
-        if (this.isSubmitting) return false
-        this.isSubmitting = true
-        this.$store
-          .dispatch({
-            type: 'RENAME_FILE',
-            oldPath: this.modal.renameFile.oldPath,
-            newPath: this.filePath,
-            isFolder: this.isFolder
-          })
-          .then(() => {
-            this.isSubmitting = false
-          })
-          .then(() => this.close())
-          .catch(() => {
-            this.isSubmitting = false
-          })
-      }
+        .then(() => {
+          this.isSubmitting = false
+        })
+        .then(() => this.close())
+        .catch(() => {
+          this.isSubmitting = false
+        })
     },
-    created() {
-      const tailSlashReg = /\/$/
-      if (tailSlashReg.test(this.modal.renameFile.oldPath)) {
-        this.filePath = this.modal.renameFile.oldPath.replace(tailSlashReg, '')
-        this.isFolder = true
-      } else {
-        this.filePath = this.modal.renameFile.oldPath
-        this.isFolder = false
-      }
-    },
-  }
+  },
+  created() {
+    const tailSlashReg = /\/$/
+    if (tailSlashReg.test(this.modal.renameFile.oldPath)) {
+      this.filePath = this.modal.renameFile.oldPath.replace(tailSlashReg, '')
+      this.isFolder = true
+    } else {
+      this.filePath = this.modal.renameFile.oldPath
+      this.isFolder = false
+    }
+  },
+}
 </script>

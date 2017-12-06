@@ -12,12 +12,12 @@
 </template>
 
 <script>
-  export default {
-    name: 'LayoutMenu',
-    computed: {
-      currentRouteName() {
-        return this.$route.name
-      }
-    }
-  }
+export default {
+  name: 'LayoutMenu',
+  computed: {
+    currentRouteName() {
+      return this.$route.name
+    },
+  },
+}
 </script>

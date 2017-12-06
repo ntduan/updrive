@@ -65,9 +65,7 @@
 </template>
 
 <script>
-import {
-  mapState
-} from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'login',
@@ -88,12 +86,11 @@ export default {
   },
   methods: {
     submit() {
-      this.signIn(this.bucketName, this.operatorName, this.password)
-        .then(() => {
-          if (this.rememberMe) {
-            this.user.save()
-          }
-        })
+      this.signIn(this.bucketName, this.operatorName, this.password).then(() => {
+        if (this.rememberMe) {
+          this.user.save()
+        }
+      })
     },
     signIn(bucketName, operatorName, password) {
       return this.$store
@@ -105,7 +102,7 @@ export default {
         })
         .then(result => {
           this.$router.push({
-            name: 'main'
+            name: 'main',
           })
         })
         .catch(error => {
@@ -117,17 +114,15 @@ export default {
       this.signIn(record.bucketName, record.operatorName, record.password)
     },
     deleteRecord(record) {
-      this.user.deleteAuthHistory(record.key)
-        .then(() => {
-          this.getList()
-        })
+      this.user.deleteAuthHistory(record.key).then(() => {
+        this.getList()
+      })
     },
     getList() {
-      return this.user.getAuthHistory()
-        .then(data => {
-          this.authHistoryList = data.data
-        })
-    }
+      return this.user.getAuthHistory().then(data => {
+        this.authHistoryList = data.data
+      })
+    },
   },
   created() {
     this.getList()

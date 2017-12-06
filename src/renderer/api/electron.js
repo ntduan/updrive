@@ -1,9 +1,4 @@
-import {
-  ipcRenderer,
-  shell,
-  clipboard,
-  remote,
-} from 'electron'
+import { ipcRenderer, shell, clipboard, remote } from 'electron'
 
 import Router from '@/router'
 
@@ -23,46 +18,46 @@ export const setApplicationMenu = () => {
         },
         {
           label: '退出',
-          role: 'close'
+          role: 'close',
         },
-      ]
+      ],
     },
     {
       label: ' 编辑',
       submenu: [
         {
           label: '撤销',
-          role: 'undo'
+          role: 'undo',
         },
         {
           label: '恢复',
-          role: 'redo'
+          role: 'redo',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
           label: '复制',
-          role: 'copy'
+          role: 'copy',
         },
         {
           label: '粘贴',
-          role: 'paste'
+          role: 'paste',
         },
         {
           label: '剪切',
-          role: 'cut'
+          role: 'cut',
         },
-      ]
+      ],
     },
     {
       label: '查看',
       submenu: [
         {
           label: '刷新',
-          role: 'reload'
+          role: 'reload',
         },
-      ]
+      ],
     },
     {
       label: '帮助',
@@ -70,20 +65,24 @@ export const setApplicationMenu = () => {
       submenu: [
         {
           label: '切换开发人员工具',
-          role: 'toggledevtools'
+          role: 'toggledevtools',
         },
         {
           label: '报告一个问题',
-          click() { shell.openExternal('https://github.com/aniiantt/updrive/issues') }
+          click() {
+            shell.openExternal('https://github.com/aniiantt/updrive/issues')
+          },
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
           label: '关于',
-          click() { shell.openExternal('https://github.com/aniiantt/updrive') }
+          click() {
+            shell.openExternal('https://github.com/aniiantt/updrive')
+          },
         },
-      ]
+      ],
     },
   ]
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu))

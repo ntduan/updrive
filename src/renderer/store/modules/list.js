@@ -1,4 +1,19 @@
-import { last, dropLast, path, pipe, reverse, merge, sort, sortBy, filter, identity, split, compose, append, pluck } from 'ramda'
+import {
+  last,
+  dropLast,
+  path,
+  pipe,
+  reverse,
+  merge,
+  sort,
+  sortBy,
+  filter,
+  identity,
+  split,
+  compose,
+  append,
+  pluck,
+} from 'ramda'
 import * as Types from '@/store/mutation-types'
 
 const state = {
@@ -49,21 +64,20 @@ const listSort = (data = [], key, isReverse) => {
     if (ObjA.folderType !== ObjB.folderType) {
       return ObjA.folderType === 'F' ? -1 : 1
     }
-    if (key === "lastModified" || key === "size") {
-      return ObjA[key] !== ObjB[key] ?
-        Number(ObjA[key]) - Number(ObjB[key]) :
-        naturalCompareString(ObjA.filename, ObjB.filename)
+    if (key === 'lastModified' || key === 'size') {
+      return ObjA[key] !== ObjB[key]
+        ? Number(ObjA[key]) - Number(ObjB[key])
+        : naturalCompareString(ObjA.filename, ObjB.filename)
     }
-    if (key === "filetype" || key === "filename") {
-      return ObjA[key] !== ObjB[key] ?
-        naturalCompareString(String(ObjA[key]), String(ObjB[key])) :
-        naturalCompareString(ObjA.filename, ObjB.filename)
+    if (key === 'filetype' || key === 'filename') {
+      return ObjA[key] !== ObjB[key]
+        ? naturalCompareString(String(ObjA[key]), String(ObjB[key]))
+        : naturalCompareString(ObjA.filename, ObjB.filename)
     }
   }, data)
 
   return isReverse ? reverse(sortData) : sortData
 }
-
 
 const mutations = {
   [Types.SET_CURRENT_LIST](state, { data, action }) {
@@ -124,5 +138,5 @@ const mutations = {
 
 export default {
   state,
-  mutations
+  mutations,
 }

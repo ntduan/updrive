@@ -9,25 +9,23 @@
 </template>
 
 <script>
-  import {
-    mapState
-  } from 'vuex'
+import { mapState } from 'vuex'
 
-  import List from '@/components/view/List'
-  import CreateFolder from '@/components/modal/CreateFolder'
-  import RenameFile from '@/components/modal/RenameFile'
-  import FileProgress from '@/components/modal/FileProgress'
+import List from '@/components/view/List'
+import CreateFolder from '@/components/modal/CreateFolder'
+import RenameFile from '@/components/modal/RenameFile'
+import FileProgress from '@/components/modal/FileProgress'
 
-  export default {
-    name: 'LayoutBody',
-    components: {
-      List,
-      CreateFolder,
-      RenameFile,
-      FileProgress,
-    },
-    computed: {
-      ...mapState(['modal']),
-    },
-  }
+export default {
+  name: 'LayoutBody',
+  components: {
+    List,
+    CreateFolder,
+    RenameFile,
+    FileProgress,
+  },
+  computed: {
+    ...mapState(['modal']),
+  },
+}
 </script>

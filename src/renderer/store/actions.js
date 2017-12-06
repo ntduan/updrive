@@ -1,7 +1,6 @@
 import { join, append, compose, unless, isEmpty } from 'ramda'
 
-
-import { md5sum, errorHandler } from '@/api/tool.js'
+import { errorHandler } from '@/api/tool.js'
 import * as Types from '@/store/mutation-types'
 import * as UpyunFtp from '@/api/upyunFtp.js'
 import UpyunClient from '@/api/upyunClient.js'
@@ -18,7 +17,8 @@ export default {
     }
     commit(Types.SET_USER_INFO, userInfo)
 
-    return getters.upyunClient.checkAuth()
+    return getters.upyunClient
+      .checkAuth()
       .then(() => {
         Session.setUser(userInfo)
         return userInfo
@@ -32,7 +32,8 @@ export default {
   // 获取文件目录信息
   [Types.GET_LIST_DIR_INFO]({ getters, commit }, { remotePath, spinner = true, action }) {
     if (spinner) commit({ type: Types.SET_LOADING_LIST, data: true })
-    return  getters.upyunClient.getListDirInfo(remotePath)
+    return getters.upyunClient
+      .getListDirInfo(remotePath)
       .then(result => {
         commit({
           type: Types.SET_CURRENT_LIST,
@@ -48,7 +49,8 @@ export default {
   // 上传文件
   [Types.UPLOAD_FILES]({ getters, commit, dispatch }, { remotePath, localFilePaths }) {
     commit('SHOW_TASK_MODAL')
-    return getters.upyunClient.uploadFiles(remotePath, localFilePaths, payload => commit({ type: 'UPDATE_TASK', payload }))
+    return getters.upyunClient
+      .uploadFiles(remotePath, localFilePaths, payload => commit({ type: 'UPDATE_TASK', payload }))
       .then(errorStack => {
         if (!errorStack.length) {
           Message.success('文件上传成功')
@@ -61,7 +63,8 @@ export default {
   },
   // 创建目录
   [Types.CREATE_FOLDER]({ getters, commit, dispatch }, { remotePath, folderName }) {
-    return getters.upyunClient.createFolder(remotePath, folderName)
+    return getters.upyunClient
+      .createFolder(remotePath, folderName)
       .then(() => Message.success('文件夹创建成功'))
       .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
       .catch(errorHandler)
@@ -72,7 +75,8 @@ export default {
   },
   // 删除文件
   [Types.DELETE_FILE]({ getters, commit, dispatch }, { selectedPaths } = {}) {
-    return getters.upyunClient.deleteFiles(selectedPaths)
+    return getters.upyunClient
+      .deleteFiles(selectedPaths)
       .then(errorStack => {
         if (!errorStack.length) {
           Message.success('操作成功')
@@ -85,7 +89,8 @@ export default {
   },
   // 重命名
   [Types.RENAME_FILE]({ getters, commit, dispatch }, { oldPath, newPath, isFolder } = {}) {
-    return getters.upyunClient.renameFile(oldPath, newPath)
+    return getters.upyunClient
+      .renameFile(oldPath, newPath)
       .then(() => Message.success('操作成功'))
       .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
       .catch(errorHandler)
@@ -93,7 +98,8 @@ export default {
   // 下载文件
   [Types.DOWNLOAD_FILES]({ getters, commit, dispatch }, { destPath, downloadPath } = {}) {
     commit('SHOW_TASK_MODAL')
-    return getters.upyunClient.downloadFiles(destPath, downloadPath, getters.baseHref, payload => commit({ type: 'UPDATE_TASK', payload }))
+    return getters.upyunClient
+      .downloadFiles(destPath, downloadPath, payload => commit({ type: 'UPDATE_TASK', payload }))
       .then(errorStack => {
         if (!errorStack.length) {
           Message.success('下载完成')
@@ -104,11 +110,11 @@ export default {
       .catch(errorHandler)
   },
   // 获取文件详情信息
-  [Types.GET_FILE_DETAIL_INFO]({ getters, commit }, { filePath, basicInfo } = {}) {
+  [Types.GET_FILE_DETAIL_INFO]({ getters, commit }, { uri, basicInfo } = {}) {
     return Promise.resolve()
       .then(() => {
         if (basicInfo.folderType === 'F') return Promise.resolve()
-        return getters.upyunClient.getFileHead(filePath)
+        return getters.upyunClient.head(uri)
       })
       .then(data => {
         commit({
@@ -121,4 +127,3 @@ export default {
       })
   },
 }
-
