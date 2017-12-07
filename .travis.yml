@@ -28,6 +28,7 @@ before_script:
   - git lfs pull
 install:
 - nvm install 8
+- curl -o- -L https://yarnpkg.com/install.sh | bash
 - source ~/.bashrc
 - npm install -g xvfb-maybe
 - yarn
