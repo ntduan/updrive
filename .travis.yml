@@ -1,6 +1,4 @@
 osx_image: xcode8.3
-language: node_js
-node_js: "8"
 sudo: required
 dist: trusty
 language: c
@@ -29,6 +27,7 @@ before_install:
 before_script:
   - git lfs pull
 install:
+- nvm install 8
 - source ~/.bashrc
 - npm install -g xvfb-maybe
 - yarn
