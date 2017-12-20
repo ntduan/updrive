@@ -6,6 +6,8 @@ import Moment from 'moment'
 import { existsSync } from 'fs'
 import Message from '@/api/message'
 
+const userAgent = `${process.env.npm_package_build_productName}/${process.env.npm_package_version}`
+
 export const errorHandler = error => {
   if (error && error.message) {
     Message.error(error.message)
@@ -63,7 +65,7 @@ export const getAuthorizationHeader = (
       uri: new URL(url).pathname,
       method: method.toUpperCase(),
     }),
-    Date: date,
+    'x-date': date,
   }
 }
 

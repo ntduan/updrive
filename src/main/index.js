@@ -23,6 +23,7 @@ function createWindow () {
     width: 1150,
     minHeight: 750,
     minWidth: 1150,
+    webPreferences: { webSecurity: false},
   })
 
   mainWindow.loadURL(winURL)

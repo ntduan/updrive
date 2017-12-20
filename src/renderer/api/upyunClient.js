@@ -22,12 +22,12 @@ import {
   __,
   equals,
 } from 'ramda'
-import { createReadStream, createWriteStream, readdirSync, statSync, mkdirSync, existsSync } from 'fs'
+import { readFileSync, createReadStream, createWriteStream, readdirSync, statSync, mkdirSync, existsSync } from 'fs'
 import Request from 'request'
 import Path from 'path'
-import { URL, parse } from 'url'
 import mime from 'mime'
 import upyun from 'upyun'
+import axios from 'axios'
 
 import { mandatory, base64, md5sum, sleep, isDir, getLocalName, getAuthorizationHeader } from '@/api/tool'
 import UpyunFtp from '@/api/upyunFtp'
@@ -40,26 +40,44 @@ export default class UpyunClient {
     this.ftp = new UpyunFtp(bucketName, operatorName, password)
   }
 
-  makeRequestOpts({ search = '', uri = '', method, headers = {} } = {}) {
+  request(input, config = {}, responseHandle = response => response.data) {
+    const url = this.getUrl(input)
+    config.url = url
+    config.headers = { ...config.headers, ...this.getHeaders(url, config.method) }
+    return axios({
+      responseType: 'text',
+      ...config,
+    }).then(responseHandle)
+  }
+
+  getUrl(input) {
+    const uri = typeof input === 'object' ? input.uri : input
+    const search = typeof input === 'object' ? input.search : ''
     const urlObject = new URL(`${this.bucketName}${uri}`, `https://v0.api.upyun.com`)
     if (search) urlObject.search = search
+    return urlObject.href
+  }
 
-    const url = urlObject.href
+  getHeaders(url, method = 'GET') {
+    return {
+      ...getAuthorizationHeader({
+        passwordMd5: this.passwordMd5,
+        operatorName: this.operatorName,
+        method: method,
+        url,
+      }),
+    }
+  }
 
-    const authHeader = getAuthorizationHeader({
-      passwordMd5: this.passwordMd5,
-      operatorName: this.operatorName,
-      method,
-      url,
-    })
+  makeRequestOpts({ search = '', uri = '', method, headers = {} } = {}) {
+    const url = this.getUrl(uri, { search })
+
+    const _headers = { ...headers, ...this.getHeaders(url, method) }
 
     return {
       method,
       url,
-      headers: {
-        ...authHeader,
-        ...headers,
-      },
+      headers: _headers,
     }
   }
 
@@ -175,14 +193,7 @@ export default class UpyunClient {
 
   // 删除文件
   async deleteFile(uri) {
-    return new Promise((resolve, reject) => {
-      Request(this.makeRequestOpts({ method: 'DELETE', uri }), (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        console.info(`文件: ${uri} 删除成功`, { body: response.body, statusCode: response.statusCode })
-        return resolve(body)
-      })
-    })
+    return this.request(uri, { method: 'DELETE' })
   }
 
   // 下载单个文件
@@ -239,81 +250,47 @@ export default class UpyunClient {
 
   // HEAD 请求
   async head(uri) {
-    return new Promise((resolve, reject) => {
-      Request(this.makeRequestOpts({ method: 'HEAD', uri }), (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        return resolve(response.headers)
-      })
-    })
+    return this.request(uri, { method: 'HEAD' }, response => response.headers)
   }
 
   // GET 请求
   async get(uri) {
-    return new Promise((resolve, reject) => {
-      Request(this.makeRequestOpts({ method: 'GET', uri }), (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        return resolve(response.headers)
-      })
-    })
+    return this.request(uri, { method: 'GET' })
   }
 
   // 授权认证
   async checkAuth() {
-    return new Promise((resolve, reject) => {
-      Request(this.makeRequestOpts({ method: 'GET', search: '?usage', uri: '/' }), (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        resolve()
-      })
-    })
+    return this.request({ search: '?usage', uri: '/' })
   }
 
   // 获取目录列表信息
   async getListDirInfo(uri = '/') {
-    return new Promise((resolve, reject) => {
-      Request(this.makeRequestOpts({ method: 'GET', uri }), (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        console.info(`目录: ${uri} 获取成功`, { body: response.body, statusCode: response.statusCode })
-        return compose(
-          resolve,
-          assoc('path', uri),
-          ifElse(
-            isEmpty,
-            () => ({ data: [] }),
+    return this.request(uri, { method: 'GET' }).then(
+      compose(
+        assoc('path', uri),
+        ifElse(
+          isEmpty,
+          () => ({ data: [] }),
+          compose(
+            objOf('data'),
             compose(
-              objOf('data'),
-              compose(
-                map(obj => {
-                  obj.filetype = obj.folderType === 'F' ? '' : mime.getType(obj.filename)
-                  obj.uri = uri + obj.filename + (obj.folderType === 'F' ? '/' : '')
-                  return obj
-                }),
-                map(compose(zipObj(['filename', 'folderType', 'size', 'lastModified']), split(/\t/))),
-                split(/\n/),
-              ),
+              map(obj => {
+                obj.filetype = obj.folderType === 'F' ? '' : mime.getType(obj.filename)
+                obj.uri = uri + obj.filename + (obj.folderType === 'F' ? '/' : '')
+                return obj
+              }),
+              map(compose(zipObj(['filename', 'folderType', 'size', 'lastModified']), split(/\t/))),
+              split(/\n/),
             ),
           ),
-        )(body)
-      })
-    })
+        ),
+      ),
+    )
   }
 
   // 创建目录
   async createFolder(uri = '', folderName = '') {
-    return new Promise((resolve, reject) => {
-      Request(
-        this.makeRequestOpts({ method: 'POST', uri: uri + folderName + '/', headers: { folder: true } }),
-        (error, response, body) => {
-          if (error) return reject(error)
-          if (response.statusCode !== 200) return reject(body)
-          console.info(`文件夹: ${folderName} 创建成功`, { body: response.body, statusCode: response.statusCode })
-          return resolve(body)
-        },
-      )
-    })
+    return this.request(`${uri}${folderName}/`, { method: 'POST', headers: { folder: true } })
   }
 
   // 上传文件

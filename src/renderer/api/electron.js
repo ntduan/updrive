@@ -4,6 +4,26 @@ import Router from '@/router'
 
 const { dialog, Menu, MenuItem, BrowserWindow, getCurrentWindow } = remote
 
+const currentWin = getCurrentWindow()
+
+const session = currentWin.webContents.session
+
+const userAgent = `${process.env.npm_package_build_productName}/${process.env.npm_package_version}`
+
+// session.webRequest.onBeforeSendHeaders(
+//   {
+//     urls: ['*://v0.api.upyun.com/*'],
+//   },
+//   (details, callback) => {
+//     callback({
+//       requestHeaders: {
+//         ...details.requestHeaders,
+//         'origin': 'https://v0.api.upyun.com',
+//       },
+//     })
+//   },
+// )
+
 // 设置菜单
 export const setApplicationMenu = () => {
   const menu = [
@@ -94,7 +114,7 @@ export const writeText = clipboard.writeText
 export const openExternal = shell.openExternal
 
 export const windowOpen = (url, frameName, features) => {
-  let child = new BrowserWindow({ parent: getCurrentWindow(), modal: true, show: false })
+  let child = new BrowserWindow({ parent: currentWin, modal: true, show: false })
   child.loadURL(url)
   child.once('ready-to-show', () => {
     child.show()
@@ -113,7 +133,7 @@ export const createContextmenu = ({ appendItems } = {}) => {
 // 显示右键菜单
 export const showContextmenu = (items, opts = {}) => {
   const menu = createContextmenu(items)
-  setTimeout(() => menu.popup(getCurrentWindow()))
+  setTimeout(() => menu.popup(currentWin))
 }
 
 // 监听 Ctrl + A
@@ -123,7 +143,7 @@ export const listenSelectAll = callback => ipcRenderer.on('SHORTCUT_SELECT_ALL',
 export const uploadFileDialog = (option = {}) => {
   return new Promise((resolve, reject) => {
     dialog.showOpenDialog(
-      getCurrentWindow(),
+      currentWin,
       {
         title: '选择要上传的文件',
         buttonLabel: '上传',
@@ -139,7 +159,7 @@ export const uploadFileDialog = (option = {}) => {
 export const uploadDirectoryDialog = (option = {}) => {
   return new Promise((resolve, reject) => {
     dialog.showOpenDialog(
-      getCurrentWindow(),
+      currentWin,
       {
         title: '选择要上传的文件夹',
         buttonLabel: '上传',
@@ -155,7 +175,7 @@ export const uploadDirectoryDialog = (option = {}) => {
 export const downloadFileDialog = (option = {}) => {
   return new Promise((resolve, reject) => {
     dialog.showOpenDialog(
-      getCurrentWindow(),
+      currentWin,
       {
         title: '下载到',
         buttonLabel: '保存',
@@ -173,7 +193,7 @@ export const downloadFileDialog = (option = {}) => {
 export const messgaeDialog = (option = {}) => {
   return new Promise((resolve, reject) => {
     dialog.showMessageBox(
-      getCurrentWindow(),
+      currentWin,
       {
         buttons: [],
         cancelId: -1,
