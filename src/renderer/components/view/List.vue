@@ -4,31 +4,26 @@
       <div class="list-operation">
         <div class="list-operation-item" @click="isSelectedSingleFile && getLink()" :class="{disabled: !isSelectedSingleFile}">
           <svg class="svg-icon"><use xlink:href="#icon-link"></use></svg>
-          获取链接
+          <Icon name="icon-link" />获取链接
         </div>
         <div class="list-operation-item" @click="uniqueSelectedUri && downloadFile()" :class="{disabled: !uniqueSelectedUri}">
-          <svg class="svg-icon"><use xlink:href="#icon-icondownload"></use></svg>
-          下载
+          <Icon name="icon-download" />下载
         </div>
         <div class="list-operation-item" @click="isSelectedSingleFile && dblclickItem()" :class="{disabled: !isSelectedSingleFile}">
-          <svg class="svg-icon"><use xlink:href="#icon-browse"></use></svg>
-          查看
+          <Icon name="icon-browse" />查看
         </div>
         <div class="list-operation-item" @click="selected.length && deleteFile()" :class="{disabled: !selected.length}">
-          <svg class="svg-icon"><use xlink:href="#icon-delete"></use></svg>
-          删除
+          <Icon name="icon-delete" />删除
         </div>
         <div class="list-operation-item" @click="isSelectedSingleFile && renameFile()" :class="{disabled: !isSelectedSingleFile}">
-          <svg class="svg-icon"><use xlink:href="#icon-edit"></use></svg>
-          重命名
+          <Icon name="icon-edit" />重命名
         </div>
         <div
           class="list-operation-item"
           @click="isViewDetail ? toggleShowViewDetail() :  getFileDetail()"
           :class="{disabled: !selected.length, 'list-operation-item-hover': isViewDetail}"
         >
-          <svg class="svg-icon"><use xlink:href="#icon-information"></use></svg>
-          详情
+          <Icon name="icon-information" />详情
         </div>
       </div>
       <div
@@ -114,7 +109,7 @@
           <div class="separate-line"></div>
         </div>
         <span class="list-view-detail-close" @click="toggleShowViewDetail()">
-          <svg class="svg-icon"><use xlink:href="#icon-x"></use></svg>
+          <Icon name="icon-x" />
         </span>
       </div>
       <div class="list-view-detail-content" v-if="fileDetail.basicInfo.folderType !== 'B'">
@@ -150,7 +145,7 @@
                   @click="() => {copytext = '已复制！';writeText(fileDetail.basicInfo.url)}"
                 >
                   <a class="button">
-                    <i class="icon"><svg class="svg-icon"><use xlink:href="#icon-copy"></use></svg></i>
+                    <i class="icon"><Icon name="icon-copy" /></i>
                   </a>
                 </p>
               </div>
@@ -217,6 +212,7 @@ import { mapState, mapGetters, dispatch, commit } from 'vuex'
 import Path from 'path'
 import Message from 'iview/src/components/message'
 
+import Icon from '@/components/uiComponents/icon'
 import Spinner from '@/components/uiComponents/spinner'
 import { timestamp, digiUnit, isDir } from '@/api/tool'
 import {
@@ -235,6 +231,7 @@ export default {
   name: 'List',
   components: {
     Spinner,
+    Icon,
   },
   data() {
     return {

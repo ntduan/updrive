@@ -36,9 +36,7 @@
     </div>
     <div class="bar-right">
       <div data-balloon="设置" data-balloon-pos="left" style="cursor: pointer;" @click.prevent="setProfile">
-        <svg class="svg-icon">
-          <use xlink:href="#icon-setting"></use>
-        </svg>
+        <Icon name="icon-setting" />
       </div>
     </div>
   </div>
@@ -48,10 +46,14 @@
 import { path, take, split, identity, filter, compose, concat, join } from 'ramda'
 import { mapState, mapGetters } from 'vuex'
 
+import Icon from '@/components/uiComponents/icon'
 import { uploadFileDialog, uploadDirectoryDialog } from '@/api/electron.js'
 
 export default {
   name: 'LayoutNav',
+  components: {
+    Icon,
+  },
   computed: {
     pathArray() {
       return compose(filter(identity), split('/'))(this.list.dirInfo.path)

@@ -3,14 +3,10 @@
     <div class="card-header" @dblclick="foldProgress">
       <span class="card-header-title">正在进行</span>
       <span class="card-header-icon" @click="foldProgress">
-        <svg class="svg-icon">
-          <use :xlink:href="isFold ? '#icon-angle-up' : '#icon-angle-down'"></use>
-        </svg>
+        <Icon :name="isFold ? '#icon-angle-up' : '#icon-angle-down'" />
       </span>
       <span class="card-header-icon" @click="close">
-        <svg class="svg-icon">
-          <use xlink:href="#icon-x"></use>
-        </svg>
+        <Icon name="icon-x" />
       </span>
     </div>
     <div v-show="!isFold" style="max-height: 300px;overflow: auto;">
@@ -35,11 +31,14 @@ import { mapState } from 'vuex'
 import { reverse } from 'ramda'
 
 import ProgressBar from '@/components/uiComponents/progressBar'
+import Icon from '@/components/uiComponents/icon'
 import { digiUnit, uploadStatus } from '@/api/tool'
 
 export default {
+  name: 'FileProgress',
   components: {
     ProgressBar,
+    Icon,
   },
   data() {
     return {

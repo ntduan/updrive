@@ -5,9 +5,7 @@
       <div class="modal-header">
         <span class="modal-title">创建文件夹</span>
         <span class="modal-close-button" @click="close">
-          <svg class="svg-icon">
-            <use xlink:href="#icon-x"></use>
-          </svg>
+          <Icon name="icon-x" />
         </span>
       </div>
       <div class="modal-body">
@@ -25,8 +23,13 @@
 <script>
 import { mapState } from 'vuex'
 
+import Icon from '@/components/uiComponents/icon'
+
 export default {
   name: 'CreateFolder',
+  components: {
+    Icon,
+  },
   data() {
     return {
       folderName: '',
