@@ -39,22 +39,23 @@ export const standardUri = (path = '') => {
   return compose(replace(/(\/*)$/, '/'), replace(/^(\/*)/, '/'))(pathStr)
 }
 
-export const makeSign = (
-  {
-    method = mandatory('method'),
-    uri = mandatory('uri'),
-    date = mandatory('date'),
-    passwordMd5 = mandatory('passwordMd5'),
-    operatorName = mandatory('operatorName'),
-  } = {},
-) => {
+export const makeSign = ({
+  method = mandatory('method'),
+  uri = mandatory('uri'),
+  date = mandatory('date'),
+  passwordMd5 = mandatory('passwordMd5'),
+  operatorName = mandatory('operatorName'),
+} = {}) => {
   return `UPYUN ${operatorName}:${hmacSha1(passwordMd5, [method, uri, date].join('&'))}`
 }
 
 // @TODO 实现 Content-MD5 校验
-export const getAuthorizationHeader = (
-  { method = 'GET', url = '', passwordMd5 = mandatory('passwordMd5'), operatorName = mandatory('operatorName') } = {},
-) => {
+export const getAuthorizationHeader = ({
+  method = 'GET',
+  url = '',
+  passwordMd5 = mandatory('passwordMd5'),
+  operatorName = mandatory('operatorName'),
+} = {}) => {
   const date = new Date().toGMTString()
 
   return {

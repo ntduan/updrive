@@ -3,8 +3,12 @@
     <ul class="menu-list">
       <li>
         <router-link :to="{name: 'main'}" :class="{'is-active': currentRouteName === 'main'}">
-          <svg class="svg-icon"><use xlink:href="#icon-logo"></use></svg>
-          文件
+          <Icon name="icon-logo" />
+          全部文件
+        </router-link>
+        <router-link :to="{name: 'task'}" :class="{'is-active': currentRouteName === 'task'}">
+          <Icon name="icon-task" />
+          任务列表
         </router-link>
       </li>
     </ul>
@@ -12,8 +16,13 @@
 </template>
 
 <script>
+import Icon from '@/components/uiComponents/icon'
+
 export default {
   name: 'LayoutMenu',
+  components: {
+    Icon,
+  },
   computed: {
     currentRouteName() {
       return this.$route.name

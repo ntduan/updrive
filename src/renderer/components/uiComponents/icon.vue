@@ -3,7 +3,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'Icon',
   props: {
@@ -19,5 +18,3 @@ export default {
   },
 }
 </script>
-
-

@@ -3,6 +3,11 @@ import { append, drop } from 'ramda'
 import * as Types from '@/store/mutation-types'
 
 const state = {
+  taskType: {
+    upload: '正在上传',
+    download: '正在下载',
+    completed: '已完成',
+  },
   taskList: [
     // {
     //   id, // 每次任务唯一标识符

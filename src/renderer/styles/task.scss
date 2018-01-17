@@ -1,0 +1,11 @@
+.task-container {
+  width: 100%;
+  background: #ffffff;
+  position: relative;
+  .tabs a {
+    height: 40px;
+  }
+  .tabs:not(:last-child) {
+    margin-bottom: 0;
+  }
+}

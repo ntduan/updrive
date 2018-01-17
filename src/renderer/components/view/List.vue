@@ -3,7 +3,6 @@
     <div class="list-view-main" ref='listView' tabindex="-1" @keydown="keydown">
       <div class="list-operation">
         <div class="list-operation-item" @click="isSelectedSingleFile && getLink()" :class="{disabled: !isSelectedSingleFile}">
-          <svg class="svg-icon"><use xlink:href="#icon-link"></use></svg>
           <Icon name="icon-link" />获取链接
         </div>
         <div class="list-operation-item" @click="uniqueSelectedUri && downloadFile()" :class="{disabled: !uniqueSelectedUri}">
@@ -72,7 +71,7 @@
             <div
               class="files-list-item"
               v-for="(file, index) in list.dirInfo.data"
-              :key="file.filename"
+              :key="file.uri"
               :class="{ 'item-selected': (listItemState[file.uri] && listItemState[file.uri].selected) }"
               :tabindex="getListTabIndex(file.uri)"
               @click.stop="selectItem(file, $event, index)"
@@ -430,7 +429,11 @@ export default {
           { hide: !this.uniqueSelectedUri, label: '打开', click: () => this.dblclickItem(this.uniqueSelectedUri) },
           { hide: !this.isSelectedSingleFile, label: '在浏览器中打开', click: () => openExternal(this.getUrl()) },
           { hide: !this.uniqueSelectedUri, type: 'separator' },
-          { hide: !this.uniqueSelectedUri || this.isViewDetail, label: '查看详细信息', click: () => this.getFileDetail() },
+          {
+            hide: !this.uniqueSelectedUri || this.isViewDetail,
+            label: '查看详细信息',
+            click: () => this.getFileDetail(),
+          },
           { hide: !this.isSelectedSingleFile, label: '获取链接', click: () => this.getLink() },
           { hide: !this.isSelectedSingleFile, label: '重命名', click: () => this.renameFile() },
           { hide: !this.selected.length, label: '下载', click: () => this.downloadFile() },
@@ -474,6 +477,7 @@ export default {
     // 双击
     dblclickItem(uri) {
       // 如果是文件夹,则打开目录
+      console.log(uri)
       if (/\/$/.test(uri)) {
         const historyUri = this.currentDirPath
         this.$store.dispatch({ type: 'GET_LIST_DIR_INFO', remotePath: uri, action: 0 }).then(() => this.listGetFocus())
@@ -488,7 +492,9 @@ export default {
         title: '提示',
         buttons: ['删除', '取消'],
         defaultId: 1,
-        message: `确定要删除「${Path.basename(selected[0])}」${selected.length > 1 ? `等${selected.length}个文件` : ''}吗?`,
+        message: `确定要删除「${Path.basename(selected[0])}」${
+          selected.length > 1 ? `等${selected.length}个文件` : ''
+        }吗?`,
         detail: '操作后文件无法恢复',
       }).then(index => {
         if (index !== 0) return

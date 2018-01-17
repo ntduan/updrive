@@ -27,12 +27,13 @@ import Request from 'request'
 import Path from 'path'
 import mime from 'mime'
 import upyun from 'upyun'
-import axios from 'axios'
+// import axios from 'axios'
 
 import { mandatory, base64, md5sum, sleep, isDir, getLocalName, getAuthorizationHeader } from '@/api/tool'
+import Download from '@/api/download'
 import UpyunFtp from '@/api/upyunFtp'
 
-export default class UpyunClient {
+class UpyunClient {
   constructor(bucketName, operatorName, password) {
     this.bucketName = bucketName
     this.operatorName = operatorName
@@ -40,15 +41,24 @@ export default class UpyunClient {
     this.ftp = new UpyunFtp(bucketName, operatorName, password)
   }
 
-  request(input, config = {}, responseHandle = response => response.data) {
+  request(input, config = {}, responseHandle = response => response) {
     const url = this.getUrl(input)
-    config.url = url
     config.headers = { ...config.headers, ...this.getHeaders(url, config.method) }
-    return axios({
-      responseType: 'text',
-      ...config,
-    }).then(responseHandle)
+    return window
+      .fetch(url, config)
+      .then(res => res.text())
+      .then(responseHandle)
   }
+
+  // requestWithAxios(input, config = {}, responseHandle = response => response.data) {
+  //   const url = this.getUrl(input)
+  //   config.url = url
+  //   config.headers = { ...config.headers, ...this.getHeaders(url, config.method) }
+  //   return axios({
+  //     responseType: 'text',
+  //     ...config,
+  //   }).then(responseHandle)
+  // }
 
   getUrl(input) {
     const uri = typeof input === 'object' ? input.uri : input
@@ -169,7 +179,6 @@ export default class UpyunClient {
           if (percentage !== newPercentage) {
             percentage = newPercentage
             console.info(`正在上传：${filename} ${percentage}`)
-            console.log()
             onChange({ id, percentage, done: total })
           }
         })
@@ -199,53 +208,60 @@ export default class UpyunClient {
   // 下载单个文件
   async downloadFile(localPath, uri, onChange) {
     if (!uri && !existsSync(localPath)) return Promise.resolve(mkdirSync(localPath))
-
-    let total = 0
-    let percentage = 0
-    const filename = Path.basename(localPath)
-    const id = base64(`file:${uri};date:${+new Date()}`)
-
-    return new Promise((resolve, reject) => {
-      Request(this.makeRequestOpts({ method: 'GET', uri })).on('response', res => {
-        const size = parseInt(res.headers['content-length'], 10)
-        onChange({
-          id,
-          type: 'upload',
-          status: '1',
-          localPath,
-          remoteQuery: uri,
-          filename,
-          percentage,
-          size,
-          done: total,
-        })
-
-        res
-          .on('data', chunk => {
-            total += chunk.length
-            const newPercentage = Math.floor(total / size * 100) / 100
-            if (percentage !== newPercentage) {
-              percentage = newPercentage
-              console.info(`正在下载：${filename} ${percentage}`)
-              onChange({ id, percentage, done: total })
-            }
-          })
-          .pipe(
-            createWriteStream(localPath).on('close', () => {
-              resolve()
-              console.info('下载完成')
-            }),
-          )
-      })
+    const url = this.getUrl(uri)
+    const headers = this.getHeaders(url, 'GET')
+    const download = new Download()
+    download.startDownload({
+      method: 'GET',
+      url: url,
+      headers: headers,
     })
-      .then(result => {
-        onChange({ id, status: '2' })
-        return Promise.resolve(result)
-      })
-      .catch(error => {
-        onChange({ id, status: '-1' })
-        return Promise.reject(error)
-      })
+    // let total = 0
+    // let percentage = 0
+    // const filename = Path.basename(localPath)
+    // const id = base64(`file:${uri};date:${+new Date()}`)
+
+    // return new Promise((resolve, reject) => {
+    //   Request(this.makeRequestOpts({ method: 'GET', uri })).on('response', res => {
+    //     const size = parseInt(res.headers['content-length'], 10)
+    //     onChange({
+    //       id,
+    //       type: 'upload',
+    //       status: '1',
+    //       localPath,
+    //       remoteQuery: uri,
+    //       filename,
+    //       percentage,
+    //       size,
+    //       done: total,
+    //     })
+
+    //     res
+    //       .on('data', chunk => {
+    //         total += chunk.length
+    //         const newPercentage = Math.floor(total / size * 100) / 100
+    //         if (percentage !== newPercentage) {
+    //           percentage = newPercentage
+    //           console.info(`正在下载：${filename} ${percentage}`)
+    //           onChange({ id, percentage, done: total })
+    //         }
+    //       })
+    //       .pipe(
+    //         createWriteStream(localPath).on('close', () => {
+    //           resolve()
+    //           console.info('下载完成')
+    //         }),
+    //       )
+    //   })
+    // })
+    //   .then(result => {
+    //     onChange({ id, status: '2' })
+    //     return Promise.resolve(result)
+    //   })
+    //   .catch(error => {
+    //     onChange({ id, status: '-1' })
+    //     return Promise.reject(error)
+    //   })
   }
 
   // HEAD 请求
@@ -377,3 +393,5 @@ export default class UpyunClient {
     await this.ftp.renameFile(oldPath, newPath)
   }
 }
+
+export default UpyunClient

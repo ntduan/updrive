@@ -24,12 +24,17 @@
     </div>
     <div class="nav">
       <nav class="breadcrumb is-medium">
-        <ul>
+        <ul v-if="!pageTitle">
           <li :class="{'is-active': !pathArray.length}">
             <a @click.prevent.stop="goto()">{{bucketName}}</a>
           </li>
-          <li :class="{'is-active': index === pathArray.length - 1}" v-for="(name, index) in pathArray">
+          <li :class="{'is-active': index === pathArray.length - 1}" v-for="(name, index) in pathArray" :key="name + index">
             <a @click.prevent.stop="goto(index)">{{name}}</a>
+          </li>
+        </ul>
+        <ul v-if="pageTitle">
+          <li class="is-active">
+            <a>{{pageTitle}}</a>
           </li>
         </ul>
       </nav>
@@ -58,6 +63,9 @@ export default {
     pathArray() {
       return compose(filter(identity), split('/'))(this.list.dirInfo.path)
     },
+    pageTitle() {
+      return this.$route.meta && this.$route.meta.pageTitle
+    },
     currentDirPath() {
       return path(['list', 'dirInfo', 'path'], this)
     },
@@ -66,7 +74,7 @@ export default {
   },
   methods: {
     goto(index) {
-      const remotePath = index === undefined ? '/' : concat(join('/', take(index + 1)(this.pathArray)), '/')
+      const remotePath = index === undefined ? '/' : concat('/', concat(join('/', take(index + 1)(this.pathArray)), '/'))
       return this.$store.dispatch({
         type: 'GET_LIST_DIR_INFO',
         remotePath,

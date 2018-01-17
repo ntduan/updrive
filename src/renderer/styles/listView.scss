@@ -11,7 +11,6 @@
   display: flex;
   .list-view-main {
     position: relative;
-    border-left: 1px solid #e1e1e1;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -24,7 +23,7 @@
     position: relative;
     -webkit-user-select: auto;
     box-shadow: 0 3px 4px 0 rgba(0,0,0,0.14);
-    border-left: 1px solid #e1e1e1;
+    border-left: 1px solid #dbdbdb;
     .list-view-detail-header {
       padding-left: 10px;
       padding-right: 10px;
@@ -34,7 +33,7 @@
       h4 {
         width: 275px;
         font-size: 16px;
-        line-height: 40px;
+        line-height: 39px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

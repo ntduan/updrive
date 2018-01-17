@@ -15,12 +15,24 @@ const userAgent = `${process.env.npm_package_build_productName}/${process.env.np
 //     urls: ['*://v0.api.upyun.com/*'],
 //   },
 //   (details, callback) => {
-//     callback({
-//       requestHeaders: {
-//         ...details.requestHeaders,
-//         'origin': 'https://v0.api.upyun.com',
-//       },
-//     })
+//     const urlObj = new URL(details.url)
+//     if(urlObj.hash) {
+//       const headersHash = urlObj.hash.substr(1)
+//       const headers = window.atob(headersHash)
+//       console.log(details.url, headers)
+//       callback({
+//         requestHeaders: {
+//           ...headers,
+//         },
+//       })
+//     } else {
+//       callback({
+//         requestHeaders: {
+//           ...details.requestHeaders,
+//         },
+//         url: 'http://baidu.com'
+//       })
+//     }
 //   },
 // )
 
