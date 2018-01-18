@@ -21,12 +21,12 @@ export default class User {
         operatorName: this.operatorName,
         password: this.password,
         key: key,
+        lastModified: moment().unix(),
+        remark: '',
       }
-      const existRecord = authHistory.data.find(u => u.key === key)
-      if (existRecord) {
-        if (existRecord.password !== this.password) {
-          existRecord.password = this.password
-        }
+      const recordIndex = authHistory.data.findIndex(u => u.key === key)
+      if (recordIndex > -1) {
+        authHistory[recordIndex] = record
       } else {
         authHistory.data.push(record)
       }
@@ -49,7 +49,6 @@ export default class User {
     return this.getAuthHistory().then(data => {
       const authHistory = data
       authHistory.data = authHistory.data.filter(u => u.key !== key)
-      console.log(authHistory)
       return localforage.setItem('authHistory', authHistory)
     })
   }

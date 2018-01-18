@@ -76,7 +76,7 @@ export default {
       bucketName: '',
       operatorName: '',
       password: '',
-      rememberMe: false,
+      rememberMe: true,
       authHistoryList: [],
     }
   },
