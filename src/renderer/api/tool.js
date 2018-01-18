@@ -9,12 +9,11 @@ import Message from '@/api/message'
 const userAgent = `${process.env.npm_package_build_productName}/${process.env.npm_package_version}`
 
 export const errorHandler = error => {
-  if (error && error.message) {
-    Message.error(error.message)
+  if (error && error.response && error.response.data) {
+    Message.error(error.response.data.msg)
   } else {
-    Message.error(error)
+    Message.error(error.message)
   }
-  return Promise.reject(error)
 }
 
 export const mandatory = parameter => {

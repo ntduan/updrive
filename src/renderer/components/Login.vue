@@ -67,6 +67,8 @@
 <script>
 import { mapState } from 'vuex'
 
+import { errorHandler } from '@/api/tool.js'
+
 export default {
   name: 'login',
   data() {
@@ -105,10 +107,7 @@ export default {
             name: 'main',
           })
         })
-        .catch(error => {
-          alert(error)
-          return Promise.reject(error)
-        })
+        .catch(errorHandler)
     },
     selectRecord(record) {
       this.signIn(record.bucketName, record.operatorName, record.password)
