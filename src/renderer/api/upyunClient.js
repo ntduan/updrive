@@ -27,7 +27,7 @@ import Request from 'request'
 import Path from 'path'
 import mime from 'mime'
 import upyun from 'upyun'
-// import axios from 'axios'
+import axios from 'axios'
 
 import { mandatory, base64, md5sum, sleep, isDir, getLocalName, getAuthorizationHeader } from '@/api/tool'
 import Download from '@/api/download'
@@ -41,24 +41,24 @@ class UpyunClient {
     this.ftp = new UpyunFtp(bucketName, operatorName, password)
   }
 
-  request(input, config = {}, responseHandle = response => response) {
-    const url = this.getUrl(input)
-    config.headers = { ...config.headers, ...this.getHeaders(url, config.method) }
-    return window
-      .fetch(url, config)
-      .then(res => res.text())
-      .then(responseHandle)
-  }
-
-  // requestWithAxios(input, config = {}, responseHandle = response => response.data) {
+  // requestWithFetch(input, config = {}, responseHandle = response => response) {
   //   const url = this.getUrl(input)
-  //   config.url = url
   //   config.headers = { ...config.headers, ...this.getHeaders(url, config.method) }
-  //   return axios({
-  //     responseType: 'text',
-  //     ...config,
-  //   }).then(responseHandle)
+  //   return window
+  //     .fetch(url, config)
+  //     .then(res => res.text())
+  //     .then(responseHandle)
   // }
+
+  request(input, config = {}, responseHandle = response => response.data) {
+    const url = this.getUrl(input)
+    config.url = url
+    config.headers = { ...config.headers, ...this.getHeaders(url, config.method) }
+    return axios({
+      responseType: 'text',
+      ...config,
+    }).then(responseHandle)
+  }
 
   getUrl(input) {
     const uri = typeof input === 'object' ? input.uri : input
@@ -206,16 +206,28 @@ class UpyunClient {
   }
 
   // 下载单个文件
-  async downloadFile(localPath, uri, onChange) {
+  async downloadFile(localPath, uri, callbacks) {
     if (!uri && !existsSync(localPath)) return Promise.resolve(mkdirSync(localPath))
     const url = this.getUrl(uri)
     const headers = this.getHeaders(url, 'GET')
     const download = new Download()
-    download.startDownload({
-      method: 'GET',
-      url: url,
-      headers: headers,
-    })
+    download.createDownloadTask(
+      {
+        method: 'GET',
+        url: url,
+        headers: headers,
+      },
+      {
+        localPath: localPath,
+      },
+    )
+
+    return download
+
+    // download.on('progress', state => {
+    //   console.log(state)
+    // })
+
     // let total = 0
     // let percentage = 0
     // const filename = Path.basename(localPath)
@@ -347,25 +359,32 @@ class UpyunClient {
   }
 
   // 删除多个文件
-  // @TODO 控制并发数量
   async deleteFiles(uris) {
-    const errorStack = []
+    const results = []
     const waitDeleteInit = await this.traverseDir(uris, { reverse: true })
 
     for (const uri of waitDeleteInit) {
       try {
-        await this.deleteFile(uri)
+        results.push({
+          uri: uri,
+          result: true,
+          message: await this.deleteFile(uri),
+        })
       } catch (err) {
-        console.error(`删除失败：${err}`)
-        errorStack.push(uri)
+        results.push({
+          uri: uri,
+          result: false,
+          message: err && err.message,
+        })
       }
     }
-    return errorStack
+
+    return results
   }
 
   // 下载文件
   // @TODO 控制并发数量
-  async downloadFiles(destPath, uri, onChange) {
+  async downloadFiles(destPath, uri, callbacks) {
     const errorStack = []
     const dir = await this.traverseDir(uri, { relative: true })
     const dirAll = dir.map(pathObj => {
@@ -379,7 +398,7 @@ class UpyunClient {
     })
     for (const pathObj of dirAll) {
       try {
-        await this.downloadFile(pathObj.localPath, pathObj.uri, onChange)
+        await this.downloadFile(pathObj.localPath, pathObj.uri, callbacks)
       } catch (err) {
         console.error(`下载失败：${err}`)
         errorStack.push(uri)

@@ -2,7 +2,7 @@ import Request from 'request'
 import EventEmitter from 'events'
 import Progress from 'request-progress'
 import Fs from 'fs'
-
+import { basename } from 'path'
 // The options argument is optional so you can omit it
 // progress(request('https://az412801.vo.msecnd.net/vhd/VMBuild_20141027/VirtualBox/IE11/Windows/IE11.Win8.1.For.Windows.VirtualBox.zip'), {
 //     // throttle: 2000,                    // Throttle the progress event to 2000ms, defaults to 1000ms
@@ -34,10 +34,19 @@ import Fs from 'fs'
 // .pipe(fs.createWriteStream('IE11.Win8.1.For.Windows.VirtualBox.zip'));
 
 class Download extends EventEmitter {
-  startDownload(httpOptions) {
-    console.log(this)
-  }
+  createDownloadTask(httpOptions, { localPath }) {
+    const request = Request(httpOptions)
+    const task = Progress(request)
+    const localStream = Fs.createWriteStream(localPath)
 
+    task.pipe(localStream)
+
+    for (const event of ['progress', 'error', 'end']) {
+      task.on(event, (...args) => this.emit(event, ...args))
+    }
+
+    return request
+  }
 }
 
 export default Download

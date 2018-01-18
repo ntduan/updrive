@@ -77,11 +77,12 @@ export default {
   [Types.DELETE_FILE]({ getters, commit, dispatch }, { selectedPaths } = {}) {
     return getters.upyunClient
       .deleteFiles(selectedPaths)
-      .then(errorStack => {
-        if (!errorStack.length) {
+      .then(results => {
+        const isAllSuccess = !results.some(r => !r.result)
+        if (isAllSuccess) {
           Message.success('操作成功')
         } else {
-          Message.warning(`操作失败文件：${errorStack.join('、')}`)
+          Message.warning(`操作失败文件：${results.map(r => r.uri).join('、')}`)
         }
       })
       .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
@@ -99,7 +100,12 @@ export default {
   [Types.DOWNLOAD_FILES]({ getters, commit, dispatch }, { destPath, downloadPath } = {}) {
     commit('SHOW_TASK_MODAL')
     return getters.upyunClient
-      .downloadFiles(destPath, downloadPath, payload => commit({ type: 'UPDATE_TASK', payload }))
+      .downloadFiles(destPath, downloadPath, {
+        onStart: () => {},
+        onError: () => {},
+        onStart: () => {},
+        onStart: () => {},
+      })
       .then(errorStack => {
         if (!errorStack.length) {
           Message.success('下载完成')
