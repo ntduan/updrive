@@ -3,7 +3,7 @@
     <ul class="menu-list">
       <li>
         <router-link :to="{name: 'main'}" :class="{'is-active': currentRouteName === 'main'}">
-          <Icon name="icon-logo" />
+          <Icon name="icon-files" />
           全部文件
         </router-link>
         <router-link :to="{name: 'task'}" :class="{'is-active': currentRouteName === 'task'}">
