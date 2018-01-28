@@ -28,6 +28,9 @@ export const DELETE_TASK = 'DELETE_TASK' // 删除任务
 export const UPDATE_TASK = 'UPDATE_TASK' // 更新任务
 export const CANCEL_TASK = 'CANCEL_TASK' // 取消任务
 
+export const INIT_DOWNLOAD_STORE = 'INIT_DOWNLOAD_STORE' // 初始化下载类
+export const UPDATE_DOWNLOAD_LIST = 'UPDATE_DOWNLOAD_LIST' // 设置下载列表
+
 // actions
 export const VERIFICATION_ACCOUNT = 'VERIFICATION_ACCOUNT' // 验证账号
 export const GET_LIST_DIR_INFO = 'GET_LIST_DIR_INFO' // 获取列表信息
@@ -39,3 +42,5 @@ export const RENAME_FILE = 'RENAME_FILE' // 重命名文件
 export const DOWNLOAD_FILES = 'DOWNLOAD_FILES' // 下载文件
 export const GET_FILE_DETAIL_INFO = 'GET_FILE_DETAIL_INFO' // 获取文件详情信息
 export const SET_FILE_DETAIL_INFO = 'SET_FILE_DETAIL_INFO' // 设置文件详情信息
+
+export const SYNC_DOWNLOAD_LIST = 'SYNC_DOWNLOAD_LIST' // 同步下载任务列表

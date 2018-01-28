@@ -66,6 +66,9 @@ export default {
     },
     ...mapState(['task']),
   },
+  created() {
+    console.log('哈哈哈哈')
+  },
   methods: {
     selectTabs(key) {
       this.selectTabKey = key

@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import Download from '@/api/download'
 import LayoutNav from '@/components/layout/LayoutNav'
 import LayoutMenu from '@/components/layout/LayoutMenu'
 import LayoutBody from '@/components/layout/LayoutBody'
@@ -21,7 +22,20 @@ export default {
     LayoutBody,
   },
   created() {
-    this.$store.dispatch({ type: 'GET_LIST_DIR_INFO' })
+    this.activateList()
+    this.activateDownload()
+  },
+  methods: {
+    activateList() {
+      this.$store.dispatch({ type: 'GET_LIST_DIR_INFO' })
+    },
+    activateDownload() {
+      const download = new Download(() => {
+        this.$store.dispatch({ type: 'SYNC_DOWNLOAD_LIST' })
+      })
+      this.$store.commit({ type: 'INIT_DOWNLOAD_STORE', data: download })
+      this.$store.dispatch({ type: 'SYNC_DOWNLOAD_LIST' })
+    },
   },
 }
 </script>

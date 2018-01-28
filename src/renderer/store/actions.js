@@ -48,9 +48,9 @@ export default {
   },
   // 上传文件
   [Types.UPLOAD_FILES]({ getters, commit, dispatch }, { remotePath, localFilePaths }) {
-    commit('SHOW_TASK_MODAL')
+    commit(Types.SHOW_TASK_MODAL)
     return getters.upyunClient
-      .uploadFiles(remotePath, localFilePaths, payload => commit({ type: 'UPDATE_TASK', payload }))
+      .uploadFiles(remotePath, localFilePaths, payload => commit({ type: Types.UPDATE_TASK, payload }))
       .then(errorStack => {
         if (!errorStack.length) {
           Message.success('文件上传成功')
@@ -58,7 +58,7 @@ export default {
           Message.warning(`上传失败文件：${errorStack.join('、')}`)
         }
       })
-      .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
+      .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
       .catch(errorHandler)
   },
   // 创建目录
@@ -66,12 +66,12 @@ export default {
     return getters.upyunClient
       .createFolder(remotePath, folderName)
       .then(() => Message.success('文件夹创建成功'))
-      .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
+      .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
       .catch(errorHandler)
   },
   // 刷新当前目录
   [Types.REFRESH_LIST]({ state, getters, commit, dispatch }, { remotePath, spinner = true } = {}) {
-    return dispatch({ type: 'GET_LIST_DIR_INFO', remotePath: remotePath || state.list.dirInfo.path, spinner })
+    return dispatch({ type: Types.GET_LIST_DIR_INFO, remotePath: remotePath || state.list.dirInfo.path, spinner })
   },
   // 删除文件
   [Types.DELETE_FILE]({ getters, commit, dispatch }, { selectedPaths } = {}) {
@@ -85,7 +85,7 @@ export default {
           Message.warning(`操作失败文件：${results.map(r => r.uri).join('、')}`)
         }
       })
-      .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
+      .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
       .catch(errorHandler)
   },
   // 重命名
@@ -93,24 +93,19 @@ export default {
     return getters.upyunClient
       .renameFile(oldPath, newPath)
       .then(() => Message.success('操作成功'))
-      .then(() => dispatch({ type: 'REFRESH_LIST', spinner: false }))
+      .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
       .catch(errorHandler)
   },
   // 下载文件
   [Types.DOWNLOAD_FILES]({ getters, commit, dispatch }, { destPath, downloadPath } = {}) {
-    commit('SHOW_TASK_MODAL')
     return getters.upyunClient
-      .downloadFiles(destPath, downloadPath, {
-        onStart: () => {},
-        onError: () => {},
-        onStart: () => {},
-        onStart: () => {},
-      })
-      .then(errorStack => {
-        if (!errorStack.length) {
-          Message.success('下载完成')
+      .downloadFiles(destPath, downloadPath, getters.download)
+      .then(results => {
+        const isAllSuccess = !results.some(r => !r.result)
+        if (isAllSuccess) {
+          Message.success('下载成功')
         } else {
-          Message.warning(`下载失败文件：${errorStack.join('、')}`)
+          Message.warning(`下载失败文件：${results.map(r => r.uri).join('、')}`)
         }
       })
       .catch(errorHandler)
@@ -131,5 +126,11 @@ export default {
           },
         })
       })
+  },
+  // 同步下载任务列表
+  [Types.SYNC_DOWNLOAD_LIST]({ getters, commit }, { uri, basicInfo } = {}) {
+    getters.download.getStore().then(downloadStore => {
+      commit({ type: Types.UPDATE_DOWNLOAD_LIST, data: downloadStore || [] })
+    })
   },
 }

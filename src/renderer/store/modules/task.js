@@ -2,17 +2,30 @@ import { append, drop } from 'ramda'
 
 import * as Types from '@/store/mutation-types'
 
+// console.log(Store)
+// const downloadStore = new Download()
+// downloadStore.on('change', id => {
+//   downloadStore.getStore().then(obj => {
+//     console.log(obj)
+//   })
+// })
+
 const state = {
   taskType: {
     upload: '正在上传',
     download: '正在下载',
     completed: '已完成',
   },
+  download: {
+    store: null,
+    data: [],
+  },
   taskList: [
     // {
     //   id, // 每次任务唯一标识符
     //   type, // 类型 ['upload', 'download']
-    //   status:, // 状态 '0': '未开始'，'1': '进行中', '2': '已完成', '-1': '出错', '-2': '已取消'
+    //   to
+    //   status,// 状态 '0': '未开始'，'1': '进行中', '2': '已完成', '-1': '出错', '-2': '已取消'
     //   localFilePath,
     //   remoteQuery,
     //   filename,
@@ -27,6 +40,13 @@ const state = {
 }
 
 const mutations = {
+  [Types.INIT_DOWNLOAD_STORE](state, { data }) {
+    state.download.store = data
+  },
+  [Types.UPDATE_DOWNLOAD_LIST](state, { data }) {
+    state.download.data = data
+  },
+
   [Types.SHOW_TASK_MODAL](state) {
     state.showModal = true
   },

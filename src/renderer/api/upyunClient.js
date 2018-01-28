@@ -26,7 +26,6 @@ import { readFileSync, createReadStream, createWriteStream, readdirSync, statSyn
 import Request from 'request'
 import Path from 'path'
 import mime from 'mime'
-import upyun from 'upyun'
 import axios from 'axios'
 
 import { mandatory, base64, md5sum, sleep, isDir, getLocalName, getAuthorizationHeader } from '@/api/tool'
@@ -41,6 +40,7 @@ class UpyunClient {
     this.ftp = new UpyunFtp(bucketName, operatorName, password)
   }
 
+  // // fetch 请求获取不了自定义响应头
   // requestWithFetch(input, config = {}, responseHandle = response => response) {
   //   const url = this.getUrl(input)
   //   config.headers = { ...config.headers, ...this.getHeaders(url, config.method) }
@@ -200,82 +200,6 @@ class UpyunClient {
       })
   }
 
-  // 删除文件
-  async deleteFile(uri) {
-    return this.request(uri, { method: 'DELETE' })
-  }
-
-  // 下载单个文件
-  async downloadFile(localPath, uri, callbacks) {
-    if (!uri && !existsSync(localPath)) return Promise.resolve(mkdirSync(localPath))
-    const url = this.getUrl(uri)
-    const headers = this.getHeaders(url, 'GET')
-    const download = new Download()
-    download.createDownloadTask(
-      {
-        method: 'GET',
-        url: url,
-        headers: headers,
-      },
-      {
-        localPath: localPath,
-      },
-    )
-
-    return download
-
-    // download.on('progress', state => {
-    //   console.log(state)
-    // })
-
-    // let total = 0
-    // let percentage = 0
-    // const filename = Path.basename(localPath)
-    // const id = base64(`file:${uri};date:${+new Date()}`)
-
-    // return new Promise((resolve, reject) => {
-    //   Request(this.makeRequestOpts({ method: 'GET', uri })).on('response', res => {
-    //     const size = parseInt(res.headers['content-length'], 10)
-    //     onChange({
-    //       id,
-    //       type: 'upload',
-    //       status: '1',
-    //       localPath,
-    //       remoteQuery: uri,
-    //       filename,
-    //       percentage,
-    //       size,
-    //       done: total,
-    //     })
-
-    //     res
-    //       .on('data', chunk => {
-    //         total += chunk.length
-    //         const newPercentage = Math.floor(total / size * 100) / 100
-    //         if (percentage !== newPercentage) {
-    //           percentage = newPercentage
-    //           console.info(`正在下载：${filename} ${percentage}`)
-    //           onChange({ id, percentage, done: total })
-    //         }
-    //       })
-    //       .pipe(
-    //         createWriteStream(localPath).on('close', () => {
-    //           resolve()
-    //           console.info('下载完成')
-    //         }),
-    //       )
-    //   })
-    // })
-    //   .then(result => {
-    //     onChange({ id, status: '2' })
-    //     return Promise.resolve(result)
-    //   })
-    //   .catch(error => {
-    //     onChange({ id, status: '-1' })
-    //     return Promise.reject(error)
-    //   })
-  }
-
   // HEAD 请求
   async head(uri) {
     return this.request(uri, { method: 'HEAD' }, response => response.headers)
@@ -358,7 +282,7 @@ class UpyunClient {
     return errorStack
   }
 
-  // 删除多个文件
+  // 删除文件
   async deleteFiles(uris) {
     const results = []
     const waitDeleteInit = await this.traverseDir(uris, { reverse: true })
@@ -368,7 +292,7 @@ class UpyunClient {
         results.push({
           uri: uri,
           result: true,
-          message: await this.deleteFile(uri),
+          message: await this.request(uri, { method: 'DELETE' }),
         })
       } catch (err) {
         results.push({
@@ -383,10 +307,23 @@ class UpyunClient {
   }
 
   // 下载文件
-  // @TODO 控制并发数量
-  async downloadFiles(destPath, uri, callbacks) {
-    const errorStack = []
-    const dir = await this.traverseDir(uri, { relative: true })
+  async downloadFiles(destPath, uris, downloadObj) {
+    // 下载单个文件
+    const downloadFile = async (localPath, uri) => {
+      if (!uri && !existsSync(localPath)) return Promise.resolve(mkdirSync(localPath))
+      const url = this.getUrl(uri)
+      const headers = { Range: 'bytes=0-1023', ...this.getHeaders(url, 'GET') }
+      return await downloadObj.createDownloadTask({
+        key: `${this.operatorName}/${this.bucketName}`,
+        url: url,
+        headers: headers,
+        localPath: localPath,
+      })
+    }
+
+    const results = []
+
+    const dir = await this.traverseDir(uris, { relative: true })
     const dirAll = dir.map(pathObj => {
       return {
         uri: isDir(pathObj.absolutePath) ? '' : pathObj.absolutePath,
@@ -396,15 +333,26 @@ class UpyunClient {
         ),
       }
     })
+
     for (const pathObj of dirAll) {
       try {
-        await this.downloadFile(pathObj.localPath, pathObj.uri, callbacks)
+        results.push({
+          uri: pathObj.uri,
+          localPath: pathObj.localPath,
+          result: true,
+          message: await downloadFile(pathObj.localPath, pathObj.uri),
+        })
       } catch (err) {
-        console.error(`下载失败：${err}`)
-        errorStack.push(uri)
+        results.push({
+          uri: pathObj.uri,
+          localPath: pathObj.localPath,
+          result: false,
+          message: err && err.message,
+        })
       }
     }
-    return errorStack
+
+    return results
   }
 
   // 重命名文件

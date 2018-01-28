@@ -18,6 +18,12 @@ export const forwardUri = state => {
   return last(forwardStack)
 }
 
+// upyunClient 对象
 export const upyunClient = state => {
   return path(['auth', 'user', 'client'], state) || null
+}
+
+// download 对象
+export const download = state => {
+  return path(['task', 'download', 'store'], state) || null
 }
