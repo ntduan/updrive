@@ -14,8 +14,10 @@
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "dev": "node .electron-vue/dev-runner.js",
     "pack": "npm run pack:main && npm run pack:renderer",
-    "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
-    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
+    "pack:main":
+      "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
+    "pack:renderer":
+      "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": ""
   },
   "build": {
@@ -24,9 +26,7 @@
     "directories": {
       "output": "build"
     },
-    "files": [
-      "dist/electron/**/*"
-    ],
+    "files": ["dist/electron/**/*"],
     "dmg": {
       "contents": [
         {
@@ -47,10 +47,7 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "target": [
-        "nsis",
-        "portable"
-      ]
+      "target": ["nsis", "portable"]
     },
     "linux": {
       "icon": "build/icons"
@@ -72,9 +69,7 @@
     "progressbar.js": "^1.0.1",
     "ramda": "^0.25.0",
     "request": "^2.83.0",
-    "request-progress": "^3.0.0",
     "sass-loader": "^6.0.6",
-    "upyun": "^3.3.1",
     "vue": "^2.5.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
