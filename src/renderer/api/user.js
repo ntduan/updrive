@@ -10,17 +10,17 @@ export default class User {
     this.operatorName = operatorName
     this.password = password
     this.client = new UpyunClient(this.bucketName, this.operatorName, this.password)
+    this.key = `${this.operatorName}/${this.bucketName}`
   }
 
   save() {
     this.getAuthHistory().then(data => {
       const authHistory = data
-      const key = `${this.operatorName}/${this.bucketName}`
       const record = {
         bucketName: this.bucketName,
         operatorName: this.operatorName,
         password: this.password,
-        key: key,
+        key: this.key,
         lastModified: moment().unix(),
         remark: '',
       }
