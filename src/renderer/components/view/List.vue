@@ -207,7 +207,7 @@ import {
   append,
   isEmpty,
 } from 'ramda'
-import { mapState, mapGetters, dispatch, commit } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import Path from 'path'
 import Message from 'iview/src/components/message'
 
@@ -477,7 +477,6 @@ export default {
     // 双击
     dblclickItem(uri) {
       // 如果是文件夹,则打开目录
-      console.log(uri)
       if (/\/$/.test(uri)) {
         const historyUri = this.currentDirPath
         this.$store.dispatch({ type: 'GET_LIST_DIR_INFO', remotePath: uri, action: 0 }).then(() => this.listGetFocus())
