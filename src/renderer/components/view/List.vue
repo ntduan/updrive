@@ -40,10 +40,10 @@
           v-if="list.dirInfo.data.length"
         >
           <div class="files-list-column">
-            <div class="column-file-name table-column"></div>
-            <div class="column-last-modified table-column"></div>
-            <div class="column-file-type table-column" v-if="!isViewDetail"></div>
-            <div class="column-file-size table-column" v-if="!isViewDetail"></div>
+            <div class="column-file-name table-column" />
+            <div class="column-last-modified table-column" />
+            <div class="column-file-type table-column" v-if="!isViewDetail" />
+            <div class="column-file-size table-column" v-if="!isViewDetail" />
           </div>
           <div class="files-list-header">
             <div class="file-info-item column-file-name" @click="sort('filename')">
