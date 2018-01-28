@@ -71,6 +71,18 @@ export const getAuthorizationHeader = ({
 
 export const base64 = (str = '') => new Buffer(str).toString('base64')
 
+// 以固定间隔时间立即执行的 throttle,和普通的不一样
+export const throttle = (fn, ms) => {
+  let time = 0
+  return (...args) => {
+    const nowTime = +new Date()
+    if (nowTime - time > ms) {
+      time = nowTime
+      fn(...args)
+    }
+  }
+}
+
 export const sleep = (ms = 0) => {
   return new Promise(r => setTimeout(r, ms))
 }
