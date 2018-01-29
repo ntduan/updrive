@@ -1,4 +1,4 @@
-@import "~@/styles/custom.scss";
+@import '~@/styles/custom.scss';
 
 @media (max-width: 1200px) {
   .hide-2000 {
@@ -14,16 +14,16 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    background: #FFF;
+    background: #fff;
     outline: none;
   }
   .list-view-detail {
     width: 350px;
-    background: #FFF;
+    background: #fff;
     position: relative;
     -webkit-user-select: auto;
-    box-shadow: 0 3px 4px 0 rgba(0,0,0,0.14);
-    border-left: 1px solid #dbdbdb;
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
     .list-view-detail-header {
       padding-left: 10px;
       padding-right: 10px;
@@ -42,11 +42,10 @@
     .separate-line-wrap {
       margin-right: -10px;
       margin-left: -10px;
-      color: #eee;
     }
     .list-view-detail-close {
       cursor: pointer;
-      opacity: .5;
+      opacity: 0.5;
       position: absolute;
       height: 14px;
       right: 14px;
@@ -61,15 +60,15 @@
       .list-view-detail-content-item {
         margin-bottom: 5px;
         .list-view-detail-content-item-label {
-          color: #666666;
+          color: rgba(0, 0, 0, 0.6);
           font-size: 12px;
         }
         .list-view-detail-content-item-value {
           font-size: 14px;
-          color: #000;
+          color: rgba(0, 0, 0, 1);
           word-break: break-all;
           &.head-request-info {
-            color: #4a4a4a;
+            color: rgba(0, 0, 0, 0.8);
             padding-left: 5px;
             font-size: 12px;
             line-height: 20px;
@@ -81,17 +80,17 @@
 }
 
 .separate-line {
-  border-top: 1px solid #eee;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .list-operation {
   height: 40px;
   display: flex;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   align-items: center;
   // padding-left: 4px;
   .list-operation-item {
-    color: #212121;
+    color: rgba(0, 0, 0, 0.88);
     min-width: 22px;
     font-size: 14px;
     line-height: 24px;
@@ -106,10 +105,9 @@
       background-color: #edf4fc;
     }
     &.disabled {
-      color: #cacaca;
-      opacity: .7;
+      color: rgba(0, 0, 0, 0.2);
       .svg-icon {
-        opacity: 0.5;
+        opacity: 0.2;
       }
     }
     .svg-icon {
@@ -148,7 +146,8 @@
   width: 100%;
 
   .files-list-header {
-    background: #fff;
+    background: #fafafa;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
     position: absolute;
     color: #4c607a;
     font-size: 14px;
@@ -165,13 +164,13 @@
         padding-left: 12px;
       }
       &:not(:last-child) {
-        border-right: 1px solid #e5e5e5;
+        border-right: 1px solid rgba(0, 0, 0, 0.08);
       }
     }
   }
 
   .files-list-body {
-    color: #000;
+    color: rgba(0, 0, 0, 1);
     display: table-row-group;
   }
 
@@ -199,6 +198,7 @@
   .files-list-item {
     display: table-row;
     outline: none;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
     &:hover {
       background: #edf4fc;
     }
@@ -220,7 +220,7 @@
   .mime,
   .last-modified,
   .size {
-    color: #6d6d6d;
+    color: rgba(0, 0, 0, 0.6);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -241,5 +241,3 @@
 .item-hover {
   background: #e5f3ff;
 }
-
-

@@ -1,10 +1,11 @@
-.modal-folder.modal, .modal-rename.modal {
+.modal-folder.modal,
+.modal-rename.modal {
   .modal-content {
     width: 320px;
     padding: 24px 32px;
     background-color: white;
     box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-    color: #4a4a4a;
+    color: rgba(0, 0, 0, 0.6);
     max-width: 100%;
     position: relative;
   }
@@ -16,7 +17,7 @@
     .modal-close-button {
       outline: none;
       height: 11px;
-      opacity: .7;
+      opacity: 0.7;
       position: absolute;
       right: 0;
       top: 0;
@@ -41,9 +42,11 @@
   }
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .2s
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
 }
-.fade-enter, .fade-leave-active {
-  opacity: 0
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
 }

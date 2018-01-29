@@ -8,7 +8,6 @@
   .layout-inner {
     display: flex;
     flex: 1;
-    background: #eee;
   }
   .layout-body {
     display: flex;
@@ -19,8 +18,8 @@
 .menu {
   padding-top: 10px;
   width: 160px;
-  background: #FFFFFF;
-  border-right: 1px solid #dbdbdb;
+  background: #ffffff;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
   .menu-list a {
     padding-left: 20px;
     padding-right: 20px;
@@ -52,31 +51,30 @@
   display: inline-block;
 }
 
-.logo img{
+.logo img {
   height: 25px;
   vertical-align: middle;
 }
 
 // page-nav
 .bar {
-  border-top: 1px solid #ccc;
   align-items: center;
   display: flex;
   z-index: 1;
-  box-shadow: 0 2px 4px rgba(0,0,0,.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   background: #fafafa;
   .bar-right {
     display: flex;
     font-size: 24px;
-    margin-left: .75em;
-    margin-right: .75em;
+    margin-left: 0.75em;
+    margin-right: 0.75em;
   }
 }
 
 .button-zone {
   width: 160px;
   display: flex;
-  justify-content:center;
+  justify-content: center;
   .dropdown-trigger .button {
     width: 100px;
     position: relative;

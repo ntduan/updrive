@@ -31,9 +31,8 @@ body {
 }
 
 .drag-over {
-  background-color: #F5FBFF;
+  background-color: #f5fbff;
 }
-
 
 /*
 * 覆盖 bulma
@@ -56,7 +55,6 @@ body {
   padding-left: 15px;
 }
 
-
 /*
 * 覆盖 balloon-css
 */
@@ -64,7 +62,6 @@ body {
 [data-balloon]:after {
   font-family: inherit !important;
 }
-
 
 /*
 * 进度条提示
@@ -102,7 +99,7 @@ body {
   align-items: center;
   height: 50px;
   padding: 0.5em 0.7em;
-  border-bottom: 1px solid #dbdbdb;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .account-history {

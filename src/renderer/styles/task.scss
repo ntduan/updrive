@@ -7,6 +7,12 @@
   .tabs a {
     height: 40px;
   }
+  .tabs .handle a {
+    &:hover {
+      // 和正常时一样
+      border-bottom-color: #dbdbdb;
+    }
+  }
   .tabs:not(:last-child) {
     margin-bottom: 0;
   }
@@ -24,8 +30,16 @@
       width: 150px;
     }
   }
+  .files-list-item {
+    height: 60px;
+    .file-info-item {
+      vertical-align: middle;
+    }
+  }
   .size.file-info-item {
     font-size: 12px;
+    text-align: left;
+    padding-right: 15px;
   }
   .status.file-info-item {
   }
