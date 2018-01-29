@@ -16,13 +16,12 @@
 }
 
 .menu {
-  padding-top: 10px;
+  padding-top: 32px;
   width: 160px;
   background: #ffffff;
   border-right: 1px solid rgba(0, 0, 0, 0.12);
   .menu-list a {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 8px 20px;
   }
   .svg-icon {
     margin-right: 5px;

@@ -158,6 +158,8 @@
       flex: 1;
     }
     .file-info-item {
+      padding-top: 0;
+      padding-bottom: 0;
       line-height: 25px;
       padding-left: 6px;
       &:first-child {
@@ -208,9 +210,8 @@
   }
 
   .file-info-item {
-    padding-left: 6px;
-    padding-right: 10px;
-    line-height: 30px;
+    padding: 5px 6px 5px 10px;
+    line-height: 24px;
     display: table-cell;
     &:first-child {
       padding-left: 12px;
