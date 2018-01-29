@@ -14,6 +14,7 @@ export const errorHandler = error => {
   } else {
     Message.error(error.message)
   }
+  throw error
 }
 
 export const mandatory = parameter => {

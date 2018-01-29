@@ -107,6 +107,7 @@ export default {
         } else {
           Message.warning(`下载失败文件：${results.map(r => r.uri).join('、')}`)
         }
+        return dispatch(Types.SYNC_DOWNLOAD_LIST)
       })
       .catch(errorHandler)
   },
@@ -130,7 +131,7 @@ export default {
   // 同步下载任务列表
   [Types.SYNC_DOWNLOAD_LIST]({ getters, commit }, { uri, basicInfo } = {}) {
     getters.download.getStore().then(downloadStore => {
-      commit({ type: Types.UPDATE_DOWNLOAD_LIST, data: downloadStore || [] })
+      commit({ type: Types.UPDATE_DOWNLOAD_LIST, data: downloadStore ? downloadStore.data : [] })
     })
   },
 }

@@ -1,4 +1,4 @@
-import { append, drop } from 'ramda'
+import { append, drop, prepend, update } from 'ramda'
 
 import * as Types from '@/store/mutation-types'
 
@@ -12,10 +12,11 @@ import * as Types from '@/store/mutation-types'
 
 const state = {
   taskType: {
-    upload: '正在上传',
-    download: '正在下载',
+    uploading: '上传中',
+    downloading: '下载中',
     completed: '已完成',
   },
+  tabKey: 'uploading',
   download: {
     store: null,
     data: [],
@@ -46,7 +47,17 @@ const mutations = {
   [Types.UPDATE_DOWNLOAD_LIST](state, { data }) {
     state.download.data = data
   },
-
+  [Types.UPDATE_DOWNLOAD_ITEM](state, { downloadItem }) {
+    const existedItemIndex = state.download.data.findIndex(_item => _item.id === downloadItem.id)
+    if (~existedItemIndex) {
+      state.download.data = update(existedItemIndex, downloadItem, state.download.data)
+    } else {
+      state.download.data = prepend(downloadItem, state.download.data)
+    }
+  },
+  [Types.SELECT_TAB_KEY](state, { tabKey }) {
+    state.tabKey = tabKey
+  },
   [Types.SHOW_TASK_MODAL](state) {
     state.showModal = true
   },

@@ -8,12 +8,8 @@
               <div class="columns is-variable is-5">
                 <div class="column is-6 account-history" v-if="authHistoryList.length">
                   帐号历史
-                  <ul
-                    class="menu-list account-history-list"
-                    v-for="record in authHistoryList"
-                    :key="record.key"
-                  >
-                    <li>
+                  <ul class="menu-list account-history-list">
+                    <li v-for="record in authHistoryList" :key="record.key">
                       <a class="record" @click="selectRecord(record)">
                         {{record.key}}<span class="record-delete" @click.stop="deleteRecord(record)">删除</span>
                       </a>
@@ -90,6 +86,7 @@ export default {
     submit() {
       this.signIn(this.bucketName, this.operatorName, this.password).then(() => {
         if (this.rememberMe) {
+          console.log(this.user)
           this.user.save()
         }
       })

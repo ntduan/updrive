@@ -24,7 +24,7 @@ export default class User {
         lastModified: moment().unix(),
         remark: '',
       }
-      const recordIndex = authHistory.data.findIndex(u => u.key === key)
+      const recordIndex = authHistory.data.findIndex(u => u.key === this.key)
       if (recordIndex > -1) {
         authHistory[recordIndex] = record
       } else {

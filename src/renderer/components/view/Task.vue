@@ -3,47 +3,31 @@
     <div class="tabs">
       <ul>
         <li :class="{
-          'is-active': tabKey === key,
-        }" v-for="(value, key) in task.taskType" :key="key" @click="selectTabs(key)"><a>{{value}}</a></li>
+          'is-active': task.tabKey === key,
+        }" v-for="(value, key) in task.taskType" :key="key" @click="switchTab(key)"><a>{{value}}</a></li>
       </ul>
     </div>
     <div class="list">
         <div class="files-list">
           <div class="files-list-column">
-            <div class="column-file-name table-column"></div>
-            <div class="table-column"></div>
-            <div class="table-column"></div>
-            <div class="table-column"></div>
-            <div class="table-column"></div>
-            <div class="table-column"></div>
+            <div class="column-file-name table-column" />
+            <div class="column-file-size table-column" />
+            <div class="column-file-status table-column" />
+            <div class="column-file-handle table-column" />
           </div>
           <div class="files-list-header">
-            <div class="file-info-item column-file-name">名称</div>
-            <div class="file-info-item">大小</div>
-            <div class="file-info-item">状态</div>
-            <div class="file-info-item">上传日期</div>
-            <div class="file-info-item">操作</div>
+            <div class="column-file-name file-info-item">名称</div>
+            <div class="column-file-size file-info-item">大小</div>
+            <div class="column-file-status file-info-item">状态</div>
+            <div class="column-file-handle file-info-item">操作</div>
           </div>
           <div class="files-list-body">
-            <div class="files-list-item" v-for="file in task.taskList" :key="file.id">
+            <div class="files-list-item" v-for="file in downloadingList" :key="file.id">
               <div class="name file-info-item">{{file.filename}}</div>
-              <div class="file-info-item"></div>
-              <div class="file-info-item"></div>
-              <div class="file-info-item"></div>
+              <div class="size file-info-item">{{file.transferred | digiUnit}} / {{file.total | digiUnit}}</div>
+              <div class="status file-info-item"></div>
+              <div class="handle file-info-item"></div>
             </div>
-            <!-- <div class="card-block" v-for="data in taskList" :key="data.id">
-              <div class="card-block-title">
-                {{data.filename}}
-                <br>
-                <p style="color:#a5a5a5;">
-                  {{data.done | digiUnit}}/{{data.size | digiUnit}}&nbsp;&nbsp;{{data.status | uploadStatus}}
-                </p>
-              </div>
-              <div class="card-block-icon" v-show="data.status === '0' || data.status === '1'">
-                <progress-bar :progress='data.percentage' class="progress-bar"></progress-bar>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
     </div>
@@ -52,27 +36,28 @@
 
 <script>
 import { mapState, mapGetters, dispatch, commit } from 'vuex'
+import { digiUnit } from '@/api/tool'
 
 export default {
   name: 'Task',
   data() {
     return {
-      selectTabKey: '',
+      taskList: [],
     }
   },
   computed: {
-    tabKey() {
-      return this.selectTabKey || (this.task.taskType && Object.keys(this.task.taskType)[0])
+    downloadingList() {
+      return this.task.download.data
     },
     ...mapState(['task']),
   },
-  created() {
-    console.log('哈哈哈哈')
-  },
   methods: {
-    selectTabs(key) {
-      this.selectTabKey = key
+    switchTab(tabKey) {
+      this.$store.commit('SELECT_TAB_KEY', { tabKey })
     },
+  },
+   filters: {
+    digiUnit,
   },
 }
 </script>

@@ -2,10 +2,33 @@
   width: 100%;
   background: #ffffff;
   position: relative;
+  display: flex;
+  flex-direction: column;
   .tabs a {
     height: 40px;
   }
   .tabs:not(:last-child) {
     margin-bottom: 0;
+  }
+  .files-list {
+    .column-file-name {
+      width: 100%;
+    }
+    .column-file-size {
+      width: 150px;
+    }
+    .column-file-status {
+      width: 200px;
+    }
+    .column-file-handle {
+      width: 150px;
+    }
+  }
+  .size.file-info-item {
+    font-size: 12px;
+  }
+  .status.file-info-item {
+  }
+  .handle.file-info-item {
   }
 }

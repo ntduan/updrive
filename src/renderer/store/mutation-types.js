@@ -30,6 +30,8 @@ export const CANCEL_TASK = 'CANCEL_TASK' // 取消任务
 
 export const INIT_DOWNLOAD_STORE = 'INIT_DOWNLOAD_STORE' // 初始化下载类
 export const UPDATE_DOWNLOAD_LIST = 'UPDATE_DOWNLOAD_LIST' // 设置下载列表
+export const UPDATE_DOWNLOAD_ITEM = 'UPDATE_DOWNLOAD_ITEM' // 设置下载任务
+export const SELECT_TAB_KEY = 'SELECT_TAB_KEY' // 设置 task tab key
 
 // actions
 export const VERIFICATION_ACCOUNT = 'VERIFICATION_ACCOUNT' // 验证账号

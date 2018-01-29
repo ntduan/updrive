@@ -30,11 +30,11 @@ export default {
       this.$store.dispatch({ type: 'GET_LIST_DIR_INFO' })
     },
     activateDownload() {
-      const download = new Download(() => {
-        this.$store.dispatch({ type: 'SYNC_DOWNLOAD_LIST' })
+      const download = new Download(item => {
+        this.$store.commit('UPDATE_DOWNLOAD_ITEM', { downloadItem: item })
       })
-      this.$store.commit({ type: 'INIT_DOWNLOAD_STORE', data: download })
-      this.$store.dispatch({ type: 'SYNC_DOWNLOAD_LIST' })
+      this.$store.commit('INIT_DOWNLOAD_STORE', { data: download })
+      this.$store.dispatch('SYNC_DOWNLOAD_LIST')
     },
   },
 }

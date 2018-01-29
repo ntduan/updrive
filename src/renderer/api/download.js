@@ -2,12 +2,13 @@ import Request from 'request'
 import EventEmitter from 'events'
 import Fs from 'fs'
 import { basename } from 'path'
-import { append } from 'ramda'
+import { prepend } from 'ramda'
 import localforage from 'localforage'
 import moment from 'moment'
 
 import { base64, throttle } from '@/api/tool'
 
+// @TODO 并发问题，数据写入冲突问题
 class Download extends EventEmitter {
   storeKey = 'download'
 
@@ -27,78 +28,15 @@ class Download extends EventEmitter {
       localPath: localPath, // 下载本地路径
       startTime: startTime, // 下载开始时间
       filename: basename(localPath), // 下载的文件名
-      status: 'in_progress', // 下载状态: "in_progress", "interrupted", "complete"
-      message: '',
+      status: 'in_progress', // 下载状态: "in_progress", "interrupted", "complete", "error"
+      errorMessage: '',
       transferred: 0, // 已下载大小
       total: -1, // 总共大小
       endTime: -1, // 下载结束时间
     }
-    const store = await this.setItem(id, item)
-    this.emit('created', store)
-    return await this.getItem(id)
-  }
-
-  async createDownloadTask({ key, url, headers, localPath }) {
-    const item = await this.createDownloadItem(key, url, localPath)
-    // @TODO 并发
-    return new Promise((resolve, reject) => {
-      const request = Request({
-        url: url,
-        headers: headers,
-      })
-
-      const localStream = Fs.createWriteStream(localPath)
-      request.pipe(localStream)
-
-      let transferred = 0
-      let percentage = 0
-      let total = 0
-
-      request.on('response', response => {
-        total = window.parseInt(response.headers['content-length'], 10)
-        this.setItem(item.id, {
-          total: total,
-        }).then(() => {
-          this.emit('change', item.id)
-        })
-      })
-
-      const calTrans = transferred => {
-        const newPercentage = (transferred / total).toFixed(2)
-        if (percentage !== newPercentage) {
-          percentage = newPercentage
-          this.setItem(item.id, { total: total, transferred: transferred }).then(() => {
-            this.emit('change', item.id)
-          })
-        }
-      }
-
-      const throttleChunk = throttle(calTrans, 100)
-
-      request.on('data', chunk => {
-        transferred += chunk.length
-        if (transferred === total) {
-          calTrans(transferred)
-        } else {
-          throttleChunk(transferred)
-        }
-      })
-
-      request.on('error', error => {
-        reject(error)
-      })
-
-      localStream.once('finish', () => {
-        this.setItem(item.id, {
-          status: 'complete',
-          endTime: moment().unix(),
-        }).then(() => {
-          request.removeAllListeners()
-          resolve('success')
-          this.emit('change', item.id)
-        })
-      })
-    })
+    await this.setItem(id, item)
+    this.emit('change', { ...item })
+    return item
   }
 
   async setItem(id, item) {
@@ -115,10 +53,62 @@ class Download extends EventEmitter {
           ...item,
         }
       } else {
-        store.data = append(item, store.data)
+        store.data = prepend(item, store.data)
       }
       return await localforage.setItem(this.storeKey, store)
     }
+  }
+
+  async createDownloadTask({ key, url, headers, localPath }) {
+    const item = await this.createDownloadItem(key, url, localPath)
+    // @TODO 并发
+    return new Promise((resolve, reject) => {
+      const emitChange = type => {
+        this.emit('change', { ...item })
+      }
+
+      let percentage = 0
+      const calTrans = () => {
+        const newPercentage = (item.transferred / item.total).toFixed(2)
+        if (percentage !== newPercentage) {
+          percentage = newPercentage
+          emitChange()
+        }
+      }
+
+      const throttleChunk = throttle(calTrans, 100)
+
+      const request = Request({ url: url, headers: headers })
+        .on('response', response => {
+          item.total = window.parseInt(response.headers['content-length'], 10)
+          emitChange()
+        })
+        .on('data', chunk => {
+          item.transferred += chunk.length
+          if (item.transferred === item.total) {
+            calTrans()
+          } else {
+            throttleChunk()
+          }
+        })
+        .on('error', error => {
+          item.status = error
+          item.errorMessage = error && error.message
+          emitChange()
+          reject(error)
+        })
+
+      const localStream = Fs.createWriteStream(localPath).once('finish', async () => {
+        item.status = 'complete'
+        item.endTime = moment().unix()
+        request.removeAllListeners()
+        await this.setItem(item.id, item)
+        emitChange()
+        resolve('success')
+      })
+
+      request.pipe(localStream)
+    })
   }
 
   async clear() {
