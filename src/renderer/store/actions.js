@@ -80,9 +80,9 @@ export default {
       .then(results => {
         const isAllSuccess = !results.some(r => !r.result)
         if (isAllSuccess) {
-          Message.success('操作成功')
+          Message.success('删除成功')
         } else {
-          Message.warning(`操作失败文件：${results.map(r => r.uri).join('、')}`)
+          for (const result of results) Message.warning(`删除失败：${result.uri}: ${result.message}`)
         }
       })
       .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
@@ -99,15 +99,15 @@ export default {
   // 下载文件
   [Types.DOWNLOAD_FILES]({ getters, commit, dispatch }, { destPath, downloadPath } = {}) {
     return getters.upyunClient
-      .downloadFiles(destPath, downloadPath, getters.download)
+      .downloadFiles(destPath, downloadPath, getters.job)
       .then(results => {
         const isAllSuccess = !results.some(r => !r.result)
         if (isAllSuccess) {
           Message.success('下载成功')
         } else {
-          Message.warning(`下载失败文件：${results.map(r => r.uri).join('、')}`)
+          for (const result of results) Message.warning(`下载失败：${result.uri}: ${result.message}`)
         }
-        return dispatch(Types.SYNC_DOWNLOAD_LIST)
+        return dispatch(Types.SYNC_JOB_LIST)
       })
       .catch(errorHandler)
   },
@@ -129,9 +129,9 @@ export default {
       })
   },
   // 同步下载任务列表
-  [Types.SYNC_DOWNLOAD_LIST]({ getters, commit }, { uri, basicInfo } = {}) {
-    getters.download.getStore().then(downloadStore => {
-      commit({ type: Types.UPDATE_DOWNLOAD_LIST, data: downloadStore ? downloadStore.data : [] })
+  [Types.SYNC_JOB_LIST]({ getters, commit }, { uri, basicInfo } = {}) {
+    getters.job.getStore().then(store => {
+      commit(Types.SET_JOB_LIST, store ? store.data : [])
     })
   },
 }

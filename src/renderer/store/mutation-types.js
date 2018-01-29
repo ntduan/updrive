@@ -28,9 +28,9 @@ export const DELETE_TASK = 'DELETE_TASK' // 删除任务
 export const UPDATE_TASK = 'UPDATE_TASK' // 更新任务
 export const CANCEL_TASK = 'CANCEL_TASK' // 取消任务
 
-export const INIT_DOWNLOAD_STORE = 'INIT_DOWNLOAD_STORE' // 初始化下载类
-export const UPDATE_DOWNLOAD_LIST = 'UPDATE_DOWNLOAD_LIST' // 设置下载列表
-export const UPDATE_DOWNLOAD_ITEM = 'UPDATE_DOWNLOAD_ITEM' // 设置下载任务
+export const INIT_JOB = 'INIT_JOB' // 初始化任务实例
+export const SET_JOB_LIST = 'SET_JOB_LIST' // 设置任务列表
+export const UPDATE_JOB_ITEM = 'UPDATE_JOB_ITEM' // 更新一个任务
 export const SELECT_TAB_KEY = 'SELECT_TAB_KEY' // 设置 task tab key
 
 // actions
@@ -45,4 +45,4 @@ export const DOWNLOAD_FILES = 'DOWNLOAD_FILES' // 下载文件
 export const GET_FILE_DETAIL_INFO = 'GET_FILE_DETAIL_INFO' // 获取文件详情信息
 export const SET_FILE_DETAIL_INFO = 'SET_FILE_DETAIL_INFO' // 设置文件详情信息
 
-export const SYNC_DOWNLOAD_LIST = 'SYNC_DOWNLOAD_LIST' // 同步下载任务列表
+export const SYNC_JOB_LIST = 'SYNC_JOB_LIST' // 同步下载任务列表

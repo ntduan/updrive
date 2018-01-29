@@ -24,14 +24,14 @@
         <div class="files-list-body">
           <div
             class="files-list-item"
-            v-for="file in downloadingList"
+            v-for="file in task.list"
             :key="file.id"
           >
             <div class="name file-info-item">
               <i class="res-icon" :class="getFileIconClass(file.filename)"></i>{{file.filename}}
             </div>
             <div class="size file-info-item">{{file.transferred | digiUnit}} / {{file.total | digiUnit}}</div>
-            <div class="status file-info-item">{{task.download.store.status[file.status].name}}</div>
+            <div class="status file-info-item">{{task.job.status[file.status].name}}</div>
             <div class="handle file-info-item"></div>
           </div>
         </div>
@@ -41,20 +41,18 @@
 </template>
 
 <script>
-import { mapState, mapGetters, dispatch, commit } from 'vuex'
+import { mapState } from 'vuex'
 import { digiUnit, getFileIconClass } from '@/api/tool'
 
 export default {
   name: 'Task',
   data() {
-    return {
-      taskList: [],
-    }
+    return {}
   },
   computed: {
-    downloadingList() {
-      return this.task.download.data.filters
-    },
+    // downloadingList() {
+    //   return this.task.download.data.filters
+    // },
     ...mapState(['task']),
   },
   methods: {

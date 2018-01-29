@@ -9,7 +9,9 @@
 </template>
 
 <script>
-import Download from '@/api/download'
+import { mapState } from 'vuex'
+
+import Job from '@/api/job'
 import LayoutNav from '@/components/layout/LayoutNav'
 import LayoutMenu from '@/components/layout/LayoutMenu'
 import LayoutBody from '@/components/layout/LayoutBody'
@@ -21,20 +23,25 @@ export default {
     LayoutMenu,
     LayoutBody,
   },
+  computed: {
+    ...mapState(['auth']),
+  },
   created() {
     this.activateList()
-    this.activateDownload()
+    this.activateJob()
   },
   methods: {
     activateList() {
       this.$store.dispatch({ type: 'GET_LIST_DIR_INFO' })
     },
-    activateDownload() {
-      const download = new Download(item => {
-        this.$store.commit('UPDATE_DOWNLOAD_ITEM', { downloadItem: item })
-      })
-      this.$store.commit('INIT_DOWNLOAD_STORE', { data: download })
-      this.$store.dispatch('SYNC_DOWNLOAD_LIST')
+    activateJob() {
+      this.$store.commit(
+        'INIT_JOB',
+        new Job(this.auth.user.key, item => {
+          this.$store.commit('UPDATE_JOB_ITEM', { item: { ...item } })
+        }),
+      )
+      this.$store.dispatch('SYNC_JOB_LIST')
     },
   },
 }

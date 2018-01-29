@@ -17,42 +17,25 @@ const state = {
     completed: '已完成',
   },
   tabKey: 'uploading',
-  download: {
-    store: null,
-    data: [],
-  },
-  taskList: [
-    // {
-    //   id, // 每次任务唯一标识符
-    //   type, // 类型 ['upload', 'download']
-    //   to
-    //   status,// 状态 '0': '未开始'，'1': '进行中', '2': '已完成', '-1': '出错', '-2': '已取消'
-    //   localFilePath,
-    //   remoteQuery,
-    //   filename,
-    //   percentage,
-    //   size, // 文件大小
-    //   done, // 已完成
-    //   abort, 取消函数
-    //   retry, 重试函数
-    // }
-  ],
+  job: null,
+  list: [],
+  taskList: [],
   showModal: false,
 }
 
 const mutations = {
-  [Types.INIT_DOWNLOAD_STORE](state, { data }) {
-    state.download.store = data
+  [Types.INIT_JOB](state, job) {
+    state.job = job
   },
-  [Types.UPDATE_DOWNLOAD_LIST](state, { data }) {
-    state.download.data = data
+  [Types.SET_JOB_LIST](state, list) {
+    state.list = list
   },
-  [Types.UPDATE_DOWNLOAD_ITEM](state, { downloadItem }) {
-    const existedItemIndex = state.download.data.findIndex(_item => _item.id === downloadItem.id)
+  [Types.UPDATE_JOB_ITEM](state, { item }) {
+    const existedItemIndex = state.list.findIndex(_item => _item.id === item.id)
     if (~existedItemIndex) {
-      state.download.data = update(existedItemIndex, downloadItem, state.download.data)
+      state.list = update(existedItemIndex, item, state.list)
     } else {
-      state.download.data = prepend(downloadItem, state.download.data)
+      state.list = prepend(item, state.list)
     }
   },
   [Types.SELECT_TAB_KEY](state, { tabKey }) {

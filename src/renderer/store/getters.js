@@ -24,6 +24,6 @@ export const upyunClient = state => {
 }
 
 // download 对象
-export const download = state => {
-  return path(['task', 'download', 'store'], state) || null
+export const job = state => {
+  return path(['task', 'job'], state) || null
 }

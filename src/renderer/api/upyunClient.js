@@ -29,7 +29,6 @@ import mime from 'mime'
 import axios from 'axios'
 
 import { mandatory, base64, md5sum, sleep, isDir, getLocalName, getAuthorizationHeader } from '@/api/tool'
-import Download from '@/api/download'
 import UpyunFtp from '@/api/upyunFtp'
 
 class UpyunClient {
@@ -307,14 +306,13 @@ class UpyunClient {
   }
 
   // 下载文件
-  async downloadFiles(destPath, uris, downloadObj) {
+  async downloadFiles(destPath, uris, jobObj) {
     // 下载单个文件
     const downloadFile = async (localPath, uri) => {
       if (!uri && !existsSync(localPath)) return Promise.resolve(mkdirSync(localPath))
       const url = this.getUrl(uri)
-      const headers = { Range: 'bytes=0-1023', ...this.getHeaders(url, 'GET') }
-      return await downloadObj.createDownloadTask({
-        key: `${this.operatorName}/${this.bucketName}`,
+      const headers = { ...this.getHeaders(url, 'GET') }
+      return await jobObj.createDownloadTask({
         url: url,
         headers: headers,
         localPath: localPath,
