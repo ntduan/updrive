@@ -124,3 +124,23 @@ export const getLocalName = (fileName = '', init = true) => {
     return getLocalName(fileName + '(1)', false)
   }
 }
+
+export const getFileIconClass = (filename = '', folderType) => {
+  const extensionName = Path.extname(filename).toLocaleLowerCase()
+  return {
+    'icon-folder': folderType === 'F' || folderType === 'B',
+    'icon-image': ['.bmp', '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.gifv'].includes(
+      extensionName,
+    ),
+    'icon-music': ['.mp3', '.m4a', '.ogg'].includes(extensionName),
+    'icon-zip': ['.zip', '.rar', '.7z'].includes(extensionName),
+    'icon-movie': ['.avi', '.mp4', '.flv', '.mov', '.3gp', '.asf', '.wmv', '.mpg', '.f4v', '.m4v', '.mkv'].includes(
+      extensionName,
+    ),
+    'icon-html': ['.htm', '.html', '.vue'].includes(extensionName),
+    'icon-json': ['.json'].includes(extensionName),
+    'icon-javascript': ['.js', '.jsx'].includes(extensionName),
+    'icon-style': ['.css', '.sass', '.less', '.stylus'].includes(extensionName),
+    'icon-markdown': ['.md', '.markdown'].includes(extensionName),
+  }
+}

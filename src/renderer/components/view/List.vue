@@ -79,7 +79,7 @@
               @contextmenu.prevent="contextmenuItem(file)"
             >
               <div class="name file-info-item">
-                <i class="res-icon" :class="getFileIconClass(file.folderType, file.filename)"></i>{{file.filename}}
+                <i class="res-icon" :class="getFileIconClass(file.filename, file.folderType)"></i>{{file.filename}}
               </div>
               <div class="last-modified file-info-item">{{file.lastModified | timestamp}}</div>
               <div class="mime file-info-item">{{file.filetype}}</div>
@@ -100,7 +100,7 @@
       <div class="list-view-detail-header">
         <div>
           <h4 :title="fileDetail.basicInfo.filename">
-            <i class="res-icon" :class="getFileIconClass(fileDetail.basicInfo.folderType, fileDetail.basicInfo.filename)"></i>
+            <i class="res-icon" :class="getFileIconClass(fileDetail.basicInfo.filename, fileDetail.basicInfo.folderType)"></i>
             {{fileDetail.basicInfo.filename}}
           </h4>
         </div>
@@ -213,7 +213,7 @@ import Message from 'iview/src/components/message'
 
 import Icon from '@/components/uiComponents/icon'
 import Spinner from '@/components/uiComponents/spinner'
-import { timestamp, digiUnit, isDir } from '@/api/tool'
+import { timestamp, digiUnit, isDir, getFileIconClass } from '@/api/tool'
 import {
   uploadFileDialog,
   uploadDirectoryDialog,
@@ -290,25 +290,6 @@ export default {
     },
     toggleShowViewDetail() {
       this.isViewDetail = !this.isViewDetail
-    },
-    getFileIconClass(folderType, filename = '') {
-      const extensionName = Path.extname(filename).toLocaleLowerCase()
-      return {
-        'icon-folder': folderType === 'F' || folderType === 'B',
-        'icon-image': ['.bmp', '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.gifv'].includes(
-          extensionName,
-        ),
-        'icon-music': ['.mp3', '.m4a', '.ogg'].includes(extensionName),
-        'icon-zip': ['.zip', '.rar', '.7z'].includes(extensionName),
-        'icon-movie': ['.avi', '.mp4', '.flv', '.mov', '.3gp', '.asf', '.wmv', '.mpg', '.f4v', '.m4v', '.mkv'].includes(
-          extensionName,
-        ),
-        'icon-html': ['.htm', '.html', '.vue'].includes(extensionName),
-        'icon-json': ['.json'].includes(extensionName),
-        'icon-javascript': ['.js', '.jsx'].includes(extensionName),
-        'icon-style': ['.css', '.sass', '.less', '.stylus'].includes(extensionName),
-        'icon-markdown': ['.md', '.markdown'].includes(extensionName),
-      }
     },
     dragstart($event) {
       return false
@@ -540,6 +521,7 @@ export default {
         })
       })
     },
+    getFileIconClass: getFileIconClass,
   },
   filters: {
     timestamp,

@@ -12,6 +12,13 @@ import { base64, throttle } from '@/api/tool'
 class Download extends EventEmitter {
   storeKey = 'download'
 
+  status = {
+    in_progress: { name: '下载中', key: 'in_progress' },
+    interrupted: { name: '已暂停', key: 'interrupted' },
+    complete: { name: '下载完成', key: 'complete' },
+    error: { name: '错误', key: 'error' },
+  }
+
   constructor(onChange) {
     super()
     this.on('change', onChange)
@@ -28,7 +35,7 @@ class Download extends EventEmitter {
       localPath: localPath, // 下载本地路径
       startTime: startTime, // 下载开始时间
       filename: basename(localPath), // 下载的文件名
-      status: 'in_progress', // 下载状态: "in_progress", "interrupted", "complete", "error"
+      status: this.status.in_progress.key, // 下载状态: "in_progress", "interrupted", "complete", "error"
       errorMessage: '',
       transferred: 0, // 已下载大小
       total: -1, // 总共大小
@@ -92,14 +99,14 @@ class Download extends EventEmitter {
           }
         })
         .on('error', error => {
-          item.status = error
+          item.status = this.status.error.key
           item.errorMessage = error && error.message
           emitChange()
           reject(error)
         })
 
       const localStream = Fs.createWriteStream(localPath).once('finish', async () => {
-        item.status = 'complete'
+        item.status = this.status.complete.key
         item.endTime = moment().unix()
         request.removeAllListeners()
         await this.setItem(item.id, item)
