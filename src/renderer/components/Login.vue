@@ -86,7 +86,6 @@ export default {
     submit() {
       this.signIn(this.bucketName, this.operatorName, this.password).then(() => {
         if (this.rememberMe) {
-          console.log(this.user)
           this.user.save()
         }
       })
