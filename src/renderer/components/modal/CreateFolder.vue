@@ -14,7 +14,7 @@
         </p>
       </div>
       <div class="modal-footer">
-        <button class="button is-primary" :class="{'is-loading': isSubmitting}" @click="submit">创建</button>
+        <button class="button is-primary" :class="{'is-loading': isSubmitting}" @click="submit" :disabled="!folderName">创建</button>
       </div>
     </div>
   </div>
