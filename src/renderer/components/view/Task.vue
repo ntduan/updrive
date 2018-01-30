@@ -6,6 +6,9 @@
           'is-active': task.tabKey === key,
         }" v-for="(value, key) in task.taskType" :key="key" @click="switchTab(key)"><a>{{value}}</a></li>
       </ul>
+      <div class="handle">
+        <a>清除所有记录</a>
+      </div>
     </div>
     <div class="list">
       <div class="files-list">
@@ -26,12 +29,13 @@
             class="files-list-item"
             v-for="file in task.list"
             :key="file.id"
+            v-if="filterList(file)"
           >
             <div class="name file-info-item">
               <i class="res-icon" :class="getFileIconClass(file.filename)"></i>{{file.filename}}
             </div>
             <div class="size file-info-item">{{file.transferred | digiUnit}} / {{file.total | digiUnit}}</div>
-            <div class="status file-info-item">{{task.job.status[file.status].name}}</div>
+            <div class="status file-info-item">{{file.status && task.status[file.status].name}}</div>
             <div class="handle file-info-item"></div>
           </div>
         </div>
@@ -50,14 +54,23 @@ export default {
     return {}
   },
   computed: {
-    // downloadingList() {
-    //   return this.task.download.data.filters
-    // },
     ...mapState(['task']),
   },
   methods: {
     switchTab(tabKey) {
       this.$store.commit('SELECT_TAB_KEY', { tabKey })
+    },
+    filterList(file) {
+      const isCompleted = file.status === this.task.status.completed.value
+      if (this.task.tabKey === 'completed') {
+        return isCompleted
+      }
+      if (this.task.tabKey === 'uploading' && !isCompleted) {
+        return file.connectType === 'upload'
+      }
+      if (this.task.tabKey === 'downloading' && !isCompleted) {
+        return file.connectType === 'download'
+      }
     },
     getFileIconClass: getFileIconClass,
   },

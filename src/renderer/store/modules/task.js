@@ -16,6 +16,7 @@ const state = {
     downloading: '下载中',
     completed: '已完成',
   },
+  status: {},
   tabKey: 'uploading',
   job: null,
   list: [],
@@ -26,6 +27,7 @@ const state = {
 const mutations = {
   [Types.INIT_JOB](state, job) {
     state.job = job
+    state.status = job.status
   },
   [Types.SET_JOB_LIST](state, list) {
     state.list = list

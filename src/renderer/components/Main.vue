@@ -38,7 +38,7 @@ export default {
       this.$store.commit(
         'INIT_JOB',
         new Job(this.auth.user.key, item => {
-          this.$store.commit('UPDATE_JOB_ITEM', { item: { ...item } })
+          this.$store.commit('UPDATE_JOB_ITEM', { item })
         }),
       )
       this.$store.dispatch('SYNC_JOB_LIST')

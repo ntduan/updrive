@@ -14,11 +14,6 @@ class Job extends EventEmitter {
     data: [],
   }
 
-  type = {
-    download: 'download', // 下载
-    upload: 'upload', // 上传
-  }
-
   status = {
     downloading: { name: '下载中', value: 'downloading' },
     uploading: { name: '上传中', value: 'uploading' },
@@ -29,7 +24,7 @@ class Job extends EventEmitter {
 
   constructor(keyPre, onChange) {
     super()
-    this.storeKey = `${keyPre}-job`
+    this.storeKey = `${keyPre}:job`
     this.on('change', onChange)
   }
 
@@ -40,6 +35,7 @@ class Job extends EventEmitter {
     const item = {
       id: id, // 唯一ID
       url: url, // 远程路径
+      connectType: 'download', // 类型 download upload
       localPath: localPath, // 下载本地路径
       startTime: startTime, // 下载开始时间
       filename: basename(localPath), // 下载的文件名
@@ -70,7 +66,7 @@ class Job extends EventEmitter {
     const item = await this.createDownloadItem(url, localPath)
     // @TODO 并发
     return new Promise((resolve, reject) => {
-      const emitChange = type => {
+      const emitChange = () => {
         this.emit('change', { ...item })
       }
 
