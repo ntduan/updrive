@@ -6,9 +6,9 @@ import Store from '@/store'
 
 import Login from '@/components/Login'
 import Main from '@/components/Main'
-import List from '@/components/view/List'
-import Domain from '@/components/view/Domain'
-import Task from '@/components/view/Task'
+import List from '@/views/list/List'
+import Domain from '@/views/domain/Domain'
+import Task from '@/views/task/Task'
 import Session from '@/api/session.js'
 
 Vue.use(Router)

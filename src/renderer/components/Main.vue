@@ -12,9 +12,9 @@
 import { mapState } from 'vuex'
 
 import Job from '@/api/job'
-import LayoutNav from '@/components/layout/LayoutNav'
-import LayoutMenu from '@/components/layout/LayoutMenu'
-import LayoutBody from '@/components/layout/LayoutBody'
+import LayoutNav from '@/views/layout/LayoutNav'
+import LayoutMenu from '@/views/layout/LayoutMenu'
+import LayoutBody from '@/views/layout/LayoutBody'
 
 export default {
   name: 'Main',
