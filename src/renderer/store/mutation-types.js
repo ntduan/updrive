@@ -31,6 +31,7 @@ export const CANCEL_TASK = 'CANCEL_TASK' // 取消任务
 export const INIT_JOB = 'INIT_JOB' // 初始化任务实例
 export const SET_JOB_LIST = 'SET_JOB_LIST' // 设置任务列表
 export const UPDATE_JOB_ITEM = 'UPDATE_JOB_ITEM' // 更新一个任务
+export const CLEAR_COMPLEATE_JOB = 'CLEAR_COMPLEATE_JOB' // 清空已完成任务
 export const SELECT_TAB_KEY = 'SELECT_TAB_KEY' // 设置 task tab key
 
 // actions

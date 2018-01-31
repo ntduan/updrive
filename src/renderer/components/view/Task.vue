@@ -75,7 +75,7 @@ export default {
     },
     clearCompleted() {
       this.toggleShowClearCompletedModal(false)
-      console.log('daslkdalsjdklajdkasjkdljas')
+      this.$store.dispatch('CLEAR_COMPLEATE_JOB')
     },
     switchTab(tabKey) {
       this.$store.commit('SELECT_TAB_KEY', { tabKey })

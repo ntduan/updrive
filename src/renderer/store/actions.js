@@ -134,4 +134,14 @@ export default {
       commit(Types.SET_JOB_LIST, store ? store.data : [])
     })
   },
+  // 清空已完成任务
+  [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { uri, basicInfo } = {}) {
+    getters.job
+      .clearCompleted()
+      .then(store => {
+        Message.success('操作成功')
+        dispatch('SYNC_JOB_LIST')
+      })
+      .catch(errorHandler)
+  },
 }

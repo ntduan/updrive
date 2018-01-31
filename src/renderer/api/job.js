@@ -114,13 +114,16 @@ class Job extends EventEmitter {
   }
 
   async clearCompleted() {
-    // return await localforage.removeItem(this.storeKey.completed)
+    const store = await this.getStore()
+    store.data = store.data.filter(item => {
+      return item.status !== this.status.completed.value
+    })
+    return await localforage.setItem(this.storeKey, store)
   }
 
   async getStore() {
-    return await localforage.getItem(this.storeKey).then(data => {
-      return data && data.version === this.initStore.version ? data : { ...this.initStore }
-    })
+    const data = await localforage.getItem(this.storeKey)
+    return data && data.version === this.initStore.version ? data : { ...this.initStore }
   }
 }
 

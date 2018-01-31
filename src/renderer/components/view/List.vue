@@ -5,7 +5,7 @@
         <div class="list-operation-item" @click="isSelectedSingleFile && getLink()" :class="{disabled: !isSelectedSingleFile}">
           <Icon name="icon-link" />获取链接
         </div>
-        <div class="list-operation-item" @click="uniqueSelectedUri && downloadFile()" :class="{disabled: !uniqueSelectedUri}">
+        <div class="list-operation-item" @click="selected.length && downloadFile()" :class="{disabled: !uniqueSelectedUri}">
           <Icon name="icon-download" />下载
         </div>
         <div class="list-operation-item" @click="isSelectedSingleFile && dblclickItem()" :class="{disabled: !isSelectedSingleFile}">
