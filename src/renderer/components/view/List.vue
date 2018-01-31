@@ -11,7 +11,7 @@
         <div class="list-operation-item" @click="isSelectedSingleFile && dblclickItem()" :class="{disabled: !isSelectedSingleFile}">
           <Icon name="icon-browse" />查看
         </div>
-        <div class="list-operation-item" @click="selected.length && deleteFile()" :class="{disabled: !selected.length}">
+        <div class="list-operation-item" @click="selected.length && toggleShowDeleteModal(true)" :class="{disabled: !selected.length}">
           <Icon name="icon-delete" />删除
         </div>
         <div class="list-operation-item" @click="isSelectedSingleFile && renameFile()" :class="{disabled: !isSelectedSingleFile}">
@@ -163,6 +163,15 @@
         </div>
       </div>
     </div>
+    <confirm-modal
+      title="是否删除选中文件?"
+      :show="showDeleteModal"
+      @confirm="deleteFile"
+      @close="toggleShowDeleteModal"
+    >
+      <p>{{`确定要删除「${getBasename(selected[0])}」${selected.length > 1 ? `等${selected.length}个文件` : ''}吗?`}}</p>
+      <p class="has-text-weight-bold" style="margin-top: 1em;">该操作无法恢复。</p>
+    </confirm-modal>
   </div>
 </template>
 
@@ -210,6 +219,7 @@ import {
 import { mapState, mapGetters } from 'vuex'
 import Path from 'path'
 import Message from 'iview/src/components/message'
+import ConfirmModal from '@/components/UIComponents/ConfirmModal'
 
 import Icon from '@/components/UIComponents/Icon'
 import Spinner from '@/components/UIComponents/Spinner'
@@ -218,7 +228,6 @@ import {
   uploadFileDialog,
   uploadDirectoryDialog,
   downloadFileDialog,
-  messgaeDialog,
   createContextmenu,
   showContextmenu,
   openExternal,
@@ -231,6 +240,7 @@ export default {
   components: {
     Spinner,
     Icon,
+    ConfirmModal,
   },
   data() {
     return {
@@ -238,6 +248,7 @@ export default {
       detailLoading: false,
       isViewDetail: false,
       isDragOver: false,
+      showDeleteModal: false,
     }
   },
   computed: {
@@ -288,8 +299,11 @@ export default {
     refresh() {
       this.$store.dispatch('REFRESH_LIST')
     },
-    toggleShowViewDetail() {
-      this.isViewDetail = !this.isViewDetail
+    toggleShowDeleteModal(value) {
+      this.showDeleteModal = value !== undefined ? value : !this.showDeleteModal
+    },
+    toggleShowViewDetail(value) {
+      this.isViewDetail = value !== undefined ? value : !this.isViewDetail
     },
     dragstart($event) {
       return false
@@ -424,7 +438,7 @@ export default {
           // { hide: false, label: '上传文件', click: () => this.uploadFile() },
           // { hide: false, label: '上传文件夹', click: () => this.uploadDirectory() },
           { hide: !this.selected.length, type: 'separator' },
-          { hide: !this.selected.length, label: '删除', click: () => this.deleteFile() },
+          { hide: !this.selected.length, label: '删除', click: () => this.toggleShowDeleteModal(true) },
         ],
       })
     },
@@ -468,18 +482,10 @@ export default {
     // 删除文件
     deleteFile() {
       const { selected } = this
-      return messgaeDialog({
-        title: '提示',
-        buttons: ['删除', '取消'],
-        defaultId: 1,
-        message: `确定要删除「${Path.basename(selected[0])}」${
-          selected.length > 1 ? `等${selected.length}个文件` : ''
-        }吗?`,
-        detail: '操作后文件无法恢复',
-      }).then(index => {
-        if (index !== 0) return
-        this.$store.dispatch({ type: 'DELETE_FILE', selectedPaths: selected })
-      })
+      this.$store.dispatch({ type: 'DELETE_FILE', selectedPaths: selected })
+        .then(() => {
+          this.toggleShowDeleteModal()
+        })
     },
     // 下载文件
     downloadFile() {
@@ -520,6 +526,9 @@ export default {
           localFilePaths: folderPaths,
         })
       })
+    },
+    getBasename(str = '') {
+      return Path.basename(str)
     },
     getFileIconClass: getFileIconClass,
   },

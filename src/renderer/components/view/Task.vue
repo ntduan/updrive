@@ -7,7 +7,7 @@
         }" v-for="(value, key) in task.taskType" :key="key" @click="switchTab(key)"><a>{{value}}</a></li>
       </ul>
       <div class="handle">
-        <a>清除所有记录</a>
+        <a @click="toggleShowClearCompletedModal(true)">清除所有记录</a>
       </div>
     </div>
     <div class="list">
@@ -41,22 +41,42 @@
         </div>
       </div>
     </div>
+    <confirm-modal
+      title="是否清空已完成任务？"
+      content="该操作无法恢复。"
+      :show="showClearCompletedModal"
+      @confirm="clearCompleted"
+      @close="toggleShowClearCompletedModal"
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { digiUnit, getFileIconClass } from '@/api/tool'
+import ConfirmModal from '@/components/UIComponents/ConfirmModal'
 
 export default {
   name: 'Task',
   data() {
-    return {}
+    return {
+      showClearCompletedModal: false,
+    }
+  },
+  components: {
+    ConfirmModal,
   },
   computed: {
     ...mapState(['task']),
   },
   methods: {
+    toggleShowClearCompletedModal(value) {
+      this.showClearCompletedModal = value !== undefined ? value : !this.showClearCompletedModal
+    },
+    clearCompleted() {
+      this.toggleShowClearCompletedModal(false)
+      console.log('daslkdalsjdklajdkasjkdljas')
+    },
     switchTab(tabKey) {
       this.$store.commit('SELECT_TAB_KEY', { tabKey })
     },

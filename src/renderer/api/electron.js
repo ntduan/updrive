@@ -201,18 +201,3 @@ export const downloadFileDialog = (option = {}) => {
   })
 }
 
-// messgae
-export const messgaeDialog = (option = {}) => {
-  return new Promise((resolve, reject) => {
-    dialog.showMessageBox(
-      currentWin,
-      {
-        buttons: [],
-        cancelId: -1,
-        noLink: true,
-        ...option,
-      },
-      resolve,
-    )
-  })
-}
