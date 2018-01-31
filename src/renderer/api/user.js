@@ -1,10 +1,15 @@
 import moment from 'moment'
 import localforage from 'localforage'
-import { remove } from 'ramda'
+import { remove, prepend } from 'ramda'
 
 import UpyunClient from '@/api/upyunClient'
 
 export default class User {
+  initStore = {
+    version: 0.1,
+    data: [],
+  }
+
   constructor(bucketName, operatorName, password) {
     this.bucketName = bucketName
     this.operatorName = operatorName
@@ -25,10 +30,10 @@ export default class User {
         remark: '',
       }
       const recordIndex = authHistory.data.findIndex(u => u.key === this.key)
-      if (recordIndex > -1) {
-        authHistory[recordIndex] = record
+      if (~recordIndex) {
+        authHistory[recordIndex] = { ...record }
       } else {
-        authHistory.data.push(record)
+        authHistory.data = prepend(record, authHistory.data)
       }
 
       return localforage.setItem('authHistory', authHistory)
@@ -37,11 +42,7 @@ export default class User {
 
   getAuthHistory() {
     return localforage.getItem('authHistory').then(data => {
-      return (
-        data || {
-          data: [],
-        }
-      )
+      return data && data.version === this.initStore.version ? data : { ...this.initStore }
     })
   }
 

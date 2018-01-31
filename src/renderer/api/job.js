@@ -51,8 +51,7 @@ class Job extends EventEmitter {
   }
 
   async setItem(id, item) {
-    const _store = await this.getStore()
-    const store = _store && _store.version === this.initStore.version ? _store : this.initStore
+    const store = await this.getStore()
     const existedItemIndex = store.data.findIndex(_item => _item.id === id)
     if (~existedItemIndex) {
       store.data[existedItemIndex] = { ...item }
@@ -119,7 +118,9 @@ class Job extends EventEmitter {
   }
 
   async getStore() {
-    return await localforage.getItem(this.storeKey)
+    return await localforage.getItem(this.storeKey).then(data => {
+      return data && data.version === this.initStore.version ? data : { ...this.initStore }
+    })
   }
 }
 
