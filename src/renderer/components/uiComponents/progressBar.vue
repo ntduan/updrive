@@ -6,7 +6,7 @@
 import ProgressBar from 'progressbar.js'
 
 export default {
-  name: 'MainMenu',
+  name: 'ProgressBar',
   data() {
     return {
       shape: null,

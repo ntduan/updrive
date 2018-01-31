@@ -2,6 +2,12 @@
   <div class="spinner"></div>
 </template>
 
+<script>
+export default {
+  name: 'Spinner',
+}
+</script>
+
 <style>
 @keyframes spinner {
   to {
