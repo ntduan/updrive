@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Icon from '@/components/uiComponents/icon'
+import Icon from '@/components/UIComponents/Icon'
 
 export default {
   name: 'LayoutMenu',

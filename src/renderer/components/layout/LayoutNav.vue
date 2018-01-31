@@ -51,7 +51,7 @@
 import { path, take, split, identity, filter, compose, concat, join } from 'ramda'
 import { mapState, mapGetters } from 'vuex'
 
-import Icon from '@/components/uiComponents/icon'
+import Icon from '@/components/UIComponents/Icon'
 import { uploadFileDialog, uploadDirectoryDialog } from '@/api/electron.js'
 
 export default {

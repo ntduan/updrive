@@ -31,7 +31,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-import Icon from '@/components/uiComponents/icon'
+import Icon from '@/components/UIComponents/Icon'
 
 export default {
   name: 'RenameFile',

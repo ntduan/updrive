@@ -211,8 +211,8 @@ import { mapState, mapGetters } from 'vuex'
 import Path from 'path'
 import Message from 'iview/src/components/message'
 
-import Icon from '@/components/uiComponents/icon'
-import Spinner from '@/components/uiComponents/spinner'
+import Icon from '@/components/UIComponents/Icon'
+import Spinner from '@/components/UIComponents/Spinner'
 import { timestamp, digiUnit, isDir, getFileIconClass } from '@/api/tool'
 import {
   uploadFileDialog,
