@@ -1,5 +1,5 @@
 <template>
-  <div class="modal modal-folder is-active" v-show="modal.createFolder.show" tabindex="1" @keyup.esc="close" @keyup.enter="submit">
+  <div class="modal modal-sm basic-modal is-active" v-show="modal.createFolder.show" tabindex="1" @keyup.esc="close" @keyup.enter="submit">
     <div class="modal-background"></div>
     <div class="modal-content">
       <div class="modal-header">
@@ -10,7 +10,7 @@
       </div>
       <div class="modal-body">
         <p class="control">
-          <input class="input" autofocus type="text" v-model="folderName" placeholder="请输入文件夹名称">
+          <input class="input" ref="autofocus" type="text" v-model="folderName" placeholder="请输入文件夹名称">
         </p>
       </div>
       <div class="modal-footer">
@@ -37,19 +37,21 @@ export default {
     }
   },
   computed: {
+    show() {
+      return this.modal.createFolder.show
+    },
     ...mapState(['modal', 'list']),
   },
   methods: {
     close() {
       this.$store.commit('CLOSE_CREATE_FOLDER_MODAL')
     },
-    enter(el) {
-      this.$nextTick(() => {
-        el.querySelector('input[autofocus]').focus()
-      })
+    valid() {
+      if (!this.folderName) return false
+      return true
     },
     submit() {
-      if (this.isSubmitting) return false
+      if (this.isSubmitting || !this.valid()) return false
       this.isSubmitting = true
       this.$store
         .dispatch({
@@ -65,6 +67,15 @@ export default {
         .catch(() => {
           this.isSubmitting = false
         })
+    },
+  },
+  watch: {
+    'modal.createFolder.show'(val, oldVal) {
+      this.$nextTick(() => {
+        if (this.$refs.autofocus && val) {
+          this.$refs.autofocus.focus()
+        }
+      })
     },
   },
 }
