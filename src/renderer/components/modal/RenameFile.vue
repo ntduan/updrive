@@ -1,5 +1,5 @@
 <template>
-  <div class="modal modal-rename is-active" v-show="modal.renameFile.show" tabindex="1" @keyup.esc="close" @keyup.enter="submit">
+  <div class="modal modal-md basic-modal is-active" v-show="modal.renameFile.show" tabindex="1" @keyup.esc="close" @keyup.enter="submit">
     <div class="modal-background"></div>
     <div class="modal-content">
       <div class="modal-header">
