@@ -30,8 +30,8 @@
 import { mapState } from 'vuex'
 import { reverse } from 'ramda'
 
-import ProgressBar from '@/components/UIComponents/ProgressBar'
-import Icon from '@/components/UIComponents/Icon'
+import ProgressBar from '@/components/uiComponents/ProgressBar'
+import Icon from '@/components/uiComponents/Icon'
 import { digiUnit, uploadStatus } from '@/api/tool'
 
 export default {

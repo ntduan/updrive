@@ -23,7 +23,7 @@
 <script>
 import { mapState } from 'vuex'
 
-import Icon from '@/components/UIComponents/Icon'
+import Icon from '@/components/uiComponents/Icon'
 
 export default {
   name: 'Profile',
