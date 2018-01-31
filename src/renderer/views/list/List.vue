@@ -219,10 +219,10 @@ import {
 import { mapState, mapGetters } from 'vuex'
 import Path from 'path'
 import Message from 'iview/src/components/message'
-import ConfirmModal from '@/components/uiComponents/ConfirmModal'
+import ConfirmModal from '@/components/ConfirmModal'
 
-import Icon from '@/components/uiComponents/Icon'
-import Spinner from '@/components/uiComponents/Spinner'
+import Icon from '@/components/Icon'
+import Spinner from '@/components/Spinner'
 import { timestamp, digiUnit, isDir, getFileIconClass } from '@/api/tool'
 import {
   uploadFileDialog,

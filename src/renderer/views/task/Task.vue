@@ -54,7 +54,7 @@
 <script>
 import { mapState } from 'vuex'
 import { digiUnit, getFileIconClass } from '@/api/tool'
-import ConfirmModal from '@/components/uiComponents/ConfirmModal'
+import ConfirmModal from '@/components/ConfirmModal'
 
 export default {
   name: 'Task',

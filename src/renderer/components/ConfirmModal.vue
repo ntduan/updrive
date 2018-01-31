@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import Icon from '@/components/uiComponents/Icon'
+import Icon from '@/components/Icon'
 
 export default {
   name: 'ConfirmModal',
