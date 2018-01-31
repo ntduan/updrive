@@ -12,9 +12,9 @@
 <script>
 import { mapState } from 'vuex'
 
-import CreateFolder from '@/components/modal/CreateFolder'
-import RenameFile from '@/components/modal/RenameFile'
-import FileProgress from '@/components/modal/FileProgress'
+import CreateFolder from '@/views/modal/CreateFolder'
+import RenameFile from '@/views/modal/RenameFile'
+import FileProgress from '@/views/modal/FileProgress'
 
 export default {
   name: 'LayoutBody',

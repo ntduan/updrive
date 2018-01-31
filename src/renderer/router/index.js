@@ -4,8 +4,8 @@ import { path } from 'ramda'
 
 import Store from '@/store'
 
-import Login from '@/components/Login'
-import Main from '@/components/Main'
+import Main from '@/views/layout/Main'
+import Login from '@/views/login/Login'
 import List from '@/views/list/List'
 import Domain from '@/views/domain/Domain'
 import Task from '@/views/task/Task'
