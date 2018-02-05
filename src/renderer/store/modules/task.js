@@ -2,22 +2,13 @@ import { append, drop, prepend, update } from 'ramda'
 
 import * as Types from '@/store/mutation-types'
 
-// console.log(Store)
-// const downloadStore = new Download()
-// downloadStore.on('change', id => {
-//   downloadStore.getStore().then(obj => {
-//     console.log(obj)
-//   })
-// })
-
 const state = {
   taskType: {
-    uploading: '上传中',
-    downloading: '下载中',
-    completed: '已完成',
+    upload: '上传',
+    download: '下载',
   },
   status: {},
-  tabKey: 'uploading',
+  tabKey: 'upload',
   job: null,
   list: [],
   taskList: [],

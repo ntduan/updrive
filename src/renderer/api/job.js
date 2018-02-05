@@ -15,10 +15,10 @@ class Job extends EventEmitter {
   }
 
   status = {
-    downloading: { name: '下载中', value: 'downloading' },
-    uploading: { name: '上传中', value: 'uploading' },
+    downloading: { name: '下载中...', value: 'downloading' },
+    uploading: { name: '上传中...', value: 'uploading' },
     interrupted: { name: '已暂停', value: 'interrupted' },
-    completed: { name: '下载完成', value: 'completed' },
+    completed: { name: '已完成', value: 'completed' },
     error: { name: '错误', value: 'error' },
   }
 
@@ -113,10 +113,10 @@ class Job extends EventEmitter {
     })
   }
 
-  async clearCompleted() {
+  async clearCompleted(type) {
     const store = await this.getStore()
     store.data = store.data.filter(item => {
-      return item.status !== this.status.completed.value
+      return item.status !== this.status.completed.value && (!type || item.connectType === type)
     })
     return await localforage.setItem(this.storeKey, store)
   }

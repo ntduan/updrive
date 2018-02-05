@@ -135,9 +135,9 @@ export default {
     })
   },
   // 清空已完成任务
-  [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { uri, basicInfo } = {}) {
+  [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { type } = {}) {
     getters.job
-      .clearCompleted()
+      .clearCompleted(type)
       .then(store => {
         Message.success('操作成功')
         dispatch('SYNC_JOB_LIST')

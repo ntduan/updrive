@@ -24,14 +24,14 @@
       width: 150px;
     }
     .column-file-status {
-      width: 200px;
+      width: 250px;
     }
     .column-file-handle {
       width: 150px;
     }
   }
   .files-list-item {
-    height: 60px;
+    height: 56px;
     .file-info-item {
       vertical-align: middle;
     }
@@ -42,7 +42,21 @@
     padding-right: 15px;
   }
   .status.file-info-item {
+    font-size: 12px;
+    text-align: left;
+    padding-right: 15px;
+    color: rgba(0, 0, 0, 0.8);
+    line-height: 18px;
+    .task-state {
+      display: flex;
+    }
+    .task-state-time {
+      margin-left: 16px;
+      color: rgba(0, 0, 0, 0.4);
+    }
   }
   .handle.file-info-item {
+    line-height: 18px;
   }
 }
+

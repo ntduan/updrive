@@ -9,6 +9,13 @@ export default {
   name: 'ProgressBar',
   data() {
     return {
+      defaultOpts: {
+        strokeWidth: 2,
+        color: '#97c8f3',
+        trailColor: '#eee',
+        trailWidth: 1,
+        svgStyle: { width: '100%', height: '100%' },
+      },
       shape: null,
     }
   },
@@ -20,26 +27,25 @@ export default {
     },
   },
   watch: {
-    progress(val) {
-      this.progressAnimate(val)
+    progress(val, oldval) {
+      this.progressAnimate(val, oldval)
     },
   },
   destroyed() {
     this.shape && this.shape.destroy()
   },
   mounted() {
-    this.shape = new ProgressBar.Circle(this.$refs.progressBar, {
-      strokeWidth: 14,
-      color: '#2389d0',
-      trailColor: '#aaa',
-      trailWidth: 12,
+    this.shape = new ProgressBar.Line(this.$refs.progressBar, {
+      ...this.defaultOpts,
     })
     this.progressAnimate(this.progress)
   },
   methods: {
-    progressAnimate(progress = 0) {
+    progressAnimate(progress = 0, oldProgress = 0) {
       if (!this.shape) return
-      this.shape.animate(progress)
+      this.shape.animate(progress, {
+        duration: 100,
+      })
     },
   },
 }
