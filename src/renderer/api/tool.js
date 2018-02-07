@@ -110,6 +110,11 @@ export const digiUnit = input => {
   )(input)
 }
 
+export const percent = (input, precision = 0) => {
+  const num = parseFloat(input * 100, 10).toFixed(precision)
+  return `${num} %`
+}
+
 export const uploadStatus = input => {
   return { '0': '未开始', '1': '进行中', '2': '已完成', '-1': '出错', '-2': '已取消' }[input]
 }
@@ -129,9 +134,7 @@ export const getFileIconClass = (filename = '', folderType) => {
   const extensionName = Path.extname(filename).toLocaleLowerCase()
   return {
     'icon-folder': folderType === 'F' || folderType === 'B',
-    'icon-image': ['.bmp', '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.gifv'].includes(
-      extensionName,
-    ),
+    'icon-image': ['.bmp', '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.gifv'].includes(extensionName),
     'icon-music': ['.mp3', '.m4a', '.ogg'].includes(extensionName),
     'icon-zip': ['.zip', '.rar', '.7z'].includes(extensionName),
     'icon-movie': ['.avi', '.mp4', '.flv', '.mov', '.3gp', '.asf', '.wmv', '.mpg', '.f4v', '.m4v', '.mkv'].includes(

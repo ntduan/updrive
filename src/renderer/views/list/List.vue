@@ -87,12 +87,16 @@
             </div>
           </div>
         </div>
-        <div v-if="!list.dirInfo.data.length && !list.dirInfo.loading" class="empty-list">
-          <div class="empty-list-content">
-            <p>该文件夹为空</p>
-            <p>拖动上传文件</p>
-          </div>
-        </div>
+        <table v-if="!list.dirInfo.data.length && !list.dirInfo.loading" class="table empty-list-table">
+          <tbody>
+            <tr v-for="(value, index) in Array.apply(null, {length: 11})" :key="index" class="empty-list-row">
+              <div class="empty-content" v-if="index === 4">
+                <p class="has-text-weight-bold">该文件夹为空</p>
+                <p>拖动到此处即可上传文件，或<a @click="uploadFile()">点击上传</a></p>
+              </div>
+            </tr>
+          </tbody>
+        </table>
         <spinner v-if="list.dirInfo.loading"/>
       </div>
     </div>
@@ -322,8 +326,7 @@ export default {
     drop($event) {
       this.isDragOver = false
       $event.preventDefault()
-      this.$store.dispatch({
-        type: 'UPLOAD_FILES',
+      this.$store.dispatch('UPLOAD_FILES', {
         remotePath: this.currentDirPath,
         localFilePaths: pluck('path', $event.dataTransfer.files),
       })
@@ -482,10 +485,9 @@ export default {
     // 删除文件
     deleteFile() {
       const { selected } = this
-      this.$store.dispatch({ type: 'DELETE_FILE', selectedPaths: selected })
-        .then(() => {
-          this.toggleShowDeleteModal()
-        })
+      this.$store.dispatch({ type: 'DELETE_FILE', selectedPaths: selected }).then(() => {
+        this.toggleShowDeleteModal()
+      })
     },
     // 下载文件
     downloadFile() {
@@ -509,8 +511,7 @@ export default {
     uploadFile() {
       return uploadFileDialog().then(filePaths => {
         if (!filePaths || !filePaths.length) return
-        return this.$store.dispatch({
-          type: 'UPLOAD_FILES',
+        return this.$store.dispatch('UPLOAD_FILES', {
           remotePath: this.currentDirPath,
           localFilePaths: filePaths,
         })
@@ -520,8 +521,7 @@ export default {
     uploadDirectory() {
       return uploadDirectoryDialog().then(folderPaths => {
         if (!folderPaths || !folderPaths.length) return
-        return this.$store.dispatch({
-          type: 'UPLOAD_FILES',
+        return this.$store.dispatch('UPLOAD_FILES', {
           remotePath: this.currentDirPath,
           localFilePaths: folderPaths,
         })

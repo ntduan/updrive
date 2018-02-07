@@ -46,21 +46,6 @@ export default {
         return Promise.reject(error)
       })
   },
-  // 上传文件
-  [Types.UPLOAD_FILES]({ getters, commit, dispatch }, { remotePath, localFilePaths }) {
-    commit(Types.SHOW_TASK_MODAL)
-    return getters.upyunClient
-      .uploadFiles(remotePath, localFilePaths, payload => commit({ type: Types.UPDATE_TASK, payload }))
-      .then(errorStack => {
-        if (!errorStack.length) {
-          Message.success('文件上传成功')
-        } else {
-          Message.warning(`上传失败文件：${errorStack.join('、')}`)
-        }
-      })
-      .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
-      .catch(errorHandler)
-  },
   // 创建目录
   [Types.CREATE_FOLDER]({ getters, commit, dispatch }, { remotePath, folderName }) {
     return getters.upyunClient
@@ -111,6 +96,22 @@ export default {
       })
       .catch(errorHandler)
   },
+  // 上传文件
+  [Types.UPLOAD_FILES]({ getters, commit, dispatch }, { localFilePaths, remotePath } = {}) {
+    return getters.upyunClient
+      .uploadFiles(remotePath, localFilePaths, getters.job)
+      .then(results => {
+        const isAllSuccess = !results.some(r => !r.result)
+        if (isAllSuccess) {
+          Message.success('上传成功')
+        } else {
+          for (const result of results) Message.warning(`上传失败：${result.localPath}: ${result.message}`)
+        }
+        return dispatch(Types.SYNC_JOB_LIST)
+      })
+      .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
+      .catch(errorHandler)
+  },
   // 获取文件详情信息
   [Types.GET_FILE_DETAIL_INFO]({ getters, commit }, { uri, basicInfo } = {}) {
     return Promise.resolve()
@@ -128,16 +129,26 @@ export default {
         })
       })
   },
-  // 同步下载任务列表
+  // 同步任务列表
   [Types.SYNC_JOB_LIST]({ getters, commit }, { uri, basicInfo } = {}) {
     getters.job.getStore().then(store => {
       commit(Types.SET_JOB_LIST, store ? store.data : [])
     })
   },
   // 清空已完成任务
-  [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { uri, basicInfo } = {}) {
+  [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { type } = {}) {
     getters.job
-      .clearCompleted()
+      .clearCompleted(type)
+      .then(store => {
+        Message.success('操作成功')
+        dispatch('SYNC_JOB_LIST')
+      })
+      .catch(errorHandler)
+  },
+  // 清空已完成任务
+  [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { type, id } = {}) {
+    getters.job
+      .clearCompleted({type, id})
       .then(store => {
         Message.success('操作成功')
         dispatch('SYNC_JOB_LIST')

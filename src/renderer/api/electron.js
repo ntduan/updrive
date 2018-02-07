@@ -201,3 +201,6 @@ export const downloadFileDialog = (option = {}) => {
   })
 }
 
+export const showItemInFolder = (fullPath) => {
+  return shell.showItemInFolder(fullPath)
+}

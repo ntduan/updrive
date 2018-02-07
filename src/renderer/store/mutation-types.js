@@ -24,9 +24,6 @@ export const RENAME_FILE_CLEAR_OLD_PATH = 'RENAME_FILE_CLEAR_OLD_PATH' // 清除
 
 export const SHOW_TASK_MODAL = 'SHOW_TASK_MODAL' // 显示任务框
 export const HIDE_TASK_MODAL = 'HIDE_TASK_MODAL' // 隐藏任务框
-export const DELETE_TASK = 'DELETE_TASK' // 删除任务
-export const UPDATE_TASK = 'UPDATE_TASK' // 更新任务
-export const CANCEL_TASK = 'CANCEL_TASK' // 取消任务
 
 export const INIT_JOB = 'INIT_JOB' // 初始化任务实例
 export const SET_JOB_LIST = 'SET_JOB_LIST' // 设置任务列表

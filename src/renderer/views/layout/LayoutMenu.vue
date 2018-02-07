@@ -8,7 +8,7 @@
         </router-link>
         <router-link :to="{name: 'task'}" :class="{'is-active': currentRouteName === 'task'}">
           <Icon name="icon-task" />
-          任务列表
+          任务列表<span v-show="workingTaskNum" class="task-tag tag is-danger is-rounded">{{workingTaskNum}}</span>
         </router-link>
       </li>
     </ul>
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import Icon from '@/components/Icon'
 
 export default {
@@ -24,9 +26,13 @@ export default {
     Icon,
   },
   computed: {
+    workingTaskNum() {
+      return this.task.list.filter(file => file.status !== this.task.status.completed.value).length
+    },
     currentRouteName() {
       return this.$route.name
     },
+    ...mapState(['task']),
   },
 }
 </script>

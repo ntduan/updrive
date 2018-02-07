@@ -62,19 +62,8 @@ export default {
     foldProgress() {
       this.isFold = !this.isFold
     },
-    cancelTask(data) {
-      this.$store.commit({
-        type: 'CANCEL_TASK',
-        data,
-      })
-    },
-    retryTask(data) {
-      // @TODO 增加重试操作
-      this.$store.commit({
-        type: 'RETRY_TASK',
-        data,
-      })
-    },
+    cancelTask(data) {},
+    retryTask(data) {},
   },
   filters: {
     digiUnit,

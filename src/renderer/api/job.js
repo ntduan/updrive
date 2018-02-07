@@ -15,10 +15,10 @@ class Job extends EventEmitter {
   }
 
   status = {
-    downloading: { name: '下载中', value: 'downloading' },
-    uploading: { name: '上传中', value: 'uploading' },
+    downloading: { name: '下载中...', value: 'downloading' },
+    uploading: { name: '上传中...', value: 'uploading' },
     interrupted: { name: '已暂停', value: 'interrupted' },
-    completed: { name: '下载完成', value: 'completed' },
+    completed: { name: '已完成', value: 'completed' },
     error: { name: '错误', value: 'error' },
   }
 
@@ -50,6 +50,29 @@ class Job extends EventEmitter {
     return item
   }
 
+  async createUploadItem(url, localPath) {
+    const filename = decodeURIComponent(new URL(url).pathname.split('/').reverse()[0])
+    const startTime = moment().unix()
+    const total = Fs.statSync(localPath).size
+    const id = base64(`${filename}:${startTime}`)
+    const item = {
+      id: id, // 唯一ID
+      url: url, // 上传路径
+      connectType: 'upload', // 类型 download upload
+      localPath: localPath, // 上传本地文件路径
+      startTime: startTime, // 上传开始时间
+      filename: filename, // 上传的文件名
+      status: this.status.uploading.value, // 传输状态: "downloading", "interrupted", "completed", "error"
+      errorMessage: '',
+      transferred: 0, // 已上传大小
+      total: total, // 总共大小
+      endTime: -1, // 下载结束时间
+    }
+    await this.setItem(id, item)
+    this.emit('change', { ...item })
+    return item
+  }
+
   async setItem(id, item) {
     const store = await this.getStore()
     const existedItemIndex = store.data.findIndex(_item => _item.id === id)
@@ -62,9 +85,10 @@ class Job extends EventEmitter {
   }
 
   async createDownloadTask({ url, headers, localPath }) {
-    const item = await this.createDownloadItem(url, localPath)
     // @TODO 并发
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      const item = await this.createDownloadItem(url, localPath)
+
       const emitChange = () => {
         this.emit('change', { ...item })
       }
@@ -113,10 +137,63 @@ class Job extends EventEmitter {
     })
   }
 
-  async clearCompleted() {
+  async createUploadTask({ url, headers, localPath }) {
+    // @TODO 并发
+    return new Promise(async (resolve, reject) => {
+      const item = await this.createUploadItem(url, localPath)
+
+      const emitChange = () => {
+        this.emit('change', { ...item })
+      }
+
+      let percentage = 0
+      const calTrans = () => {
+        const newPercentage = (item.transferred / item.total).toFixed(2)
+        if (percentage !== newPercentage) {
+          percentage = newPercentage
+          emitChange()
+        }
+      }
+
+      const throttleChunk = throttle(calTrans, 100)
+
+      const readStream = Fs.createReadStream(localPath).on('data', chunk => {
+        item.transferred += chunk.length
+        if (item.transferred === item.total) {
+          calTrans()
+        } else {
+          throttleChunk()
+        }
+      })
+
+      const request = Request({ url: url, headers: headers, method: 'PUT' })
+        .on('response', async response => {
+          item.status = this.status.completed.value
+          item.endTime = moment().unix()
+          readStream.removeAllListeners()
+          await this.setItem(item.id, item)
+          emitChange()
+          resolve('success')
+        })
+        .on('error', error => {
+          item.status = this.status.error.value
+          item.errorMessage = error && error.message
+          emitChange()
+          reject(error)
+        })
+
+      readStream.pipe(request)
+    })
+  }
+
+  async clearCompleted({ type, id }) {
     const store = await this.getStore()
     store.data = store.data.filter(item => {
-      return item.status !== this.status.completed.value
+      if (id) {
+        return item.id !== id
+      } else {
+        return item.status !== this.status.completed.value && (!type || item.connectType === type)
+      }
     })
     return await localforage.setItem(this.storeKey, store)
   }
