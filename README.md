@@ -5,7 +5,7 @@
 #### Download
 [下载地址](https://github.com/aniiantt/updrive/releases)
 
-### Screenshot
+#### Screenshot
 ![截图1](https://github.com/aniiantt/updrive/blob/develop/static/screenshot1.png?raw=true)
 ![截图2](https://github.com/aniiantt/updrive/blob/develop/static/screenshot2.png?raw=true)
 ![截图3](https://github.com/aniiantt/updrive/blob/develop/static/screenshot3.png?raw=true)
@@ -23,8 +23,6 @@ yarn dev
 yarn build
 
 ```
-
----
 
 ### Feature
 - 基础的文件上传、下载、删除、重命名、查看功能
