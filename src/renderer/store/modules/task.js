@@ -43,26 +43,6 @@ const mutations = {
     })
     state.showModal = false
   },
-  [Types.UPDATE_TASK](state, { payload = {} }) {
-    const task = state.taskList.find(item => item.id === payload.id)
-    if (task) {
-      Object.assign(task, payload)
-    } else {
-      state.taskList = append(payload, state.taskList)
-    }
-  },
-  [Types.DELETE_TASK](state, { data = {} }) {
-    state.taskList = state.taskList.filter(item => item.id !== data.id)
-  },
-  [Types.CANCEL_TASK](state, { data = {} }) {
-    state.taskList = state.taskList.map(item => {
-      if (item.id === data.id) {
-        item.abort && item.abort()
-        return { ...item, status: '-2' }
-      }
-      return item
-    })
-  },
 }
 
 export default {
