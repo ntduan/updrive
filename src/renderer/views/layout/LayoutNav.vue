@@ -74,7 +74,8 @@ export default {
   },
   methods: {
     goto(index) {
-      const remotePath = index === undefined ? '/' : concat('/', concat(join('/', take(index + 1)(this.pathArray)), '/'))
+      const remotePath =
+        index === undefined ? '/' : concat('/', concat(join('/', take(index + 1)(this.pathArray)), '/'))
       return this.$store.dispatch({
         type: 'GET_LIST_DIR_INFO',
         remotePath,
@@ -93,8 +94,7 @@ export default {
     uploadFile() {
       return uploadFileDialog().then(filePaths => {
         if (!filePaths || !filePaths.length) return
-        return this.$store.dispatch({
-          type: 'UPLOAD_FILES',
+        return this.$store.dispatch('UPLOAD_FILES', {
           remotePath: this.currentDirPath,
           localFilePaths: filePaths,
         })
@@ -104,8 +104,7 @@ export default {
     uploadDirectory() {
       return uploadDirectoryDialog().then(folderPaths => {
         if (!folderPaths || !folderPaths.length) return
-        return this.$store.dispatch({
-          type: 'UPLOAD_FILES',
+        return this.$store.dispatch('UPLOAD_FILES', {
           remotePath: this.currentDirPath,
           localFilePaths: folderPaths,
         })

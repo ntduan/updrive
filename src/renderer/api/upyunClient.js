@@ -139,65 +139,6 @@ class UpyunClient {
     return files
   }
 
-  // 上传文件
-  // relativePath 是相对当前目录的路径
-  async upload(uri = '', localFilePath = '', relativePath = '', localFileStat = {}, onChange) {
-    const size = localFileStat.size
-    let total = 0
-    let percentage = 0
-    const filename = Path.basename(localFilePath)
-    const uploadUri = uri + relativePath + filename
-    const id = base64(`file:${uploadUri}date:${+new Date()}`)
-    const localFilePathReadStream = createReadStream(localFilePath)
-    onChange({
-      id,
-      type: 'upload',
-      status: '1',
-      localFilePath,
-      remoteQuery: uploadUri,
-      filename,
-      percentage,
-      size,
-      done: total,
-      abort: localFilePathReadStream.destroy.bind(localFilePathReadStream),
-    })
-
-    return new Promise((resolve, reject) => {
-      const _request = Request(this.makeRequestOpts({ method: 'PUT', uri: uploadUri }), (error, response, body) => {
-        if (error) return reject(error)
-        if (response.statusCode !== 200) return reject(body)
-        console.info(`文件: ${localFilePath} 上传成功`, { body: response.body, statusCode: response.statusCode })
-        return resolve(body)
-      })
-
-      let isEnd = false // close 时 是否需要中断 request
-      localFilePathReadStream
-        .on('data', chunk => {
-          total += chunk.length
-          const newPercentage = Math.floor(total / size * 100) / 100
-          if (percentage !== newPercentage) {
-            percentage = newPercentage
-            console.info(`正在上传：${filename} ${percentage}`)
-            onChange({ id, percentage, done: total })
-          }
-        })
-        .on('close', arg => {
-          if (!isEnd) _request.abort()
-        })
-        .on('end', arg => {
-          isEnd = true
-        })
-        .pipe(_request)
-    })
-      .then(body => {
-        onChange({ id, status: '2' })
-        return Promise.resolve(body)
-      })
-      .catch(error => {
-        onChange({ id, status: '-1' })
-        return Promise.reject(error)
-      })
-  }
 
   // HEAD 请求
   async head(uri) {
@@ -240,16 +181,30 @@ class UpyunClient {
   }
 
   // 创建目录
-  async createFolder(uri = '', folderName = '') {
-    return this.request(`${uri}${folderName}/`, { method: 'POST', headers: { folder: true } })
+  async createFolder(location = '', folderName = '') {
+    return this.request(`${location}${folderName}/`, { method: 'POST', headers: { folder: true } })
   }
 
   // 上传文件
-  // @TODO 控制并发数量
-  async uploadFiles(uri, localFilePaths = [], onChange) {
-    const errorStack = []
-    const result = []
+  async uploadFiles(uri, localFilePaths = [], jobObj) {
+    const results = []
+
+    // 上传单个文件
+    const uploadFile = async (uploadLocation, localFilePath) => {
+      const localFileStat = statSync(localFilePath)
+      const basename = Path.basename(localFilePath)
+      if(!localFileStat.isFile()) return Promise.resolve(this.createFolder(uploadLocation, basename))
+      const url = this.getUrl(uploadLocation + basename)
+      const headers = { ...this.getHeaders(url, 'PUT') }
+      return await jobObj.createUploadTask({
+        url: url,
+        headers: headers,
+        localPath: localFilePath,
+      })
+    }
+
     // 广度优先遍历
+    const uploadList = []
     let list = localFilePaths.slice().map(path => ({ localFilePath: path, relativePath: '' }))
 
     while (list.length) {
@@ -263,22 +218,31 @@ class UpyunClient {
           })),
         )
       } else {
-        result.push(node)
+        uploadList.push(node)
       }
     }
 
-    for (const pathObj of result) {
+    for (const pathObj of uploadList) {
+      const uploadLocation = uri + pathObj.relativePath
       try {
-        const localFileStat = statSync(pathObj.localFilePath)
-        localFileStat.isFile()
-          ? await this.upload(uri, pathObj.localFilePath, pathObj.relativePath, localFileStat, onChange)
-          : await this.createFolder(uri, pathObj.relativePath + Path.basename(pathObj.localFilePath))
+        results.push({
+          result: true,
+          location: uploadLocation,
+          localPath: pathObj.localFilePath,
+          message: await uploadFile(uploadLocation, pathObj.localFilePath),
+        })
       } catch (err) {
-        console.error(`上传失败：${err}`)
-        errorStack.push(uri)
+        console.error(err)
+        results.push({
+          result: false,
+          location: uploadLocation,
+          localPath: pathObj.localFilePath,
+          message: err && err.message,
+        })
       }
     }
-    return errorStack
+
+    return results
   }
 
   // 删除文件

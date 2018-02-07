@@ -326,8 +326,7 @@ export default {
     drop($event) {
       this.isDragOver = false
       $event.preventDefault()
-      this.$store.dispatch({
-        type: 'UPLOAD_FILES',
+      this.$store.dispatch('UPLOAD_FILES', {
         remotePath: this.currentDirPath,
         localFilePaths: pluck('path', $event.dataTransfer.files),
       })
@@ -512,8 +511,7 @@ export default {
     uploadFile() {
       return uploadFileDialog().then(filePaths => {
         if (!filePaths || !filePaths.length) return
-        return this.$store.dispatch({
-          type: 'UPLOAD_FILES',
+        return this.$store.dispatch('UPLOAD_FILES', {
           remotePath: this.currentDirPath,
           localFilePaths: filePaths,
         })
@@ -523,8 +521,7 @@ export default {
     uploadDirectory() {
       return uploadDirectoryDialog().then(folderPaths => {
         if (!folderPaths || !folderPaths.length) return
-        return this.$store.dispatch({
-          type: 'UPLOAD_FILES',
+        return this.$store.dispatch('UPLOAD_FILES', {
           remotePath: this.currentDirPath,
           localFilePaths: folderPaths,
         })

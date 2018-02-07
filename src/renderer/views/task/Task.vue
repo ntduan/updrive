@@ -77,7 +77,10 @@
                 </template>
               </template>
             </div>
-            <div class="handle file-info-item"></div>
+            <div class="handle file-info-item">
+              <a v-if="file.connectType === 'download'" v-show="isCompleted(file)" @click="openFile(file)">打开</a>
+              <a v-show="isCompleted(file)" @click="deleteTask(file)">删除</a>
+            </div>
           </div>
         </div>
       </div>
@@ -110,6 +113,8 @@ import ConfirmModal from '@/components/ConfirmModal'
 import Icon from '@/components/Icon'
 import { timestamp, percent, digiUnit, getFileIconClass } from '@/api/tool'
 import { groupBy } from 'ramda'
+import { showItemInFolder } from '@/api/electron.js'
+import Message from '@/api/message'
 
 export default {
   name: 'Task',
@@ -159,6 +164,24 @@ export default {
     },
     isDownloading(file) {
       return file.connectType === 'download' && !this.isCompleted(file)
+    },
+    cancelTask(file) {
+      if (this.isCompleted(file)) {
+        this.$store.dispatch('CLEAR_COMPLEATE_JOB', { id: file.id })
+      }
+    },
+    deleteTask(file) {
+      if (this.isCompleted(file)) {
+        this.$store.dispatch('CLEAR_COMPLEATE_JOB', { id: file.id })
+      }
+    },
+    openFile(file) {
+      if (file.connectType === 'download') {
+        const result = showItemInFolder(file.localPath)
+        if (!result) {
+          Message.error('文件不存在')
+        }
+      }
     },
     getFileIconClass: getFileIconClass,
   },
