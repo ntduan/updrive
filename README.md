@@ -6,7 +6,7 @@
 [下载地址](https://github.com/aniiantt/updrive/releases)
 
 #### Usage
-[云存储服务及操作员账号创建]https://console.upyun.com/services/create/file/)
+[云存储服务及操作员账号创建](https://console.upyun.com/services/create/file/)
 
 #### Screenshot
 ![截图1](https://github.com/aniiantt/updrive/blob/develop/static/screenshot1.png?raw=true)
