@@ -142,7 +142,6 @@ class Job extends EventEmitter {
     // @TODO 并发
     return new Promise(async (resolve, reject) => {
       const item = await this.createUploadItem(url, localPath)
-
       const emitChange = () => {
         this.emit('change', { ...item })
       }
@@ -167,8 +166,16 @@ class Job extends EventEmitter {
         }
       })
 
-      const request = Request({ url: url, headers: headers, method: 'PUT' })
+      const request = Request({
+        url: url,
+        headers: {
+          ...headers,
+          'Content-Length': item.total,
+        },
+        method: 'PUT'
+      })
         .on('response', async response => {
+          console.log(response)
           if(response.statusCode === 200) {
             item.status = this.status.completed.value
             item.endTime = moment().unix()
