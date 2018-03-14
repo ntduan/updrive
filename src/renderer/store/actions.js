@@ -95,6 +95,8 @@ export default {
         return dispatch(Types.SYNC_JOB_LIST)
       })
       .catch(errorHandler)
+      // 同步错误信息
+      .catch(() => dispatch(Types.SYNC_JOB_LIST))
   },
   // 上传文件
   [Types.UPLOAD_FILES]({ getters, commit, dispatch }, { localFilePaths, remotePath } = {}) {
@@ -111,6 +113,8 @@ export default {
       })
       .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
       .catch(errorHandler)
+      // 同步错误信息
+      .catch(() => dispatch(Types.SYNC_JOB_LIST))
   },
   // 获取文件详情信息
   [Types.GET_FILE_DETAIL_INFO]({ getters, commit }, { uri, basicInfo } = {}) {
