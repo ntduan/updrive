@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     workingTaskNum() {
-      return this.task.list.filter(file => file.status !== this.task.status.completed.value).length
+      return this.task.list.filter(file => file.status !== this.task.status.completed.value && file.status !== this.task.status.error.value).length
     },
     currentRouteName() {
       return this.$route.name
