@@ -9,7 +9,7 @@ import Message from '@/api/message'
 const userAgent = `${process.env.npm_package_build_productName}/${process.env.npm_package_version}`
 
 export const errorHandler = error => {
-  if (error && error.response && error.response.data) {
+  if (error && error.response && error.response.data && error.response.data.msg) {
     Message.error(error.response.data.msg)
   } else {
     Message.error(error.message)

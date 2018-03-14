@@ -79,7 +79,7 @@
             </div>
             <div class="handle file-info-item">
               <a v-if="file.connectType === 'download'" v-show="isCompleted(file)" @click="openFile(file)">打开</a>
-              <a v-show="isCompleted(file)" @click="deleteTask(file)">删除</a>
+              <a v-show="isCompleted(file) || isError(file)" @click="deleteTask(file)">删除</a>
             </div>
           </div>
         </div>
@@ -159,6 +159,9 @@ export default {
     isCompleted(file) {
       return file.status === this.task.status.completed.value
     },
+    isError(file) {
+      return file.status === this.task.status.error.value
+    },
     isUploading(file) {
       return file.connectType === 'upload' && !this.isCompleted(file)
     },
@@ -171,7 +174,7 @@ export default {
       }
     },
     deleteTask(file) {
-      if (this.isCompleted(file)) {
+      if (this.isCompleted(file) || this.isError(file)) {
         this.$store.dispatch('CLEAR_COMPLEATE_JOB', { id: file.id })
       }
     },

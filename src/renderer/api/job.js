@@ -45,7 +45,7 @@ class Job extends EventEmitter {
       total: -1, // 总共大小
       endTime: -1, // 下载结束时间
     }
-    await this.setItem(id, item)
+    // await this.setItem(id, item) 一开始不存储任务
     this.emit('change', { ...item })
     return item
   }
@@ -68,7 +68,7 @@ class Job extends EventEmitter {
       total: total, // 总共大小
       endTime: -1, // 下载结束时间
     }
-    await this.setItem(id, item)
+    // await this.setItem(id, item) 一开始不存储任务
     this.emit('change', { ...item })
     return item
   }
@@ -117,9 +117,10 @@ class Job extends EventEmitter {
             throttleChunk()
           }
         })
-        .on('error', error => {
+        .on('error', async error => {
           item.status = this.status.error.value
           item.errorMessage = error && error.message
+          await this.setItem(item.id, item)
           emitChange()
           reject(error)
         })
@@ -141,7 +142,6 @@ class Job extends EventEmitter {
     // @TODO 并发
     return new Promise(async (resolve, reject) => {
       const item = await this.createUploadItem(url, localPath)
-
       const emitChange = () => {
         this.emit('change', { ...item })
       }
@@ -166,18 +166,37 @@ class Job extends EventEmitter {
         }
       })
 
-      const request = Request({ url: url, headers: headers, method: 'PUT' })
+      const request = Request({
+        url: url,
+        headers: {
+          ...headers,
+          'Content-Length': item.total,
+        },
+        method: 'PUT'
+      })
         .on('response', async response => {
-          item.status = this.status.completed.value
-          item.endTime = moment().unix()
-          readStream.removeAllListeners()
-          await this.setItem(item.id, item)
-          emitChange()
-          resolve('success')
+          console.log(response)
+          if(response.statusCode === 200) {
+            item.status = this.status.completed.value
+            item.endTime = moment().unix()
+            readStream.removeAllListeners()
+            await this.setItem(item.id, item)
+            emitChange()
+            resolve('success')
+          } else {
+            item.status = this.status.error.value
+            item.errorMessage = `${response.statusCode}`
+            readStream.removeAllListeners()
+            await this.setItem(item.id, item)
+            emitChange()
+            reject(`${response.statusCode}`)
+          }
         })
-        .on('error', error => {
+        .on('error', async error => {
           item.status = this.status.error.value
           item.errorMessage = error && error.message
+          readStream.removeAllListeners()
+          await this.setItem(item.id, item)
           emitChange()
           reject(error)
         })

@@ -42,9 +42,7 @@ export default {
         })
         return result
       })
-      .catch(error => {
-        return Promise.reject(error)
-      })
+      .catch(errorHandler)
   },
   // 创建目录
   [Types.CREATE_FOLDER]({ getters, commit, dispatch }, { remotePath, folderName }) {
