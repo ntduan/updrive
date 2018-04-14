@@ -31,13 +31,18 @@ import axios from 'axios'
 import { mandatory, base64, md5sum, sleep, isDir, getLocalName, getAuthorizationHeader } from '@/api/tool'
 import UpyunFtp from '@/api/upyunFtp'
 
-class UpyunClient {
-  constructor(bucketName, operatorName, password) {
+export default {
+  bucketName: '',
+  operatorName: '',
+  passwordMd5: '',
+  ftp: Object.create(UpyunFtp),
+
+  setup(bucketName, operatorName, password) {
     this.bucketName = bucketName
     this.operatorName = operatorName
     this.passwordMd5 = md5sum(password)
-    this.ftp = new UpyunFtp(bucketName, operatorName, password)
-  }
+    this.ftp.setup(bucketName, operatorName, password)
+  },
 
   // // fetch 请求获取不了自定义响应头
   // requestWithFetch(input, config = {}, responseHandle = response => response) {
@@ -47,7 +52,7 @@ class UpyunClient {
   //     .fetch(url, config)
   //     .then(res => res.text())
   //     .then(responseHandle)
-  // }
+  // },
 
   request(input, config = {}, responseHandle = response => response.data) {
     const url = this.getUrl(input)
@@ -57,7 +62,7 @@ class UpyunClient {
       responseType: 'text',
       ...config,
     }).then(responseHandle)
-  }
+  },
 
   getUrl(input) {
     const uri = typeof input === 'object' ? input.uri : input
@@ -65,7 +70,7 @@ class UpyunClient {
     const urlObject = new URL(`${this.bucketName}${uri}`, `https://v0.api.upyun.com`)
     if (search) urlObject.search = search
     return urlObject.href
-  }
+  },
 
   getHeaders(url, method = 'GET') {
     return {
@@ -76,7 +81,7 @@ class UpyunClient {
         url,
       }),
     }
-  }
+  },
 
   makeRequestOpts({ search = '', uri = '', method, headers = {} } = {}) {
     const url = this.getUrl(uri, { search })
@@ -88,7 +93,7 @@ class UpyunClient {
       url,
       headers: _headers,
     }
-  }
+  },
 
   // 遍历目录
   async traverseDir(uris = '', opts = {}) {
@@ -137,23 +142,23 @@ class UpyunClient {
     }
 
     return files
-  }
+  },
 
 
   // HEAD 请求
   async head(uri) {
     return this.request(uri, { method: 'HEAD' }, response => response.headers)
-  }
+  },
 
   // GET 请求
   async get(uri) {
     return this.request(uri, { method: 'GET' })
-  }
+  },
 
   // 授权认证
   async checkAuth() {
     return this.request({ search: '?usage', uri: '/' })
-  }
+  },
 
   // 获取目录列表信息
   async getListDirInfo(uri = '/') {
@@ -178,12 +183,12 @@ class UpyunClient {
         ),
       ),
     )
-  }
+  },
 
   // 创建目录
   async createFolder(location = '', folderName = '') {
     return this.request(`${location}${folderName}/`, { method: 'POST', headers: { folder: true } })
-  }
+  },
 
   // 上传文件
   async uploadFiles(uri, localFilePaths = [], jobObj) {
@@ -243,7 +248,7 @@ class UpyunClient {
     }
 
     return results
-  }
+  },
 
   // 删除文件
   async deleteFiles(uris) {
@@ -267,7 +272,7 @@ class UpyunClient {
     }
 
     return results
-  }
+  },
 
   // 下载文件
   async downloadFiles(destPath, uris, jobObj) {
@@ -315,12 +320,11 @@ class UpyunClient {
     }
 
     return results
-  }
+  },
 
   // 重命名文件
   async renameFile(oldPath, newPath) {
     await this.ftp.renameFile(oldPath, newPath)
-  }
+  },
 }
 
-export default UpyunClient

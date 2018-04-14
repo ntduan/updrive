@@ -3,14 +3,16 @@ import { pickAll } from 'ramda'
 
 import User from '@/api/user'
 
+const user = Object.create(User)
+
 const state = {
-  user: new User('', '', ''),
+  user: user,
   isLogined: false,
 }
 
 const mutations = {
   [Types.SET_USER_INFO](state, payload = {}) {
-    state.user = new User(payload.bucketName, payload.operatorName, payload.password)
+    state.user.setup(payload.bucketName, payload.operatorName, payload.password)
     state.isLogined = true
   },
   [Types.CLEAR_USER_INFO](state) {
