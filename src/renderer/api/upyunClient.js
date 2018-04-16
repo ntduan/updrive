@@ -160,6 +160,11 @@ export default {
     return this.request({ search: '?usage', uri: '/' })
   },
 
+  // 获取使用量
+  async getUsage() {
+    return this.request({ search: '?usage', uri: '/' })
+  },
+
   // 获取目录列表信息
   async getListDirInfo(uri = '/') {
     return this.request(uri, { method: 'GET' }).then(

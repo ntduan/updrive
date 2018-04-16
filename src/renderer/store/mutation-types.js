@@ -44,3 +44,6 @@ export const GET_FILE_DETAIL_INFO = 'GET_FILE_DETAIL_INFO' // 获取文件详情
 export const SET_FILE_DETAIL_INFO = 'SET_FILE_DETAIL_INFO' // 设置文件详情信息
 
 export const SYNC_JOB_LIST = 'SYNC_JOB_LIST' // 同步下载任务列表
+
+export const SET_USAGE = 'SET_USAGE' // 设置空间使用量
+export const GET_USAGE = 'GET_USAGE' // 获取空间使用量

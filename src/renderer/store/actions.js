@@ -81,38 +81,42 @@ export default {
   },
   // 下载文件
   [Types.DOWNLOAD_FILES]({ getters, commit, dispatch }, { destPath, downloadPath } = {}) {
-    return getters.upyunClient
-      .downloadFiles(destPath, downloadPath, getters.job)
-      .then(results => {
-        const isAllSuccess = !results.some(r => !r.result)
-        if (isAllSuccess) {
-          Message.success('下载成功')
-        } else {
-          for (const result of results) Message.warning(`下载失败：${result.uri}: ${result.message}`)
-        }
-        return dispatch(Types.SYNC_JOB_LIST)
-      })
-      .catch(errorHandler)
-      // 同步错误信息
-      .catch(() => dispatch(Types.SYNC_JOB_LIST))
+    return (
+      getters.upyunClient
+        .downloadFiles(destPath, downloadPath, getters.job)
+        .then(results => {
+          const isAllSuccess = !results.some(r => !r.result)
+          if (isAllSuccess) {
+            Message.success('下载成功')
+          } else {
+            for (const result of results) Message.warning(`下载失败：${result.uri}: ${result.message}`)
+          }
+          return dispatch(Types.SYNC_JOB_LIST)
+        })
+        .catch(errorHandler)
+        // 同步错误信息
+        .catch(() => dispatch(Types.SYNC_JOB_LIST))
+    )
   },
   // 上传文件
   [Types.UPLOAD_FILES]({ getters, commit, dispatch }, { localFilePaths, remotePath } = {}) {
-    return getters.upyunClient
-      .uploadFiles(remotePath, localFilePaths, getters.job)
-      .then(results => {
-        const isAllSuccess = !results.some(r => !r.result)
-        if (isAllSuccess) {
-          Message.success('上传成功')
-        } else {
-          for (const result of results) Message.warning(`上传失败：${result.localPath}: ${result.message}`)
-        }
-        return dispatch(Types.SYNC_JOB_LIST)
-      })
-      .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
-      .catch(errorHandler)
-      // 同步错误信息
-      .catch(() => dispatch(Types.SYNC_JOB_LIST))
+    return (
+      getters.upyunClient
+        .uploadFiles(remotePath, localFilePaths, getters.job)
+        .then(results => {
+          const isAllSuccess = !results.some(r => !r.result)
+          if (isAllSuccess) {
+            Message.success('上传成功')
+          } else {
+            for (const result of results) Message.warning(`上传失败：${result.localPath}: ${result.message}`)
+          }
+          return dispatch(Types.SYNC_JOB_LIST)
+        })
+        .then(() => dispatch({ type: Types.REFRESH_LIST, spinner: false }))
+        .catch(errorHandler)
+        // 同步错误信息
+        .catch(() => dispatch(Types.SYNC_JOB_LIST))
+    )
   },
   // 获取文件详情信息
   [Types.GET_FILE_DETAIL_INFO]({ getters, commit }, { uri, basicInfo } = {}) {
@@ -150,11 +154,17 @@ export default {
   // 清空已完成任务
   [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { type, id } = {}) {
     getters.job
-      .clearCompleted({type, id})
+      .clearCompleted({ type, id })
       .then(store => {
         Message.success('操作成功')
         dispatch('SYNC_JOB_LIST')
       })
       .catch(errorHandler)
+  },
+  // 获取空间使用量
+  [Types.GET_USAGE]({ state, getters, commit, dispatch }, { remotePath, spinner = true } = {}) {
+    return getters.upyunClient.getUsage().then(data => {
+      commit(Types.SET_USAGE, { data })
+    })
   },
 }

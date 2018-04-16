@@ -1,6 +1,11 @@
 # updrive
 
 > 又拍云文件管理桌面客户端
+#### ChangeLog
+
+v0.29.0:
+  - 增加用户名服务名展示以及设置功能
+  - 增加云存储服务使用量展示
 
 #### Download
 [下载地址](https://github.com/aniiantt/updrive/releases)

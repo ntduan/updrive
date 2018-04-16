@@ -1,14 +1,15 @@
 <template>
   <div class="bar">
     <div class="button-zone">
-      <div class="dropdown is-hoverable">
+      <div class="dropdown" :class="{'is-active': isShowCreateDropmenu}" @click="triggerCreateDropmenu()">
         <div class="dropdown-trigger">
           <button class="button is-primary">
             <span>新建</span>
           </button>
         </div>
+        <div class="dropdown-background" v-show="isShowCreateDropmenu"></div>
         <div class="dropdown-menu">
-          <div class="dropdown-content">
+          <div class="dropdown-content" @click.stop="void 0">
             <a class="dropdown-item" @click.prevent="createFolder">
               文件夹
             </a>
@@ -39,11 +40,11 @@
         </ul>
       </nav>
     </div>
-    <div class="bar-right">
+    <!-- <div class="bar-right">
       <div data-balloon="设置" data-balloon-pos="left" style="cursor: pointer;" @click.prevent="setProfile">
         <Icon name="icon-setting" />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -59,6 +60,11 @@ export default {
   components: {
     Icon,
   },
+  data() {
+    return {
+      isShowCreateDropmenu: false,
+    }
+  },
   computed: {
     pathArray() {
       return compose(filter(identity), split('/'))(this.list.dirInfo.path)
@@ -73,6 +79,9 @@ export default {
     ...mapGetters(['bucketName']),
   },
   methods: {
+    triggerCreateDropmenu() {
+      this.isShowCreateDropmenu = !this.isShowCreateDropmenu
+    },
     goto(index) {
       const remotePath =
         index === undefined ? '/' : concat('/', concat(join('/', take(index + 1)(this.pathArray)), '/'))
@@ -82,33 +91,37 @@ export default {
         action: 0,
       })
     },
-    // 新建文件夹
+    //
     setProfile() {
       return this.$store.commit('OPEN_PROFILE_MODAL')
+      this.isShowCreateDropmenu = false
     },
-    //
+    // 新建文件夹
     createFolder() {
-      return this.$store.commit('OPEN_CREATE_FOLDER_MODAL')
+      this.$store.commit('OPEN_CREATE_FOLDER_MODAL')
+      this.isShowCreateDropmenu = false
     },
     // 上传文件
     uploadFile() {
-      return uploadFileDialog().then(filePaths => {
+      uploadFileDialog().then(filePaths => {
         if (!filePaths || !filePaths.length) return
         return this.$store.dispatch('UPLOAD_FILES', {
           remotePath: this.currentDirPath,
           localFilePaths: filePaths,
         })
       })
+      this.isShowCreateDropmenu = false
     },
     // 上传文件夹
     uploadDirectory() {
-      return uploadDirectoryDialog().then(folderPaths => {
+      uploadDirectoryDialog().then(folderPaths => {
         if (!folderPaths || !folderPaths.length) return
         return this.$store.dispatch('UPLOAD_FILES', {
           remotePath: this.currentDirPath,
           localFilePaths: folderPaths,
         })
       })
+      this.isShowCreateDropmenu = false
     },
   },
 }
