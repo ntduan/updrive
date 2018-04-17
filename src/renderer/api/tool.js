@@ -130,6 +130,14 @@ export const getLocalName = (fileName = '', init = true) => {
   }
 }
 
+// 获取文件类型
+export const getFileType = (IMME = '') => {
+  const imagelist = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/bmp', 'image/webp']
+  if (imagelist.includes(IMME.toLowerCase())) {
+    return 'image'
+  }
+}
+
 export const getFileIconClass = (filename = '', folderType) => {
   const extensionName = Path.extname(filename).toLocaleLowerCase()
   return {

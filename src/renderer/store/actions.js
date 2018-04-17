@@ -1,6 +1,6 @@
 import { join, append, compose, unless, isEmpty } from 'ramda'
 
-import { errorHandler } from '@/api/tool.js'
+import { errorHandler, getFileType } from '@/api/tool.js'
 import * as Types from '@/store/mutation-types'
 import * as UpyunFtp from '@/api/upyunFtp.js'
 import UpyunClient from '@/api/upyunClient.js'
@@ -126,10 +126,12 @@ export default {
         return getters.upyunClient.head(uri)
       })
       .then(data => {
+        const fileType = data && getFileType(data['content-type'])
         commit({
           type: Types.SET_FILE_DETAIL_INFO,
           data: {
             headerInfo: data,
+            fileType: fileType,
             basicInfo: basicInfo,
           },
         })
@@ -162,7 +164,7 @@ export default {
       .catch(errorHandler)
   },
   // 获取空间使用量
-  [Types.GET_USAGE]({ state, getters, commit, dispatch }, { remotePath, spinner = true } = {}) {
+  [Types.GET_USAGE]({ state, getters, commit, dispatch }, {} = {}) {
     return getters.upyunClient.getUsage().then(data => {
       commit(Types.SET_USAGE, { data })
     })
@@ -170,6 +172,6 @@ export default {
   // 退出登录
   [Types.LOGOUT]({ commit }) {
     const mutations = ['RESET_AUTH', 'RESET_LIST', 'RESET_MODAL', 'RESET_TASK']
-    for(const m of mutations) commit(m)
+    for (const m of mutations) commit(m)
   },
 }

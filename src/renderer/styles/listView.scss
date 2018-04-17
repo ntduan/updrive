@@ -57,6 +57,20 @@
       height: calc(100% - 40px);
       overflow: auto;
       overflow-x: hidden;
+
+      .image-preview {
+        height: 216px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+          max-height: 200px;
+          max-width: 320px;
+          min-width: 80px;
+          min-height: 80px;
+        }
+      }
+
       .list-view-detail-content-item {
         margin-bottom: 5px;
         .list-view-detail-content-item-label {
