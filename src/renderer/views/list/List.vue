@@ -143,7 +143,7 @@
                 <p class="control is-expanded"><input class="input" type="text" :value="fileDetail.basicInfo.url" readonly /></p>
                 <p class="control"
                   :data-balloon="copytext"
-                  data-balloon-pos="up"
+                  data-balloon-pos="left"
                   @mouseenter="() => {copytext = '点击复制'}"
                   @click="() => {copytext = '已复制！';writeText(fileDetail.basicInfo.url)}"
                 >

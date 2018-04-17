@@ -147,3 +147,9 @@ export const getFileIconClass = (filename = '', folderType) => {
     'icon-markdown': ['.md', '.markdown'].includes(extensionName),
   }
 }
+
+export const externalUrls = {
+  repository: 'https://github.com/aniiantt/updrive',
+  issues: 'https://github.com/aniiantt/updrive/issues',
+  releases: 'https://github.com/aniiantt/updrive/releases',
+}
