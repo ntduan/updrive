@@ -222,7 +222,7 @@ import {
 } from 'ramda'
 import { mapState, mapGetters } from 'vuex'
 import Path from 'path'
-import Message from 'iview/src/components/message'
+import Message from '@/api/message'
 import ConfirmModal from '@/components/ConfirmModal'
 
 import Icon from '@/components/Icon'
@@ -478,8 +478,12 @@ export default {
     },
     // 获取链接
     getLink(uri) {
-      this.writeText(this.getUrl(uri))
-      Message.success('已复制！')
+      let url = this.getUrl(uri)
+      this.writeText(url)
+      if(url && url.length > 103 && url.substring) {
+        url = url.substring(0, 100) + '……'
+      }
+      Message.success(`${url} 已复制！`)
     },
     // 双击
     dblclickItem(uri) {
