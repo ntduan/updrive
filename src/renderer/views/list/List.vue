@@ -426,6 +426,7 @@ export default {
     },
     // 右键点击
     contextmenu() {
+      console.log('右键')
       this.$nextTick(this.showContextMenu)
     },
     // 显示菜单
@@ -443,11 +444,11 @@ export default {
           { hide: !this.isSelectedSingleFile, label: '获取链接', click: () => this.getLink() },
           { hide: !this.isSelectedSingleFile, label: '重命名', click: () => this.renameFile() },
           { hide: !this.selected.length, label: '下载', click: () => this.downloadFile() },
-          // { hide: !this.selected.length, type: 'separator' },
-          // { hide: false, label: '刷新目录', click: () => this.refresh() },
-          // { hide: false, label: '新建文件夹', click: () => this.createFolder() },
-          // { hide: false, label: '上传文件', click: () => this.uploadFile() },
-          // { hide: false, label: '上传文件夹', click: () => this.uploadDirectory() },
+          { hide: !this.selected.length, type: 'separator' },
+          { hide: false, label: '刷新目录', click: () => this.refresh() },
+          { hide: false, label: '新建文件夹', click: () => this.createFolder() },
+          { hide: false, label: '上传文件', click: () => this.uploadFile() },
+          { hide: false, label: '上传文件夹', click: () => this.uploadDirectory() },
           { hide: !this.selected.length, type: 'separator' },
           { hide: !this.selected.length, label: '删除', click: () => this.toggleShowDeleteModal(true) },
         ],
