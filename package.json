@@ -20,7 +20,7 @@
   },
   "build": {
     "productName": "updrive",
-    "artifactName": "{productName}.${ext}",
+    "artifactName": "${productName}.${ext}",
     "appId": "org.upyun.updrive",
     "directories": {
       "output": "build"
