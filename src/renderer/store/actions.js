@@ -167,4 +167,9 @@ export default {
       commit(Types.SET_USAGE, { data })
     })
   },
+  // 退出登录
+  [Types.LOGOUT]({ commit }) {
+    const mutations = ['RESET_AUTH', 'RESET_LIST', 'RESET_MODAL', 'RESET_TASK']
+    for(const m of mutations) commit(m)
+  },
 }

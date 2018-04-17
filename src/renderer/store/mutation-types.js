@@ -3,6 +3,11 @@
 export const CLEAR_USER_INFO = 'CLEAR_USER_INFO' // 清除用户信息
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' // 登录成功
+export const LOGOUT = 'LOGOUT' // 退出登录
+export const RESET_AUTH = 'RESET_AUTH'
+export const RESET_LIST = 'RESET_LIST'
+export const RESET_MODAL = 'RESET_MODAL'
+export const RESET_TASK = 'RESET_TASK'
 export const SET_USER_INFO = 'SET_USER_INFO' // 设置用户信息
 export const SET_LOADING_LIST = 'SET_LOADING_LIST' // 目录正在加载中
 export const SET_CURRENT_LIST = 'SET_CURRENT_LIST' // 设置当前目录列表

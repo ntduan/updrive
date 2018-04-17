@@ -5,7 +5,7 @@ import User from '@/api/user'
 
 const user = Object.create(User)
 
-const state = {
+const initState = {
   user: user,
   usage: 0,
   isLogined: false,
@@ -21,11 +21,14 @@ const mutations = {
   },
   [Types.CLEAR_USER_INFO](state) {
     sessionStorage.removeItem('key')
-    state = {}
+    Object.assign(state, { ...initState }, { user: Object.create(User) })
+  },
+  [Types.RESET_AUTH](state) {
+    Object.assign(state, { ...initState }, { user: Object.create(User) })
   },
 }
 
 export default {
-  state,
+  state: { ...initState },
   mutations,
 }

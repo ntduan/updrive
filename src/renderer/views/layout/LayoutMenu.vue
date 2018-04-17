@@ -79,6 +79,7 @@ export default {
     },
     toggleAccount() {
       this.$router.push({ name: 'login' })
+      this.$store.dispatch('LOGOUT')
       this.isShowProfileMenu = false
     },
     openExternal(href) {
