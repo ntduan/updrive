@@ -51,7 +51,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  const isLogined = path(['state', 'user', 'isLogined'], Store)
+  const isLogined = path(['state', 'auth', 'isLogined'], Store)
 
   if (to.name === 'login' || isLogined) {
     next()
