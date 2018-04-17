@@ -40,11 +40,6 @@
         </ul>
       </nav>
     </div>
-    <!-- <div class="bar-right">
-      <div data-balloon="设置" data-balloon-pos="left" style="cursor: pointer;" @click.prevent="setProfile">
-        <Icon name="icon-setting" />
-      </div>
-    </div> -->
   </div>
 </template>
 
