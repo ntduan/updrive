@@ -2,7 +2,7 @@
   <div class="list-view">
     <div class="list-view-main" ref='listView' tabindex="-1" @keydown="keydown">
       <div class="list-operation">
-        <div class="list-operation-item" @click="isSelectedSingleFile && getLink()" :class="{disabled: !isSelectedSingleFile}">
+        <div class="list-operation-item" @click="isSelectedSingleFile && copyHref()" :class="{disabled: !isSelectedSingleFile}">
           <Icon name="icon-link" />获取链接
         </div>
         <div class="list-operation-item" @click="selected.length && downloadFile()" :class="{disabled: !uniqueSelectedUri}">
@@ -118,6 +118,9 @@
       <div class="list-view-detail-content" v-if="fileDetail.basicInfo.folderType !== 'B'">
         <spinner v-if="detailLoading" />
         <div v-if="!detailLoading">
+          <div v-if="fileDetail.fileType === 'image'" class="image-preview">
+            <img :src="getUpyunApiUrl(fileDetail.basicInfo.uri)" alt="">
+          </div>
           <div class="list-view-detail-content-item">
             <div class="list-view-detail-content-item-label">
               修改日期
@@ -140,12 +143,12 @@
             </div>
             <div class="list-view-detail-content-item-value">
               <div class="field has-addons">
-                <p class="control is-expanded"><input class="input" type="text" :value="fileDetail.basicInfo.url" readonly /></p>
+                <p class="control is-expanded"><input class="input" type="text" :value="fileDetail.basicInfo.href" readonly /></p>
                 <p class="control"
                   :data-balloon="copytext"
                   data-balloon-pos="left"
                   @mouseenter="() => {copytext = '点击复制'}"
-                  @click="() => {copytext = '已复制！';writeText(fileDetail.basicInfo.url)}"
+                  @click="() => {copytext = '已复制！';writeText(fileDetail.basicInfo.href)}"
                 >
                   <a class="button">
                     <i class="icon"><Icon name="icon-copy" /></i>
@@ -222,7 +225,7 @@ import {
 } from 'ramda'
 import { mapState, mapGetters } from 'vuex'
 import Path from 'path'
-import Message from 'iview/src/components/message'
+import Message from '@/api/message'
 import ConfirmModal from '@/components/ConfirmModal'
 
 import Icon from '@/components/Icon'
@@ -292,7 +295,7 @@ export default {
         ...fileDetail,
         basicInfo: {
           ...fileDetail.basicInfo,
-          url: this.getUrl(fileDetail.basicInfo.uri),
+          href: this.getHref(fileDetail.basicInfo.uri),
         },
       }
     },
@@ -305,7 +308,7 @@ export default {
       return last(forwardStack)
     },
     ...mapState(['list', 'auth']),
-    ...mapGetters(['baseHref']),
+    ...mapGetters(['baseHref', 'getUpyunApiUrl']),
   },
   methods: {
     refresh() {
@@ -426,6 +429,7 @@ export default {
     },
     // 右键点击
     contextmenu() {
+      console.log('右键')
       this.$nextTick(this.showContextMenu)
     },
     // 显示菜单
@@ -433,21 +437,21 @@ export default {
       showContextmenu({
         appendItems: [
           { hide: !this.uniqueSelectedUri, label: '打开', click: () => this.dblclickItem(this.uniqueSelectedUri) },
-          { hide: !this.isSelectedSingleFile, label: '在浏览器中打开', click: () => openExternal(this.getUrl()) },
+          { hide: !this.isSelectedSingleFile, label: '在浏览器中打开', click: () => openExternal(this.getHref()) },
           { hide: !this.uniqueSelectedUri, type: 'separator' },
           {
             hide: !this.uniqueSelectedUri || this.isViewDetail,
             label: '查看详细信息',
             click: () => this.getFileDetail(),
           },
-          { hide: !this.isSelectedSingleFile, label: '获取链接', click: () => this.getLink() },
+          { hide: !this.isSelectedSingleFile, label: '获取链接', click: () => this.copyHref() },
           { hide: !this.isSelectedSingleFile, label: '重命名', click: () => this.renameFile() },
           { hide: !this.selected.length, label: '下载', click: () => this.downloadFile() },
-          // { hide: !this.selected.length, type: 'separator' },
-          // { hide: false, label: '刷新目录', click: () => this.refresh() },
-          // { hide: false, label: '新建文件夹', click: () => this.createFolder() },
-          // { hide: false, label: '上传文件', click: () => this.uploadFile() },
-          // { hide: false, label: '上传文件夹', click: () => this.uploadDirectory() },
+          { hide: !this.selected.length, type: 'separator' },
+          { hide: false, label: '刷新目录', click: () => this.refresh() },
+          { hide: false, label: '新建文件夹', click: () => this.createFolder() },
+          { hide: false, label: '上传文件', click: () => this.uploadFile() },
+          { hide: false, label: '上传文件夹', click: () => this.uploadDirectory() },
           { hide: !this.selected.length, type: 'separator' },
           { hide: !this.selected.length, label: '删除', click: () => this.toggleShowDeleteModal(true) },
         ],
@@ -467,8 +471,8 @@ export default {
           this.detailLoading = false
         })
     },
-    getUrl(uri = this.uniqueSelectedUri) {
-      const urlObj = new URL(uri, this.baseHref())
+    getHref(uri = this.uniqueSelectedUri) {
+      const urlObj = new URL(uri, this.baseHref)
       return urlObj.href
     },
     // 复制到剪切板
@@ -476,9 +480,13 @@ export default {
       return writeText(...args)
     },
     // 获取链接
-    getLink(uri) {
-      this.writeText(this.getUrl(uri))
-      Message.success('已复制！')
+    copyHref(uri) {
+      let url = this.getHref(uri)
+      this.writeText(url)
+      if(url && url.length > 103 && url.substring) {
+        url = url.substring(0, 100) + '……'
+      }
+      Message.success(`${url} 已复制！`)
     },
     // 双击
     dblclickItem(uri) {
@@ -487,7 +495,7 @@ export default {
         const historyUri = this.currentDirPath
         this.$store.dispatch({ type: 'GET_LIST_DIR_INFO', remotePath: uri, action: 0 }).then(() => this.listGetFocus())
       } else {
-        window.open(this.getUrl(), this.getUrl(), { frame: false })
+        window.open(this.getHref(), this.getHref(), { frame: false })
       }
     },
     // 删除文件

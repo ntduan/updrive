@@ -12,31 +12,25 @@ const session = currentWin.webContents.session
 
 const userAgent = `${process.env.npm_package_build_productName}/${process.env.npm_package_version}`
 
-// session.webRequest.onBeforeSendHeaders(
-//   {
-//     urls: ['*://v0.api.upyun.com/*'],
-//   },
-//   (details, callback) => {
-//     const urlObj = new URL(details.url)
-//     if(urlObj.hash) {
-//       const headersHash = urlObj.hash.substr(1)
-//       const headers = window.atob(headersHash)
-//       console.log(details.url, headers)
-//       callback({
-//         requestHeaders: {
-//           ...headers,
-//         },
-//       })
-//     } else {
-//       callback({
-//         requestHeaders: {
-//           ...details.requestHeaders,
-//         },
-//         url: 'http://baidu.com'
-//       })
-//     }
-//   },
-// )
+// img 标签注入授权头
+session.webRequest.onBeforeSendHeaders(
+  {
+    urls: ['*://v0.api.upyun.com/*'],
+  },
+  (details, callback) => {
+    if(details.resourceType === 'image') {
+      const authHeaders = Store.getters.upyunClient.getHeaders(details.url)
+      callback({
+        requestHeaders: {
+          ...details.requestHeaders,
+          ...authHeaders,
+        }
+      })
+    } else {
+      callback({})
+    }
+  },
+)
 
 // 设置菜单
 export const setApplicationMenu = () => {

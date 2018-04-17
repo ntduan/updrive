@@ -1,6 +1,6 @@
 {
   "name": "updrive",
-  "version": "0.30.1",
+  "version": "0.31.0",
   "author": "nsso <nsso@foxmail.com>",
   "description": "upyun file manager",
   "engines": {
@@ -48,7 +48,7 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "target": ["portable"]
+      "target": ["nsis", "portable", "zip"]
     },
     "linux": {
       "icon": "build/icons"
