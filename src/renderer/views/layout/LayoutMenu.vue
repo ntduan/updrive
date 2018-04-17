@@ -71,7 +71,8 @@ export default {
     ...mapState(['task', 'auth']),
   },
   created() {
-    this.$store.dispatch('GET_USAGE')
+    this.getUsage()
+    this.getAppInfo()
   },
   methods: {
     toggleProfileMenu() {
@@ -85,6 +86,13 @@ export default {
     openExternal(href) {
       openExternal(href)
       this.isShowProfileMenu = false
+    },
+    getUsage() {
+      this.$store.dispatch('GET_USAGE')
+    },
+    getAppInfo() {
+      this.appVersion = getVersion()
+      this.appName = getName()
     },
   },
   filters: {

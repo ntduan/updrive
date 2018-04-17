@@ -2,7 +2,7 @@ import { ipcRenderer, shell, clipboard, remote } from 'electron'
 
 import Router from '@/router'
 
-const { dialog, Menu, MenuItem, BrowserWindow, getCurrentWindow } = remote
+const { app, dialog, Menu, MenuItem, BrowserWindow, getCurrentWindow } = remote
 
 const currentWin = getCurrentWindow()
 
@@ -147,6 +147,12 @@ export const showContextmenu = (items, opts = {}) => {
   const menu = createContextmenu(items)
   setTimeout(() => menu.popup(currentWin))
 }
+
+// 获取版本号
+export const getVersion = app.getVersion
+
+// 获取产品名称
+export const getName = app.getName
 
 // 监听 Ctrl + A
 export const listenSelectAll = callback => ipcRenderer.on('SHORTCUT_SELECT_ALL', callback)
