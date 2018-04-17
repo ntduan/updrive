@@ -8,25 +8,24 @@ import moment from 'moment'
 
 import { base64, throttle } from '@/api/tool'
 
-class Job extends EventEmitter {
-  initStore = {
+const Job = {
+  initStore: {
     version: 0.1,
     data: [],
-  }
+  },
 
-  status = {
+  status: {
     downloading: { name: '下载中...', value: 'downloading' },
     uploading: { name: '上传中...', value: 'uploading' },
     interrupted: { name: '已暂停', value: 'interrupted' },
     completed: { name: '已完成', value: 'completed' },
     error: { name: '错误', value: 'error' },
-  }
+  },
 
-  constructor(keyPre, onChange) {
-    super()
+  setup(keyPre, onChange) {
     this.storeKey = `${keyPre}:job`
     this.on('change', onChange)
-  }
+  },
 
   async createDownloadItem(url, localPath) {
     const filename = basename(localPath)
@@ -48,7 +47,7 @@ class Job extends EventEmitter {
     // await this.setItem(id, item) 一开始不存储任务
     this.emit('change', { ...item })
     return item
-  }
+  },
 
   async createUploadItem(url, localPath) {
     const filename = decodeURIComponent(new URL(url).pathname.split('/').reverse()[0])
@@ -71,7 +70,7 @@ class Job extends EventEmitter {
     // await this.setItem(id, item) 一开始不存储任务
     this.emit('change', { ...item })
     return item
-  }
+  },
 
   async setItem(id, item) {
     const store = await this.getStore()
@@ -82,7 +81,7 @@ class Job extends EventEmitter {
       store.data = prepend(item, store.data)
     }
     return await localforage.setItem(this.storeKey, store)
-  }
+  },
 
   async createDownloadTask({ url, headers, localPath }) {
     // @TODO 并发
@@ -136,7 +135,7 @@ class Job extends EventEmitter {
 
       request.pipe(localStream)
     })
-  }
+  },
 
   async createUploadTask({ url, headers, localPath }) {
     // @TODO 并发
@@ -172,11 +171,11 @@ class Job extends EventEmitter {
           ...headers,
           'Content-Length': item.total,
         },
-        method: 'PUT'
+        method: 'PUT',
       })
         .on('response', async response => {
           console.log(response)
-          if(response.statusCode === 200) {
+          if (response.statusCode === 200) {
             item.status = this.status.completed.value
             item.endTime = moment().unix()
             readStream.removeAllListeners()
@@ -203,7 +202,7 @@ class Job extends EventEmitter {
 
       readStream.pipe(request)
     })
-  }
+  },
 
   async clearCompleted({ type, id }) {
     const store = await this.getStore()
@@ -215,12 +214,12 @@ class Job extends EventEmitter {
       }
     })
     return await localforage.setItem(this.storeKey, store)
-  }
+  },
 
   async getStore() {
     const data = await localforage.getItem(this.storeKey)
     return data && data.version === this.initStore.version ? data : { ...this.initStore }
-  }
+  },
 }
 
-export default Job
+export default Object.assign(Object.create(EventEmitter.prototype), Job)

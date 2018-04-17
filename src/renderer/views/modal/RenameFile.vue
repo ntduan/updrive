@@ -9,15 +9,15 @@
         </span>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom: 10px;">请输入新的文件名：</p>
+        <p style="margin-bottom: 10px;">请输入新的文件路径：</p>
         <div class="field has-addons">
           <p class="control">
-            <a class="button is-static" disabled>
-              {{bucketName}}
+            <a class="button is-static has-text-primary">
+              {{auth.user.bucketName}}
             </a>
           </p>
           <p class="control is-expanded">
-            <input class="input" autofocus type="text" v-model="filePath" placeholder="请输入新的文件名">
+            <input class="input" autofocus type="text" v-model="filePath" placeholder="请输入新的文件路径">
           </p>
         </div>
       </div>
@@ -44,8 +44,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['modal', 'list']),
-    ...mapGetters(['bucketName']),
+    ...mapState(['modal', 'list', 'auth']),
   },
   methods: {
     close() {

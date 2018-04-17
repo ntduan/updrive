@@ -1,6 +1,6 @@
 import * as Types from '@/store/mutation-types'
 
-const state = {
+const initState = {
   createFolder: {
     show: false,
   },
@@ -38,9 +38,12 @@ const mutations = {
   [Types.RENAME_FILE_CLEAR_OLD_PATH](state) {
     state.renameFile.oldPath = ''
   },
+  [Types.RESET_MODAL](state) {
+    Object.assign(state, { ...initState })
+  },
 }
 
 export default {
-  state,
+  state: { ...initState },
   mutations,
 }

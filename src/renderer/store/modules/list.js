@@ -16,7 +16,7 @@ import {
 } from 'ramda'
 import * as Types from '@/store/mutation-types'
 
-const state = {
+const initState = {
   dirInfo: {
     data: [],
     loading: false,
@@ -134,9 +134,12 @@ const mutations = {
   [Types.SET_FILE_DETAIL_INFO](state, { data }) {
     state.fileDetail = data
   },
+  [Types.RESET_LIST](state) {
+    Object.assign(state, { ...initState })
+  },
 }
 
 export default {
-  state,
+  state: { ...initState },
   mutations,
 }

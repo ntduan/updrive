@@ -35,12 +35,11 @@ export default {
       this.$store.dispatch({ type: 'GET_LIST_DIR_INFO' })
     },
     activateJob() {
-      this.$store.commit(
-        'INIT_JOB',
-        new Job(this.auth.user.key, item => {
-          this.$store.commit('UPDATE_JOB_ITEM', { item })
-        }),
-      )
+      const job = Object.create(Job)
+      job.setup(this.auth.user.key, item => {
+        this.$store.commit('UPDATE_JOB_ITEM', { item })
+      })
+      this.$store.commit('INIT_JOB', job)
       this.$store.dispatch('SYNC_JOB_LIST')
     },
   },

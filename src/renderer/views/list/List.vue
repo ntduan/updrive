@@ -143,7 +143,7 @@
                 <p class="control is-expanded"><input class="input" type="text" :value="fileDetail.basicInfo.url" readonly /></p>
                 <p class="control"
                   :data-balloon="copytext"
-                  data-balloon-pos="up"
+                  data-balloon-pos="left"
                   @mouseenter="() => {copytext = '点击复制'}"
                   @click="() => {copytext = '已复制！';writeText(fileDetail.basicInfo.url)}"
                 >
@@ -283,7 +283,7 @@ export default {
         return {
           ...fileDetail,
           basicInfo: {
-            filename: this.bucketName,
+            filename: this.auth.user.bucketName,
             folderType: 'B',
           },
         }
@@ -296,8 +296,16 @@ export default {
         },
       }
     },
-    ...mapState(['list']),
-    ...mapGetters(['bucketName', 'baseHref', 'backUri', 'forwardUri']),
+    backUri() {
+      const backStack = path(['list', 'history', 'backStack'], this) || []
+      return last(backStack)
+    },
+    forwardUri() {
+      const forwardStack = path(['list', 'history', 'forwardStack'], this) || []
+      return last(forwardStack)
+    },
+    ...mapState(['list', 'auth']),
+    ...mapGetters(['baseHref']),
   },
   methods: {
     refresh() {
@@ -460,7 +468,7 @@ export default {
         })
     },
     getUrl(uri = this.uniqueSelectedUri) {
-      const urlObj = new URL(uri, this.baseHref)
+      const urlObj = new URL(uri, this.baseHref())
       return urlObj.href
     },
     // 复制到剪切板

@@ -20,8 +20,8 @@ import {
 import Moment from 'moment'
 import Ftp from 'ftp'
 
-class UpyunFtp {
-  constructor(bucketName, operatorName, password) {
+export default {
+  setup(bucketName, operatorName, password) {
     const ftpClient = new Ftp()
     ftpClient.on('ready', () => {
       console.info('--------------- ftp 连接成功 ---------------')
@@ -65,5 +65,3 @@ class UpyunFtp {
     }
   }
 }
-
-export default UpyunFtp

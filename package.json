@@ -1,6 +1,6 @@
 {
   "name": "updrive",
-  "version": "0.28.0",
+  "version": "0.30.0",
   "author": "nsso <nsso@foxmail.com>",
   "description": "upyun file manager",
   "engines": {
@@ -14,19 +14,20 @@
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "dev": "node .electron-vue/dev-runner.js",
     "pack": "npm run pack:main && npm run pack:renderer",
-    "pack:main":
-      "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
-    "pack:renderer":
-      "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
+    "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
+    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": ""
   },
   "build": {
     "productName": "updrive",
+    "artifactName": "${productName}.${ext}",
     "appId": "org.upyun.updrive",
     "directories": {
       "output": "build"
     },
-    "files": ["dist/electron/**/*"],
+    "files": [
+      "dist/electron/**/*"
+    ],
     "dmg": {
       "contents": [
         {
@@ -47,7 +48,10 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "target": ["nsis", "portable"]
+      "target": [
+        "nsis",
+        "portable"
+      ]
     },
     "linux": {
       "icon": "build/icons"
@@ -59,7 +63,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "balloon-css": "^0.5.0",
-    "bulma": "^0.6.1",
+    "bulma": "^0.7.0",
     "ftp": "^0.3.10",
     "iview": "^2.7.2",
     "localforage": "^1.5.3",
@@ -70,6 +74,7 @@
     "ramda": "^0.25.0",
     "request": "^2.83.0",
     "sass-loader": "^6.0.6",
+    "semver": "^5.5.0",
     "vue": "^2.5.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",

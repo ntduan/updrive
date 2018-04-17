@@ -1,8 +1,10 @@
 import { ipcRenderer, shell, clipboard, remote } from 'electron'
 
 import Router from '@/router'
+import Store from '@/store'
+import { externalUrls } from '@/api/tool'
 
-const { dialog, Menu, MenuItem, BrowserWindow, getCurrentWindow } = remote
+const { app, dialog, Menu, MenuItem, BrowserWindow, getCurrentWindow } = remote
 
 const currentWin = getCurrentWindow()
 
@@ -46,6 +48,7 @@ export const setApplicationMenu = () => {
           label: '切换账号',
           click() {
             Router.push({ name: 'login' })
+            Store.dispatch('LOGOUT')
           },
         },
         {
@@ -102,7 +105,7 @@ export const setApplicationMenu = () => {
         {
           label: '报告一个问题',
           click() {
-            shell.openExternal('https://github.com/aniiantt/updrive/issues')
+            shell.openExternal(externalUrls.issues)
           },
         },
         {
@@ -111,7 +114,7 @@ export const setApplicationMenu = () => {
         {
           label: '关于',
           click() {
-            shell.openExternal('https://github.com/aniiantt/updrive')
+            shell.openExternal(externalUrls.repository)
           },
         },
       ],
@@ -147,6 +150,12 @@ export const showContextmenu = (items, opts = {}) => {
   const menu = createContextmenu(items)
   setTimeout(() => menu.popup(currentWin))
 }
+
+// 获取版本号
+export const getVersion = app.getVersion
+
+// 获取产品名称
+export const getName = app.getName
 
 // 监听 Ctrl + A
 export const listenSelectAll = callback => ipcRenderer.on('SHORTCUT_SELECT_ALL', callback)

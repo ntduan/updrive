@@ -3,6 +3,11 @@
 export const CLEAR_USER_INFO = 'CLEAR_USER_INFO' // 清除用户信息
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' // 登录成功
+export const LOGOUT = 'LOGOUT' // 退出登录
+export const RESET_AUTH = 'RESET_AUTH'
+export const RESET_LIST = 'RESET_LIST'
+export const RESET_MODAL = 'RESET_MODAL'
+export const RESET_TASK = 'RESET_TASK'
 export const SET_USER_INFO = 'SET_USER_INFO' // 设置用户信息
 export const SET_LOADING_LIST = 'SET_LOADING_LIST' // 目录正在加载中
 export const SET_CURRENT_LIST = 'SET_CURRENT_LIST' // 设置当前目录列表
@@ -44,3 +49,6 @@ export const GET_FILE_DETAIL_INFO = 'GET_FILE_DETAIL_INFO' // 获取文件详情
 export const SET_FILE_DETAIL_INFO = 'SET_FILE_DETAIL_INFO' // 设置文件详情信息
 
 export const SYNC_JOB_LIST = 'SYNC_JOB_LIST' // 同步下载任务列表
+
+export const SET_USAGE = 'SET_USAGE' // 设置空间使用量
+export const GET_USAGE = 'GET_USAGE' // 获取空间使用量

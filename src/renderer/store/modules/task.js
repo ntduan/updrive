@@ -2,7 +2,7 @@ import { append, drop, prepend, update } from 'ramda'
 
 import * as Types from '@/store/mutation-types'
 
-const state = {
+const initState = {
   taskType: {
     upload: '上传',
     download: '下载',
@@ -43,9 +43,12 @@ const mutations = {
     })
     state.showModal = false
   },
+  [Types.RESET_TASK](state) {
+    Object.assign(state, { ...initState })
+  },
 }
 
 export default {
-  state,
+  state: { ...initState },
   mutations,
 }
