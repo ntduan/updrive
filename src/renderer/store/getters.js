@@ -1,9 +1,5 @@
 import { path, last } from 'ramda'
 
-export const bucketName = state => {
-  return path(['auth', 'user', 'bucketName'], state) || ''
-}
-
 export const baseHref = state => {
   return 'http://' + bucketName(state) + '.b0.upaiyun.com/'
 }
