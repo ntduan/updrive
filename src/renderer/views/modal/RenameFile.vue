@@ -13,7 +13,7 @@
         <div class="field has-addons">
           <p class="control">
             <a class="button is-static has-text-primary">
-              {{bucketName}}
+              {{auth.user.bucketName}}
             </a>
           </p>
           <p class="control is-expanded">
@@ -44,8 +44,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['modal', 'list']),
-    ...mapGetters(['bucketName']),
+    ...mapState(['modal', 'list', 'auth']),
   },
   methods: {
     close() {

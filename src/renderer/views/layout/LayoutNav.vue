@@ -27,7 +27,7 @@
       <nav class="breadcrumb is-medium">
         <ul v-if="!pageTitle">
           <li :class="{'is-active': !pathArray.length}">
-            <a @click.prevent.stop="goto()">{{bucketName}}</a>
+            <a @click.prevent.stop="goto()">{{auth.user.bucketName}}</a>
           </li>
           <li :class="{'is-active': index === pathArray.length - 1}" v-for="(name, index) in pathArray" :key="name + index">
             <a @click.prevent.stop="goto(index)">{{name}}</a>
@@ -75,8 +75,7 @@ export default {
     currentDirPath() {
       return path(['list', 'dirInfo', 'path'], this)
     },
-    ...mapState(['list']),
-    ...mapGetters(['bucketName']),
+    ...mapState(['list', 'auth']),
   },
   methods: {
     triggerCreateDropmenu() {
