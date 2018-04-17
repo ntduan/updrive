@@ -48,10 +48,7 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "target": [
-        "nsis",
-        "portable"
-      ]
+      "target": ["nsis", "portable", "zip"]
     },
     "linux": {
       "icon": "build/icons"
