@@ -8,7 +8,7 @@ const initState = {
     show: false,
     oldPath: '',
   },
-  profile: {
+  domainSetting: {
     show: false,
   },
 }
@@ -20,11 +20,11 @@ const mutations = {
   [Types.CLOSE_CREATE_FOLDER_MODAL](state) {
     state.createFolder.show = false
   },
-  [Types.OPEN_PROFILE_MODAL](state) {
-    state.profile.show = true
+  [Types.OPEN_DOMAIN_SETTING_MODAL](state) {
+    state.domainSetting.show = true
   },
-  [Types.CLOSE_PROFILE_MODAL](state) {
-    state.profile.show = false
+  [Types.CLOSE_DOMAIN_SETTING_MODAL](state) {
+    state.domainSetting.show = false
   },
   [Types.OPEN_RENAME_FILE_MODAL](state) {
     state.renameFile.show = true

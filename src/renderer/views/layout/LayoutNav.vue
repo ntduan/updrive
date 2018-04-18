@@ -85,11 +85,6 @@ export default {
         action: 0,
       })
     },
-    //
-    setProfile() {
-      return this.$store.commit('OPEN_PROFILE_MODAL')
-      this.isShowCreateDropmenu = false
-    },
     // 新建文件夹
     createFolder() {
       this.$store.commit('OPEN_CREATE_FOLDER_MODAL')

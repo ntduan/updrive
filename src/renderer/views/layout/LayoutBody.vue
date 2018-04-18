@@ -6,6 +6,7 @@
     <rename-file :key="modal.renameFile.oldPath" />
     <file-progress />
     <create-folder />
+    <domain-setting />
   </div>
 </template>
 
@@ -15,6 +16,7 @@ import { mapState } from 'vuex'
 import CreateFolder from '@/views/modal/CreateFolder'
 import RenameFile from '@/views/modal/RenameFile'
 import FileProgress from '@/views/modal/FileProgress'
+import DomainSetting from '@/views/modal/DomainSetting'
 
 export default {
   name: 'LayoutBody',
@@ -22,6 +24,7 @@ export default {
     CreateFolder,
     RenameFile,
     FileProgress,
+    DomainSetting,
   },
   computed: {
     ...mapState(['modal']),

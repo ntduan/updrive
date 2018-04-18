@@ -38,3 +38,10 @@ $dropdown-item-hover-background-color: #edf4fc;
 .menu {
   color: findColorInvert(#000)
 }
+
+.message a.message-link:not(.button):not(.tag) {
+  color: #3273dc;
+  &:hover {
+    color: #363636;
+  }
+}

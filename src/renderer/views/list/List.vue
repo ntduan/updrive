@@ -19,7 +19,7 @@
         </div>
         <div
           class="list-operation-item"
-          @click="isViewDetail ? toggleShowViewDetail() :  getFileDetail()"
+          @click="isViewDetail ? toggleShowViewDetail() : getFileDetail()"
           :class="{disabled: !selected.length, 'list-operation-item-hover': isViewDetail}"
         >
           <Icon name="icon-information" />详情
@@ -142,8 +142,10 @@
               链接
             </div>
             <div class="list-view-detail-content-item-value">
-              <div class="field has-addons">
-                <p class="control is-expanded"><input class="input" type="text" :value="fileDetail.basicInfo.href" readonly /></p>
+              <div class="field has-addons" v-if="baseHref">
+                <p class="control is-expanded">
+                  <input class="input" type="text" :value="baseHref && getHref(fileDetail.basicInfo.uri)" readonly />
+                </p>
                 <p class="control"
                   :data-balloon="copytext"
                   data-balloon-pos="left"
@@ -155,6 +157,7 @@
                   </a>
                 </p>
               </div>
+              <a @click.prevent="openDomainSettingModal" v-if="!baseHref">设置加速域名</a>
             </div>
           </div>
           <div class="list-view-detail-content-item" v-if="fileDetail.basicInfo.folderType !== 'F'">
@@ -295,7 +298,6 @@ export default {
         ...fileDetail,
         basicInfo: {
           ...fileDetail.basicInfo,
-          href: this.getHref(fileDetail.basicInfo.uri),
         },
       }
     },
@@ -429,7 +431,6 @@ export default {
     },
     // 右键点击
     contextmenu() {
-      console.log('右键')
       this.$nextTick(this.showContextMenu)
     },
     // 显示菜单
@@ -437,7 +438,7 @@ export default {
       showContextmenu({
         appendItems: [
           { hide: !this.uniqueSelectedUri, label: '打开', click: () => this.dblclickItem(this.uniqueSelectedUri) },
-          { hide: !this.isSelectedSingleFile, label: '在浏览器中打开', click: () => openExternal(this.getHref()) },
+          { hide: !this.isSelectedSingleFile, label: '在浏览器中打开', click: () => this.getHref() && openExternal(this.getHref()) },
           { hide: !this.uniqueSelectedUri, type: 'separator' },
           {
             hide: !this.uniqueSelectedUri || this.isViewDetail,
@@ -471,9 +472,17 @@ export default {
           this.detailLoading = false
         })
     },
+    openDomainSettingModal() {
+      this.$store.commit('OPEN_DOMAIN_SETTING_MODAL')
+    },
     getHref(uri = this.uniqueSelectedUri) {
-      const urlObj = new URL(uri, this.baseHref)
-      return urlObj.href
+      if(!this.baseHref) {
+        Message.warning('请先设置加速域名，再进行获取链接操作')
+        this.openDomainSettingModal()
+      } else {
+        const urlObj = new URL(uri, this.baseHref)
+        return urlObj.href
+      }
     },
     // 复制到剪切板
     writeText(...args) {
@@ -495,7 +504,8 @@ export default {
         const historyUri = this.currentDirPath
         this.$store.dispatch({ type: 'GET_LIST_DIR_INFO', remotePath: uri, action: 0 }).then(() => this.listGetFocus())
       } else {
-        window.open(this.getHref(), this.getHref(), { frame: false })
+        // @TODO
+        this.isViewDetail ? this.toggleShowViewDetail() : this.getFileDetail()
       }
     },
     // 删除文件
