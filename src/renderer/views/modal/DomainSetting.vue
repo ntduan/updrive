@@ -66,7 +66,7 @@ export default {
       if (!this.domain) return false
       try {
         new URL(this.domain)
-      } catch(err) {
+      } catch (err) {
         this.isDomaininvaild = true
         return false
       }

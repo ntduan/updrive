@@ -438,7 +438,11 @@ export default {
       showContextmenu({
         appendItems: [
           { hide: !this.uniqueSelectedUri, label: '打开', click: () => this.dblclickItem(this.uniqueSelectedUri) },
-          { hide: !this.isSelectedSingleFile, label: '在浏览器中打开', click: () => this.getHref() && openExternal(this.getHref()) },
+          {
+            hide: !this.isSelectedSingleFile,
+            label: '在浏览器中打开',
+            click: () => this.getHref() && openExternal(this.getHref()),
+          },
           { hide: !this.uniqueSelectedUri, type: 'separator' },
           {
             hide: !this.uniqueSelectedUri || this.isViewDetail,
@@ -476,9 +480,10 @@ export default {
       this.$store.commit('OPEN_DOMAIN_SETTING_MODAL')
     },
     getHref(uri = this.uniqueSelectedUri) {
-      if(!this.baseHref) {
+      if (!this.baseHref) {
         Message.warning('请先设置加速域名，再进行获取链接操作')
         this.openDomainSettingModal()
+        return ''
       } else {
         const urlObj = new URL(uri, this.baseHref)
         return urlObj.href
@@ -491,11 +496,13 @@ export default {
     // 获取链接
     copyHref(uri) {
       let url = this.getHref(uri)
-      this.writeText(url)
-      if(url && url.length > 103 && url.substring) {
-        url = url.substring(0, 100) + '……'
+      if (url) {
+        this.writeText(url)
+        if (url && url.length > 103 && url.substring) {
+          url = url.substring(0, 100) + '……'
+        }
+        Message.success(`${url} 已复制！`)
       }
-      Message.success(`${url} 已复制！`)
     },
     // 双击
     dblclickItem(uri) {
