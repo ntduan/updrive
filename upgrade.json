@@ -6,9 +6,7 @@
       "darwin": "https://github.com/aniiantt/updrive/releases/download/v0.33.0/updrive-0.33.0-mac.zip",
       "other": "https://github.com/aniiantt/updrive/releases/download/v0.33.0/updrive.AppImage.dmg"
     },
-    "change_logs": [
-      "增加自定义加速域名功能"
-    ]
+    "change_logs": ["增加自定义加速域名功能"]
   },
   {
     "version": "0.31.0",
@@ -17,9 +15,7 @@
       "darwin": "https://github.com/aniiantt/updrive/releases/download/v0.31.0/updrive-0.31.0-mac.zip",
       "other": "https://github.com/aniiantt/updrive/releases/download/v0.31.0/updrive.AppImage.dmg"
     },
-    "change_logs": [
-      "绕过防盗链限制预览图片"
-    ]
+    "change_logs": ["绕过防盗链限制预览图片"]
   },
   {
     "version": "0.30.0",
