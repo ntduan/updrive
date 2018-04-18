@@ -1,11 +1,4 @@
-import Request from 'request'
-import EventEmitter from 'events'
-import Fs from 'fs'
-import { basename } from 'path'
-import { prepend, groupBy } from 'ramda'
 import localforage from 'localforage'
-
-import { base64, throttle } from '@/api/tool'
 
 const Profile = {
   initStore: {
