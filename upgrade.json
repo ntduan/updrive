@@ -1,10 +1,32 @@
 [
   {
+    "version": "0.33.0",
+    "package_urls": {
+      "win32": "https://github.com/aniiantt/updrive/releases/download/v0.33.0/updrive-0.33.0-win.zip",
+      "darwin": "https://github.com/aniiantt/updrive/releases/download/v0.33.0/updrive-0.33.0-mac.zip",
+      "other": "https://github.com/aniiantt/updrive/releases/download/v0.33.0/updrive.AppImage.dmg"
+    },
+    "change_logs": [
+      "增加自定义加速域名功能"
+    ]
+  },
+  {
+    "version": "0.31.0",
+    "package_urls": {
+      "win32": "https://github.com/aniiantt/updrive/releases/download/v0.31.0/updrive-0.31.0-win.zip",
+      "darwin": "https://github.com/aniiantt/updrive/releases/download/v0.31.0/updrive-0.31.0-mac.zip",
+      "other": "https://github.com/aniiantt/updrive/releases/download/v0.31.0/updrive.AppImage.dmg"
+    },
+    "change_logs": [
+      "绕过防盗链限制预览图片",
+    ]
+  },
+  {
     "version": "0.30.0",
     "package_urls": {
-      "win32": "https://github.com/aniiantt/updrive/releases/download/v0.30.0/updrive-0.30.0.exe",
-      "darwin": "https://github.com/aniiantt/updrive/releases/download/v0.30.0/updrive-0.30.0.dmg",
-      "other": "https://github.com/aniiantt/updrive/releases/download/v0.30.0/updrive-0.30.0-x86_64.AppImage.dmg"
+      "win32": "https://github.com/aniiantt/updrive/releases/download/v0.30.1/updrive-0.30.1.exe",
+      "darwin": "https://github.com/aniiantt/updrive/releases/download/v0.30.1/updrive-0.30.1.dmg",
+      "other": "https://github.com/aniiantt/updrive/releases/download/v0.30.1/updrive-0.30.1-x86_64.AppImage"
     },
     "change_logs": [
       "修复不同账号切换存在的一些 BUG",
