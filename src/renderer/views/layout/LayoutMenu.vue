@@ -12,10 +12,14 @@
           <div class="dropdown-content" @click.stop="void 0">
             <div class="dropdown-content-profile-name">{{auth.user.operatorName}}/{{auth.user.bucketName}}</div>
             <hr class="dropdown-divider">
-            <a class="dropdown-item" @click.prevent="openExternal(`https://console.upyun.com/services/${auth.user.bucketName}/domainsFile/`)">
+            <a class="dropdown-item" @click.prevent="openDomainSetting(true)">
+              加速域名设置
+            </a>
+            <hr class="dropdown-divider">
+            <a class="dropdown-item" @click.prevent="openExternal(externalUrls.domain)">
               云存储服务设置
             </a>
-            <a class="dropdown-item" @click.prevent="openExternal('https://console.upyun.com/services/create/file/')">
+            <a class="dropdown-item" @click.prevent="openExternal(externalUrls.createBucket)">
               创建云存储服务
             </a>
             <a class="dropdown-item" @click.prevent="openExternal(externalUrls.issues)">
@@ -99,19 +103,21 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import os from 'os'
 import semver from 'semver'
 
-import { digiUnit, externalUrls } from '@/api/tool'
+import { digiUnit } from '@/api/tool'
 import Icon from '@/components/Icon'
 import { openExternal, getVersion, getName } from '@/api/electron.js'
 
 export default {
   name: 'LayoutMenu',
+  components: {
+    Icon,
+  },
   data() {
     return {
-      externalUrls: externalUrls,
       isShowProfileMenu: false,
       appVersion: '',
       appName: '',
@@ -131,6 +137,7 @@ export default {
       return this.$route.name
     },
     ...mapState(['task', 'auth']),
+    ...mapGetters(['externalUrls']),
   },
   created() {
     this.getUsage()
@@ -138,6 +145,10 @@ export default {
     this.getUpgradeInfo()
   },
   methods: {
+    openDomainSetting(value) {
+      this.$store.commit('OPEN_DOMAIN_SETTING_MODAL')
+      this.isShowProfileMenu = false
+    },
     toggleAboutmodal(value) {
       this.showAboutModal = value !== undefined ? value : !this.showAboutModal
     },
@@ -177,9 +188,6 @@ export default {
   },
   filters: {
     digiUnit,
-  },
-  components: {
-    Icon,
   },
 }
 </script>

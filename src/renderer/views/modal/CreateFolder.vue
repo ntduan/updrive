@@ -37,9 +37,6 @@ export default {
     }
   },
   computed: {
-    show() {
-      return this.modal.createFolder.show
-    },
     ...mapState(['modal', 'list']),
   },
   methods: {

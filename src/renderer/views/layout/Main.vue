@@ -12,6 +12,7 @@
 import { mapState } from 'vuex'
 
 import Job from '@/api/job'
+import Profile from '@/api/profile'
 import LayoutNav from '@/views/layout/LayoutNav'
 import LayoutMenu from '@/views/layout/LayoutMenu'
 import LayoutBody from '@/views/layout/LayoutBody'
@@ -29,10 +30,17 @@ export default {
   created() {
     this.activateList()
     this.activateJob()
+    this.activateProfile()
   },
   methods: {
     activateList() {
       this.$store.dispatch({ type: 'GET_LIST_DIR_INFO' })
+    },
+    activateProfile() {
+      const profile = Object.create(Profile)
+      profile.setup(this.auth.user.key)
+      this.$store.commit('INIT_PROFILE', profile)
+      this.$store.dispatch('SYNC_PROFILE_DATA')
     },
     activateJob() {
       const job = Object.create(Job)

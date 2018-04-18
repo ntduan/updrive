@@ -138,7 +138,7 @@ export default {
       })
   },
   // 同步任务列表
-  [Types.SYNC_JOB_LIST]({ getters, commit }, { uri, basicInfo } = {}) {
+  [Types.SYNC_JOB_LIST]({ getters, commit }, {} = {}) {
     getters.job.getStore().then(store => {
       commit(Types.SET_JOB_LIST, store ? store.data : [])
     })
@@ -147,7 +147,7 @@ export default {
   [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { type } = {}) {
     getters.job
       .clearCompleted(type)
-      .then(store => {
+      .then(() => {
         Message.success('操作成功')
         dispatch('SYNC_JOB_LIST')
       })
@@ -157,7 +157,7 @@ export default {
   [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { type, id } = {}) {
     getters.job
       .clearCompleted({ type, id })
-      .then(store => {
+      .then(() => {
         Message.success('操作成功')
         dispatch('SYNC_JOB_LIST')
       })
@@ -173,5 +173,18 @@ export default {
   [Types.LOGOUT]({ commit }) {
     const mutations = ['RESET_AUTH', 'RESET_LIST', 'RESET_MODAL', 'RESET_TASK']
     for (const m of mutations) commit(m)
+  },
+  // 设置 profile 存储数据
+  [Types.SET_PROFILE_STORE]({ getters, dispatch }, data = {}) {
+    getters.profile.setStoreData(data).then(() => {
+      Message.success('操作成功')
+      dispatch('SYNC_PROFILE_DATA')
+    })
+  },
+  // 同步 profile 数据
+  [Types.SYNC_PROFILE_DATA]({ getters, commit }, {} = {}) {
+    getters.profile.getStore().then(store => {
+      commit(Types.SET_PROFILE_DATA, store ? store.data : {})
+    })
   },
 }
