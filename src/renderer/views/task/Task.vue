@@ -30,10 +30,13 @@
           <div
             class="files-list-item"
             v-for="file in currentList"
+            @dblclick.prevent.stop="openFile(file)"
             :key="file.id"
           >
             <div class="name file-info-item">
-              <i class="res-icon" :class="getFileIconClass(file.filename)"></i>{{file.filename}}
+              <a @click.prevent.stop="openFile(file)" title="打开文件">
+                <i class="res-icon" :class="getFileIconClass(file.filename)"></i>{{file.filename}}
+              </a>
             </div>
             <div class="size file-info-item">
               {{file.transferred | digiUnit}} / {{file.total | digiUnit}}
@@ -78,7 +81,7 @@
               </template>
             </div>
             <div class="handle file-info-item">
-              <a v-if="file.connectType === 'download'" v-show="isCompleted(file)" @click="openFile(file)">打开</a>
+              <a v-if="file.connectType === 'download'" v-show="isCompleted(file)" @click="showFile(file)">打开</a>
               <a v-show="isCompleted(file) || isError(file)" @click="deleteTask(file)">删除</a>
             </div>
           </div>
@@ -113,7 +116,7 @@ import ConfirmModal from '@/components/ConfirmModal'
 import Icon from '@/components/Icon'
 import { timestamp, percent, digiUnit, getFileIconClass } from '@/api/tool'
 import { groupBy } from 'ramda'
-import { showItemInFolder } from '@/api/electron.js'
+import { showItemInFolder, openItem } from '@/api/electron.js'
 import Message from '@/api/message'
 
 export default {
@@ -150,6 +153,14 @@ export default {
       this.toggleShowClearCompletedModal(false)
       this.$store.dispatch('CLEAR_COMPLEATE_JOB', { type: this.task.tabKey })
     },
+    openFile(file) {
+      if (this.isCompleted(file)) {
+        const result = openItem(file.localPath)
+        if (!result) {
+          Message.error('文件不存在')
+        }
+      }
+    },
     switchTab(tabKey) {
       this.$store.commit('SELECT_TAB_KEY', { tabKey })
     },
@@ -178,7 +189,7 @@ export default {
         this.$store.dispatch('CLEAR_COMPLEATE_JOB', { id: file.id })
       }
     },
-    openFile(file) {
+    showFile(file) {
       if (file.connectType === 'download') {
         const result = showItemInFolder(file.localPath)
         if (!result) {
