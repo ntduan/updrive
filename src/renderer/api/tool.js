@@ -158,7 +158,7 @@ export const getFileIconClass = (filename = '', folderType) => {
 
 export const externalUrls = {
   repository: 'https://github.com/aniiantt/updrive',
-  issues: 'https://github.com/aniiantt/updrive/issues',
+  issues: 'https://github.com/aniiantt/updrive/issues/new',
   releases: 'https://github.com/aniiantt/updrive/releases',
   latest: 'https://github.com/aniiantt/updrive/releases/latest',
 }
