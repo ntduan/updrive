@@ -32,6 +32,9 @@ session.webRequest.onBeforeSendHeaders(
   },
 )
 
+// 聚焦
+export const winShow = currentWin.show
+
 // 设置菜单
 export const setApplicationMenu = () => {
   const menu = [
