@@ -1,4 +1,4 @@
-import { ipcRenderer, shell, clipboard, remote } from 'electron'
+import { ipcRenderer, shell, clipboard, remote, webFrame } from 'electron'
 
 import Router from '@/router'
 import Store from '@/store'
@@ -11,6 +11,10 @@ const currentWin = getCurrentWindow()
 const session = currentWin.webContents.session
 
 const userAgent = `${process.env.npm_package_build_productName}/${process.env.npm_package_version}`
+
+
+// 禁止缩放
+webFrame.setZoomLevelLimits(1, 1)
 
 // img 标签注入授权头
 session.webRequest.onBeforeSendHeaders(
