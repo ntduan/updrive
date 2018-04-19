@@ -82,6 +82,7 @@
             </div>
             <div class="handle file-info-item">
               <a v-if="file.connectType === 'download'" v-show="isCompleted(file)" @click="showFile(file)">打开</a>
+              <a v-if="file.connectType === 'upload'" v-show="isCompleted(file)" @click="copyHref(file)">获取链接</a>
               <a v-show="isCompleted(file) || isError(file)" @click="deleteTask(file)">删除</a>
             </div>
           </div>
@@ -109,14 +110,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import ProgressBar from '@/components/ProgressBar'
 import ConfirmModal from '@/components/ConfirmModal'
 import Icon from '@/components/Icon'
 import { timestamp, percent, digiUnit, getFileIconClass } from '@/api/tool'
 import { groupBy } from 'ramda'
-import { showItemInFolder, openItem } from '@/api/electron.js'
+import { showItemInFolder, openItem, writeText } from '@/api/electron.js'
 import Message from '@/api/message'
 
 export default {
@@ -144,6 +145,7 @@ export default {
       }, this.task.list)
     },
     ...mapState(['task']),
+    ...mapGetters(['baseHref']),
   },
   methods: {
     toggleShowClearCompletedModal(value) {
@@ -195,6 +197,24 @@ export default {
         if (!result) {
           Message.error('文件不存在')
         }
+      }
+    },
+    // 获取链接
+    copyHref(file) {
+      console.log(file)
+      if (!this.baseHref) {
+        Message.warning('请先设置加速域名，再进行获取链接操作')
+        this.$store.commit('OPEN_DOMAIN_SETTING_MODAL')
+        return ''
+      } else {
+        const pathname = new URL(file.url).pathname
+        const urlObj = new URL(pathname, this.baseHref)
+        let url = urlObj.href
+        writeText(url)
+        if (url && url.length > 103 && url.substring) {
+          url = url.substring(0, 100) + '……'
+        }
+        Message.success(`${url} 已复制！`)
       }
     },
     getFileIconClass: getFileIconClass,
