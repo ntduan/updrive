@@ -117,7 +117,7 @@ import ConfirmModal from '@/components/ConfirmModal'
 import Icon from '@/components/Icon'
 import { timestamp, percent, digiUnit, getFileIconClass } from '@/api/tool'
 import { groupBy } from 'ramda'
-import { showItemInFolder, openItem, writeText } from '@/api/electron.js'
+import { showItemInFolder, openItem } from '@/api/electron.js'
 import Message from '@/api/message'
 
 export default {
@@ -201,7 +201,6 @@ export default {
     },
     // 获取链接
     copyHref(file) {
-      console.log(file)
       if (!this.baseHref) {
         Message.warning('请先设置加速域名，再进行获取链接操作')
         this.$store.commit('OPEN_DOMAIN_SETTING_MODAL')
@@ -210,11 +209,7 @@ export default {
         const pathname = new URL(file.url).pathname
         const urlObj = new URL(pathname, this.baseHref)
         let url = urlObj.href
-        writeText(url)
-        if (url && url.length > 103 && url.substring) {
-          url = url.substring(0, 100) + '……'
-        }
-        Message.success(`${url} 已复制！`)
+        this.$store.commit('OPEN_FORMAT_URL_MODAL', { data: url })
       }
     },
     getFileIconClass: getFileIconClass,

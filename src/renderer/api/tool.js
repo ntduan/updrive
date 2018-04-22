@@ -138,22 +138,28 @@ export const getFileType = (IMME = '') => {
   }
 }
 
-export const getFileIconClass = (filename = '', folderType) => {
-  const extensionName = Path.extname(filename).toLocaleLowerCase()
-  return {
-    'icon-folder': folderType === 'F' || folderType === 'B',
-    'icon-image': ['.bmp', '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.gifv'].includes(extensionName),
-    'icon-music': ['.mp3', '.m4a', '.ogg'].includes(extensionName),
-    'icon-zip': ['.zip', '.rar', '.7z'].includes(extensionName),
-    'icon-movie': ['.avi', '.mp4', '.flv', '.mov', '.3gp', '.asf', '.wmv', '.mpg', '.f4v', '.m4v', '.mkv'].includes(
-      extensionName,
-    ),
-    'icon-html': ['.htm', '.html', '.vue'].includes(extensionName),
-    'icon-json': ['.json'].includes(extensionName),
-    'icon-javascript': ['.js', '.jsx'].includes(extensionName),
-    'icon-style': ['.css', '.sass', '.less', '.stylus'].includes(extensionName),
-    'icon-markdown': ['.md', '.markdown'].includes(extensionName),
+export const getFileTypeFromName = (filename = '', folderType) => {
+  if (folderType === 'F' || folderType === 'B') return 'folder'
+  const fileTypeMap = {
+    image: ['.bmp', '.gif', '.ico', '.jpg', '.jpeg', '.png', '.svg', '.webp', '.gifv'],
+    music: ['.mp3', '.m4a', '.ogg'],
+    zip: ['.zip', '.rar', '.7z'],
+    movie: ['.avi', '.mp4', '.flv', '.mov', '.3gp', '.asf', '.wmv', '.mpg', '.f4v', '.m4v', '.mkv'],
+    html: ['.htm', '.html', '.vue'],
+    json: ['.json'],
+    javascript: ['.js', '.jsx'],
+    style: ['.css', '.sass', '.less', '.stylus'],
+    markdown: ['.md', '.markdown'],
   }
+  const extensionName = Path.extname(filename).toLocaleLowerCase()
+  return Object.keys(fileTypeMap).find(key => {
+    return fileTypeMap[key].includes(extensionName)
+  })
+}
+
+export const getFileIconClass = (filename = '', folderType) => {
+  const filetype = getFileTypeFromName(filename, folderType)
+  return `icon-${filetype}`
 }
 
 export const externalUrls = {

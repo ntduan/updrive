@@ -5,7 +5,14 @@ const Profile = {
     version: 0.1,
     data: {
       domain: '',
+      urlCopyType: 'url',
     },
+  },
+
+  urlCopyType: {
+    url: 'url',
+    markdown: 'markdown',
+    html: 'html',
   },
 
   setup(keyPre) {

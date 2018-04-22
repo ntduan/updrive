@@ -204,9 +204,9 @@ export default {
     for (const m of mutations) commit(m)
   },
   // 设置 profile 存储数据
-  [Types.SET_PROFILE_STORE]({ getters, dispatch }, data = {}) {
+  [Types.SET_PROFILE_STORE]({ getters, dispatch }, { data, noNofity } = {}) {
     getters.profile.setStoreData(data).then(() => {
-      Message.success('操作成功')
+      if (!noNofity) Message.success('操作成功')
       dispatch('SYNC_PROFILE_DATA')
     })
   },
