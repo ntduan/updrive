@@ -31,6 +31,11 @@ export const RENAME_FILE_CLEAR_OLD_PATH = 'RENAME_FILE_CLEAR_OLD_PATH' // 清除
 export const OPEN_DOMAIN_SETTING_MODAL = 'OPEN_DOMAIN_SETTING_MODAL' // 打开域名设置框
 export const CLOSE_DOMAIN_SETTING_MODAL = 'CLOSE_DOMAIN_SETTING_MODAL' // 关闭域名设置框
 
+export const OPEN_FORMAT_URL_MODAL = 'OPEN_FORMAT_URL_MODAL' // 打开链接格式化框
+export const CLOSE_FORMAT_URL_MODAL = 'CLOSE_FORMAT_URL_MODAL' // 关闭链接格式化框
+export const SET_FORMAT_TYPE = 'SET_FORMAT_TYPE' // 设置链接的格式
+export const SET_COPY_URL = 'SET_COPY_URL' // 设置需要复制的URL
+
 export const SHOW_TASK_MODAL = 'SHOW_TASK_MODAL' // 显示任务框
 export const HIDE_TASK_MODAL = 'HIDE_TASK_MODAL' // 隐藏任务框
 

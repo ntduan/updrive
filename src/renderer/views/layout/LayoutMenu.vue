@@ -77,7 +77,7 @@
           <div class="change-logs">
             <div class="upgrade-download-tip" v-show="upgradeUrl">
               <span class="has-text-danger">发现新版本 v{{latestRelease.version}}！</span>
-              <a :href="upgradeUrl">立即下载</a>
+              <a @click.prevent.stop="openExternal(externalUrls.latest)">立即下载</a>
             </div>
             <div class="change-logs-content" v-show="upgradeData.length">
               <div>

@@ -6,6 +6,8 @@ import * as UpyunFtp from '@/api/upyunFtp.js'
 import UpyunClient from '@/api/upyunClient.js'
 import Message from '@/api/message.js'
 import Session from '@/api/session.js'
+import Notification from '@/api/notification'
+import Router from '@/router'
 
 export default {
   // 登录
@@ -86,10 +88,24 @@ export default {
         .downloadFiles(destPath, downloadPath, getters.job)
         .then(results => {
           const isAllSuccess = !results.some(r => !r.result)
+          const notify = title =>
+            Notification.notify(
+              title,
+              {
+                body: '点击查看详情',
+              },
+              () => {
+                commit('SELECT_TAB_KEY', { tabKey: 'download' })
+                Router.push({ name: 'task' })
+              },
+            )
+
           if (isAllSuccess) {
             Message.success('下载成功')
+            notify('下载成功')
           } else {
             for (const result of results) Message.warning(`下载失败：${result.uri}: ${result.message}`)
+            notify('下载失败')
           }
           return dispatch(Types.SYNC_JOB_LIST)
         })
@@ -105,10 +121,23 @@ export default {
         .uploadFiles(remotePath, localFilePaths, getters.job)
         .then(results => {
           const isAllSuccess = !results.some(r => !r.result)
+          const notify = title =>
+            Notification.notify(
+              title,
+              {
+                body: '点击查看详情',
+              },
+              () => {
+                commit('SELECT_TAB_KEY', { tabKey: 'upload' })
+                Router.push({ name: 'task' })
+              },
+            )
           if (isAllSuccess) {
             Message.success('上传成功')
+            notify('上传成功')
           } else {
             for (const result of results) Message.warning(`上传失败：${result.localPath}: ${result.message}`)
+            notify('上传失败')
           }
           return dispatch(Types.SYNC_JOB_LIST)
         })
@@ -175,9 +204,9 @@ export default {
     for (const m of mutations) commit(m)
   },
   // 设置 profile 存储数据
-  [Types.SET_PROFILE_STORE]({ getters, dispatch }, data = {}) {
+  [Types.SET_PROFILE_STORE]({ getters, dispatch }, { data, noNofity } = {}) {
     getters.profile.setStoreData(data).then(() => {
-      Message.success('操作成功')
+      if (!noNofity) Message.success('操作成功')
       dispatch('SYNC_PROFILE_DATA')
     })
   },

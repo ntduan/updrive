@@ -36,6 +36,14 @@
       vertical-align: middle;
     }
   }
+  .name.file-info-item {
+    a {
+      color: rgb(0, 0, 0);
+      &:hover {
+        color: rgba(0, 0, 0, 0.6);
+      }
+    }
+  }
   .size.file-info-item {
     font-size: 12px;
     text-align: left;

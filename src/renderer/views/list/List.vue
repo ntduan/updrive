@@ -147,10 +147,9 @@
                   <input class="input" type="text" :value="baseHref && getHref(fileDetail.basicInfo.uri)" readonly />
                 </p>
                 <p class="control"
-                  :data-balloon="copytext"
+                  data-balloon="点击复制"
                   data-balloon-pos="left"
-                  @mouseenter="() => {copytext = '点击复制'}"
-                  @click="() => {copytext = '已复制！';writeText(fileDetail.basicInfo.href)}"
+                  @click="copyHref(fileDetail.basicInfo.href)"
                 >
                   <a class="button">
                     <i class="icon"><Icon name="icon-copy" /></i>
@@ -242,7 +241,6 @@ import {
   showContextmenu,
   openExternal,
   windowOpen,
-  writeText,
 } from '@/api/electron.js'
 
 export default {
@@ -485,23 +483,20 @@ export default {
         this.openDomainSettingModal()
         return ''
       } else {
-        const urlObj = new URL(uri, this.baseHref)
-        return urlObj.href
+        try {
+          const urlObj = new URL(uri, this.baseHref)
+          return urlObj.href
+        } catch (err) {
+          Message.error('请设置合法的加速域名')
+          return ''
+        }
       }
-    },
-    // 复制到剪切板
-    writeText(...args) {
-      return writeText(...args)
     },
     // 获取链接
     copyHref(uri) {
       let url = this.getHref(uri)
       if (url) {
-        this.writeText(url)
-        if (url && url.length > 103 && url.substring) {
-          url = url.substring(0, 100) + '……'
-        }
-        Message.success(`${url} 已复制！`)
+        this.$store.commit('OPEN_FORMAT_URL_MODAL', { data: url })
       }
     },
     // 双击

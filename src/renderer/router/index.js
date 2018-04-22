@@ -7,7 +7,6 @@ import Store from '@/store'
 import Main from '@/views/layout/Main'
 import Login from '@/views/login/Login'
 import List from '@/views/list/List'
-import Domain from '@/views/domain/Domain'
 import Task from '@/views/task/Task'
 import Session from '@/api/session.js'
 

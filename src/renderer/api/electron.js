@@ -1,4 +1,4 @@
-import { ipcRenderer, shell, clipboard, remote } from 'electron'
+import { ipcRenderer, shell, clipboard, remote, webFrame } from 'electron'
 
 import Router from '@/router'
 import Store from '@/store'
@@ -12,25 +12,31 @@ const session = currentWin.webContents.session
 
 const userAgent = `${process.env.npm_package_build_productName}/${process.env.npm_package_version}`
 
+// 禁止缩放
+webFrame.setZoomLevelLimits(1, 1)
+
 // img 标签注入授权头
 session.webRequest.onBeforeSendHeaders(
   {
     urls: ['*://v0.api.upyun.com/*'],
   },
   (details, callback) => {
-    if(details.resourceType === 'image') {
+    if (details.resourceType === 'image') {
       const authHeaders = Store.getters.upyunClient.getHeaders(details.url)
       callback({
         requestHeaders: {
           ...details.requestHeaders,
           ...authHeaders,
-        }
+        },
       })
     } else {
       callback({})
     }
   },
 )
+
+// 聚焦
+export const winShow = currentWin.show
 
 // 设置菜单
 export const setApplicationMenu = () => {
@@ -204,6 +210,10 @@ export const downloadFileDialog = (option = {}) => {
   })
 }
 
-export const showItemInFolder = (fullPath) => {
+export const showItemInFolder = fullPath => {
   return shell.showItemInFolder(fullPath)
+}
+
+export const openItem = fullPath => {
+  return shell.openItem(fullPath)
 }

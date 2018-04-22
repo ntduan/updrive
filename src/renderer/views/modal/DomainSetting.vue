@@ -77,7 +77,7 @@ export default {
       this.isSubmitting = true
       this.$store
         .dispatch('SET_PROFILE_STORE', {
-          domain: this.domain,
+          data: { domain: this.domain },
         })
         .then(() => {
           this.isSubmitting = false
