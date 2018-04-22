@@ -1,5 +1,19 @@
 [
   {
+    "version": "0.34.0",
+    "package_urls": {
+      "win32": "https://github.com/aniiantt/updrive/releases/download/v0.34.0/updrive-0.34.0-win.zip",
+      "darwin": "https://github.com/aniiantt/updrive/releases/download/v0.34.0/updrive-0.34.0-mac.zip",
+      "other": "https://github.com/aniiantt/updrive/releases/download/v0.34.0/updrive.AppImage.dmg"
+    },
+    "change_logs": [
+      "获取链接可编辑",
+      "增加获取任务列表里面上传完成后的文件获取链接的功能",
+      "上传下载完成后，增加桌面通知功能",
+      "任务列表的文件可以双击和单击文件名用操作系统默认程序打开"
+    ]
+  },
+  {
     "version": "0.33.0",
     "package_urls": {
       "win32": "https://github.com/aniiantt/updrive/releases/download/v0.33.0/updrive-0.33.0-win.zip",
