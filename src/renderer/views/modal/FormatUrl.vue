@@ -36,6 +36,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import path from 'path'
 
 import { openExternal, writeText } from '@/api/electron'
 import { getFileTypeFromName } from '@/api/tool'
@@ -80,16 +81,18 @@ export default {
         return pathname.substring(pathname.lastIndexOf('/') + 1)
       }
       const getMarkDownTemplate = link => {
-        const title = getTitle(link)
-        const type = getFileTypeFromName(title)
+        const titleUri = getTitle(link)
+        const type = getFileTypeFromName(titleUri)
+        const title = path.parse(decodeURIComponent(titleUri)).name
         if (type === 'image') {
           return `![${title}](${link})`
         }
         return `[${title}](${link})`
       }
       const getHtmlTemplate = link => {
-        const title = getTitle(link)
-        const type = getFileTypeFromName(title)
+        const titleUri = getTitle(link)
+        const type = getFileTypeFromName(titleUri)
+        const title = path.parse(decodeURIComponent(titleUri)).name
         if (type === 'image') {
           return `<img src="${link}" alt="${title}">`
         }
