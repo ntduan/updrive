@@ -90,8 +90,8 @@
       </div>
       <table v-if="isEmptyList" class="table empty-list-table">
         <tbody>
-          <tr v-for="(value, index) in Array.apply(null, {length: 11})" :key="index" class="empty-list-row">
-            <div class="empty-content" v-if="index === 4">
+          <tr v-for="(value, index) in Array.apply(null, {length: 9})" :key="index" class="empty-list-row">
+            <div class="empty-content" v-if="index === 3">
               <p class="has-text-weight-bold" v-show="task.tabKey === 'upload'">没有上传的文件</p>
               <p class="has-text-weight-bold" v-show="task.tabKey === 'download'">没有下载的文件</p>
             </div>
