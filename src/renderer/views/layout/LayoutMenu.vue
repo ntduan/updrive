@@ -38,13 +38,19 @@
       <li>
         <router-link :to="{name: 'main'}" :class="{'is-active': currentRouteName === 'main'}">
           <Icon name="icon-files" />
-          全部文件
+          全部
         </router-link>
       </li>
       <li>
-        <router-link :to="{name: 'task'}" :class="{'is-active': currentRouteName === 'task'}">
-          <Icon name="icon-task" />
-          任务列表<span v-show="workingTaskNum" class="task-tag tag is-danger is-rounded">{{workingTaskNum}}</span>
+        <router-link :to="{name: 'upload'}" :class="{'is-active': currentRouteName === 'upload'}">
+          <Icon name="icon-uploads" />
+          上传<span v-show="uploadingNum" class="task-tag tag is-danger is-rounded">{{uploadingNum}}</span>
+        </router-link>
+      </li>
+      <li>
+        <router-link :to="{name: 'download'}" :class="{'is-active': currentRouteName === 'download'}">
+          <Icon name="icon-downloads" />
+          下载<span v-show="downloadingNum" class="task-tag tag is-danger is-rounded">{{downloadingNum}}</span>
         </router-link>
       </li>
     </ul>
@@ -128,10 +134,11 @@ export default {
     }
   },
   computed: {
-    workingTaskNum() {
-      return this.task.list.filter(
-        file => file.status !== this.task.status.completed.value && file.status !== this.task.status.error.value,
-      ).length
+    uploadingNum() {
+      return this.task.list.filter(file => file.status === this.task.status.uploading.value).length
+    },
+    downloadingNum() {
+      return this.task.list.filter(file => file.status === this.task.status.downloading.value).length
     },
     currentRouteName() {
       return this.$route.name

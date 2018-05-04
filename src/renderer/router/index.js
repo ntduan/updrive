@@ -8,6 +8,8 @@ import Main from '@/views/layout/Main'
 import Login from '@/views/login/Login'
 import List from '@/views/list/List'
 import Task from '@/views/task/Task'
+import Upload from '@/views/upload/Upload'
+import Download from '@/views/download/Download'
 import Session from '@/api/session.js'
 
 Vue.use(Router)
@@ -26,13 +28,23 @@ const router = new Router({
           },
         },
         {
-          path: 'task',
-          name: 'task',
+          path: 'upload',
+          name: 'upload',
           components: {
-            body: Task,
+            body: Upload,
           },
           meta: {
-            pageTitle: '任务列表',
+            pageTitle: '上传列表',
+          },
+        },
+        {
+          path: 'download',
+          name: 'download',
+          components: {
+            body: Download,
+          },
+          meta: {
+            pageTitle: '下载列表',
           },
         },
       ],

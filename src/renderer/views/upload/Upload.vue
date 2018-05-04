@@ -1,13 +1,6 @@
 <template>
   <div class="task-container">
     <div class="tabs">
-      <ul>
-        <li :class="{
-          'is-active': task.tabKey === key,
-        }" v-for="(value, key) in task.taskType" :key="key" @click="switchTab(key)">
-          <a>{{value}}</a>
-        </li>
-      </ul>
       <div class="handle">
         <a @click="toggleShowClearCompletedModal(true)">清除已完成记录</a>
       </div>
@@ -29,61 +22,44 @@
         <div class="files-list-body">
           <div
             class="files-list-item"
-            v-for="file in currentList"
-            @dblclick.prevent.stop="openFile(file)"
+            v-for="file in uploadList"
             :key="file.id"
           >
             <div class="name file-info-item">
-              <a @click.prevent.stop="openFile(file)" title="打开文件">
-                <i class="res-icon" :class="getFileIconClass(file.filename)"></i>{{file.filename}}
-              </a>
+              <i class="res-icon" :class="getFileIconClass(file.filename)"></i>{{file.filename}}
             </div>
             <div class="size file-info-item">
               {{file.transferred | digiUnit}} / {{file.total | digiUnit}}
             </div>
             <div class="status file-info-item">
-              <template v-if="file.errorMessage">
+              <template v-if="isError(file)">
                 <p class="has-text-danger">{{file.errorMessage}}</p>
               </template>
-              <template v-else>
-                <template v-if="isUploading(file)">
-                  <progress-bar :progress='getProgress(file)' class="progress-bar"></progress-bar>
-                  <div class="task-state">
-                    <span>
-                      {{file.status && task.status[file.status].name}} {{getProgress(file) | percent}}
-                    </span>
-                    <span class="task-state-time">
-                      {{file.startTime | timestamp('YYYY-MM-DD')}}
-                    </span>
-                  </div>
-                </template>
-                <template v-if="isDownloading(file)">
-                  <progress-bar :progress='getProgress(file)' class="progress-bar"></progress-bar>
-                  <div class="task-state">
-                    <span>
-                      {{file.status && task.status[file.status].name}} {{getProgress(file) | percent}}
-                    </span>
-                    <span class="task-state-time">
-                      {{file.startTime | timestamp('YYYY-MM-DD')}}
-                    </span>
-                  </div>
-                </template>
-                <template v-if="isCompleted(file)">
-                  <div class="task-state">
-                    <span>
-                      {{file.status && task.status[file.status].name}}
-                    </span>
-                    <span class="task-state-time">
-                      {{file.endTime | timestamp('YYYY-MM-DD')}}
-                    </span>
-                  </div>
-                </template>
+              <template v-if="isCompleted(file)">
+                <div class="task-state">
+                  <span>
+                    {{file.status && task.status[file.status].name}}
+                  </span>
+                  <span class="task-state-time">
+                    {{file.endTime | timestamp('YYYY-MM-DD')}}
+                  </span>
+                </div>
+              </template>
+              <template v-if="!isEnded(file)">
+                <progress-bar :progress='getProgress(file)' class="progress-bar"></progress-bar>
+                <div class="task-state">
+                  <span>
+                    {{file.status && task.status[file.status].name}} {{getProgress(file) | percent}}
+                  </span>
+                  <span class="task-state-time">
+                    {{file.startTime | timestamp('YYYY-MM-DD')}}
+                  </span>
+                </div>
               </template>
             </div>
             <div class="handle file-info-item">
-              <a v-if="file.connectType === 'download'" v-show="isCompleted(file)" @click="showFile(file)">打开</a>
-              <a v-if="file.connectType === 'upload'" v-show="isCompleted(file)" @click="copyHref(file)">获取链接</a>
-              <a v-show="isCompleted(file) || isError(file)" @click="deleteTask(file)">删除</a>
+              <a v-show="isCompleted(file)" @click="copyHref(file)">获取链接</a>
+              <a v-show="isEnded(file)" @click="deleteTask(file)">删除</a>
             </div>
           </div>
         </div>
@@ -92,8 +68,7 @@
         <tbody>
           <tr v-for="(value, index) in Array.apply(null, {length: 9})" :key="index" class="empty-list-row">
             <div class="empty-content" v-if="index === 3">
-              <p class="has-text-weight-bold" v-show="task.tabKey === 'upload'">没有上传的文件</p>
-              <p class="has-text-weight-bold" v-show="task.tabKey === 'download'">没有下载的文件</p>
+              <p class="has-text-weight-bold">没有上传的文件</p>
             </div>
           </tr>
         </tbody>
@@ -134,15 +109,10 @@ export default {
   },
   computed: {
     isEmptyList() {
-      return !this.currentList.length
+      return !this.uploadList.length
     },
-    currentList() {
-      return this.taskData[this.task.tabKey] || []
-    },
-    taskData() {
-      return groupBy(file => {
-        return (file.connectType === 'upload' && 'upload') || (file.connectType === 'download' && 'download') || 'error'
-      }, this.task.list)
+    uploadList() {
+      return this.task.list.filter(file => file.connectType === 'upload')
     },
     ...mapState(['task']),
     ...mapGetters(['baseHref']),
@@ -153,21 +123,13 @@ export default {
     },
     clearCompleted() {
       this.toggleShowClearCompletedModal(false)
-      this.$store.dispatch('CLEAR_COMPLEATE_JOB', { type: this.task.tabKey })
-    },
-    openFile(file) {
-      if (this.isCompleted(file)) {
-        const result = openItem(file.localPath)
-        if (!result) {
-          Message.error('文件不存在')
-        }
-      }
-    },
-    switchTab(tabKey) {
-      this.$store.commit('SELECT_TAB_KEY', { tabKey })
+      this.$store.dispatch('DELETE_JOB', { connectType: 'upload' })
     },
     getProgress(file) {
       return file.total === 0 ? 1 : parseFloat((file.transferred / file.total).toFixed(2), 10)
+    },
+    isEnded(file) {
+      return this.isCompleted(file) || this.isError(file)
     },
     isCompleted(file) {
       return file.status === this.task.status.completed.value
@@ -175,20 +137,9 @@ export default {
     isError(file) {
       return file.status === this.task.status.error.value
     },
-    isUploading(file) {
-      return file.connectType === 'upload' && !this.isCompleted(file)
-    },
-    isDownloading(file) {
-      return file.connectType === 'download' && !this.isCompleted(file)
-    },
-    cancelTask(file) {
-      if (this.isCompleted(file)) {
-        this.$store.dispatch('CLEAR_COMPLEATE_JOB', { id: file.id })
-      }
-    },
     deleteTask(file) {
-      if (this.isCompleted(file) || this.isError(file)) {
-        this.$store.dispatch('CLEAR_COMPLEATE_JOB', { id: file.id })
+      if (this.isEnded(file)) {
+        this.$store.dispatch('DELETE_JOB', { id: file.id })
       }
     },
     showFile(file) {
