@@ -53,7 +53,7 @@ export const setApplicationMenu = () => {
         },
         {
           label: '退出',
-          role: 'close',
+          role: 'quit',
         },
       ],
     },

@@ -8,6 +8,9 @@ import moment from 'moment'
 
 import { base64, throttle } from '@/api/tool'
 
+// 上传和下载应该分开
+// 大量文件下性能问题未知
+
 const Job = {
   initStore: {
     version: 0.1,
@@ -38,7 +41,7 @@ const Job = {
       localPath: localPath, // 下载本地路径
       startTime: startTime, // 下载开始时间
       filename: basename(localPath), // 下载的文件名
-      status: this.status.downloading.value, // 下载状态: "downloading", "interrupted", "completed", "error"
+      status: this.status.downloading.value, // 下载状态: "uploading", "downloading", "interrupted", "completed", "error"
       errorMessage: '',
       transferred: 0, // 已下载大小
       total: -1, // 总共大小
@@ -204,13 +207,14 @@ const Job = {
     })
   },
 
-  async clearCompleted({ type, id }) {
+  async deleteJob({ connectType, id }) {
     const store = await this.getStore()
     store.data = store.data.filter(item => {
       if (id) {
         return item.id !== id
-      } else {
-        return item.status !== this.status.completed.value && (!type || item.connectType === type)
+      }
+      if (connectType) {
+        return item.connectType !== connectType || item.status !== this.status.completed.value
       }
     })
     return await localforage.setItem(this.storeKey, store)

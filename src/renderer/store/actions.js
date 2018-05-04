@@ -173,19 +173,9 @@ export default {
     })
   },
   // 清空已完成任务
-  [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { type } = {}) {
+  [Types.DELETE_JOB]({ getters, commit, dispatch }, { connectType, id } = {}) {
     getters.job
-      .clearCompleted(type)
-      .then(() => {
-        Message.success('操作成功')
-        dispatch('SYNC_JOB_LIST')
-      })
-      .catch(errorHandler)
-  },
-  // 清空已完成任务
-  [Types.CLEAR_COMPLEATE_JOB]({ getters, commit, dispatch }, { type, id } = {}) {
-    getters.job
-      .clearCompleted({ type, id })
+      .deleteJob({ connectType, id })
       .then(() => {
         Message.success('操作成功')
         dispatch('SYNC_JOB_LIST')
