@@ -52,7 +52,7 @@
               <svg v-show="list.sortInfo.key === 'filename' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
             </div>
             <div class="file-info-item column-last-modified" @click="sort('lastModified')">
-              修改日期
+              添加日期
               <svg v-show="list.sortInfo.key === 'lastModified' && !list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
               <svg v-show="list.sortInfo.key === 'lastModified' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
             </div>
@@ -123,7 +123,7 @@
           </div>
           <div class="list-view-detail-content-item">
             <div class="list-view-detail-content-item-label">
-              修改日期
+              添加日期
             </div>
             <div class="list-view-detail-content-item-value">
               {{fileDetail.basicInfo.lastModified | timestamp}}
