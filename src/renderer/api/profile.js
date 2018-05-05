@@ -7,7 +7,7 @@ const Profile = {
       domain: '',
       urlCopyType: 'url',
       sortInfo: {
-        isReverse: false,
+        isReverse: true,
         key: 'lastModified',
       },
     },
