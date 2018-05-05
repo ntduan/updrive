@@ -43,7 +43,6 @@ export const INIT_JOB = 'INIT_JOB' // 初始化任务实例
 export const SET_JOB_LIST = 'SET_JOB_LIST' // 设置任务列表
 export const UPDATE_JOB_ITEM = 'UPDATE_JOB_ITEM' // 更新一个任务
 export const DELETE_JOB = 'DELETE_JOB' // 删除任务
-export const SELECT_TAB_KEY = 'SELECT_TAB_KEY' // 设置 task tab key
 export const SYNC_JOB_LIST = 'SYNC_JOB_LIST' // 同步下载任务列表
 
 // actions

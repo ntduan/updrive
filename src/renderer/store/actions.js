@@ -95,8 +95,7 @@ export default {
                 body: '点击查看详情',
               },
               () => {
-                commit('SELECT_TAB_KEY', { tabKey: 'download' })
-                Router.push({ name: 'task' })
+                Router.push({ name: 'download' })
               },
             )
 
@@ -128,8 +127,7 @@ export default {
                 body: '点击查看详情',
               },
               () => {
-                commit('SELECT_TAB_KEY', { tabKey: 'upload' })
-                Router.push({ name: 'task' })
+                Router.push({ name: 'upload' })
               },
             )
           if (isAllSuccess) {

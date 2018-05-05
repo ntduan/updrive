@@ -96,7 +96,7 @@ import { showItemInFolder, openItem } from '@/api/electron.js'
 import Message from '@/api/message'
 
 export default {
-  name: 'Task',
+  name: 'Download',
   data() {
     return {
       showClearCompletedModal: false,

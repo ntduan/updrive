@@ -8,7 +8,6 @@ const initState = {
     download: '下载',
   },
   status: {},
-  tabKey: 'upload',
   job: null,
   list: [],
   taskList: [],
@@ -30,9 +29,6 @@ const mutations = {
     } else {
       state.list = prepend(item, state.list)
     }
-  },
-  [Types.SELECT_TAB_KEY](state, { tabKey }) {
-    state.tabKey = tabKey
   },
   [Types.SHOW_TASK_MODAL](state) {
     state.showModal = true
