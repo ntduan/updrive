@@ -14,10 +14,10 @@
           <div class="column-file-handle table-column" />
         </div>
         <div class="files-list-header">
-          <div class="column-file-name file-info-item">名称</div>
-          <div class="column-file-size file-info-item">大小</div>
-          <div class="column-file-status file-info-item">状态</div>
-          <div class="column-file-handle file-info-item">操作</div>
+          <div class="column-file-name file-info-header">名称</div>
+          <div class="column-file-size file-info-header">大小</div>
+          <div class="column-file-status file-info-header">状态</div>
+          <div class="column-file-handle file-info-header">操作</div>
         </div>
         <div class="files-list-body">
           <div

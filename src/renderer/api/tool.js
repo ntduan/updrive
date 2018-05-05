@@ -1,4 +1,4 @@
-import { replace, compose } from 'ramda'
+import { replace, compose, pipe, split, filter, reverse, sort, identity } from 'ramda'
 import Crypto from 'crypto'
 import Path from 'path'
 import { URL } from 'url'
@@ -167,4 +167,47 @@ export const externalUrls = {
   issues: 'https://github.com/aniiantt/updrive/issues/new',
   releases: 'https://github.com/aniiantt/updrive/releases',
   latest: 'https://github.com/aniiantt/updrive/releases/latest',
+}
+
+export const listSort = (data = [], key, isReverse) => {
+  if (!key) return data
+
+  const naturalCompareString = (a = '', b = '') => {
+    try {
+      const splitByNumber = pipe(split(/(\d+)/), filter(identity))
+      const [aArr, bArr] = [splitByNumber(a), splitByNumber(b)]
+      for (let i = 0; i < aArr.length; i++) {
+        if (aArr[i] !== bArr[i]) {
+          if (bArr[i] === undefined) return 1
+          if (!isNaN(aArr[i]) && !isNaN(bArr[i])) {
+            return parseInt(aArr[i]) - parseInt(bArr[i])
+          } else {
+            return aArr[i].localeCompare(bArr[i])
+          }
+        }
+      }
+      return 0
+    } catch (err) {
+      return a.localeCompare(b)
+    }
+  }
+
+  const sortData = sort((ObjA, ObjB) => {
+    if (ObjA.folderType !== ObjB.folderType) {
+      if (!isReverse) return ObjA.folderType === 'F' ? -1 : 1
+      if (isReverse) return ObjA.folderType === 'F' ? 1 : -1
+    }
+    if (key === 'lastModified' || key === 'size') {
+      return ObjA[key] !== ObjB[key]
+        ? Number(ObjA[key]) - Number(ObjB[key])
+        : naturalCompareString(ObjA.filename, ObjB.filename)
+    }
+    if (key === 'filetype' || key === 'filename') {
+      return ObjA[key] !== ObjB[key]
+        ? naturalCompareString(String(ObjA[key]), String(ObjB[key]))
+        : naturalCompareString(ObjA.filename, ObjB.filename)
+    }
+  }, data)
+
+  return isReverse ? reverse(sortData) : sortData
 }

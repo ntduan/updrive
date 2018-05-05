@@ -1,27 +1,14 @@
-@import "~bulma/sass/utilities/initial-variables";
-@import "~@/styles/custom.scss";
+@import '~bulma/sass/utilities/initial-variables';
+@import '~@/styles/custom.scss';
 
 @font-face {
   font-family: SourceHanSansCN-Light;
-  src: url("./fonts/SourceHanSansCN-Light.ttf");
+  src: url('./fonts/SourceHanSansCN-Light.ttf');
   font-weight: normal;
 }
 
-$family-sans-serif: "Arial",
-"SourceHanSansCN-Light",
-"Microsoft YaHei",
-BlinkMacSystemFont,
--apple-system,
-"Segoe UI",
-"Roboto",
-"Oxygen",
-"Ubuntu",
-"Cantarell",
-"Fira Sans",
-"Droid Sans",
-"Helvetica Neue",
-"Helvetica",
-sans-serif;
+$family-sans-serif: 'Arial', 'SourceHanSansCN-Light', 'Microsoft YaHei', BlinkMacSystemFont, -apple-system, 'Segoe UI',
+  'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Helvetica', sans-serif;
 
 $family-primary: $family-sans-serif;
 
@@ -36,7 +23,7 @@ $dropdown-item-hover-background-color: #edf4fc;
 @import '~bulma/bulma.sass';
 
 .menu {
-  color: findColorInvert(#000)
+  color: findColorInvert(#000);
 }
 
 .message a.message-link:not(.button):not(.tag) {

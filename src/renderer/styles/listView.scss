@@ -170,7 +170,7 @@
     .column-file-name {
       flex: 1;
     }
-    .file-info-item {
+    .file-info-item,.file-info-header {
       padding-top: 0;
       padding-bottom: 0;
       line-height: 25px;
@@ -180,6 +180,18 @@
       }
       &:not(:last-child) {
         border-right: 1px solid rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    .file-info-header {
+      &:hover {
+        color: rgba(0, 0, 0, 1);
+      }
+      .svg-icon {
+        display: none;
+        &.is-active {
+          display: inline;
+        }
       }
     }
   }
