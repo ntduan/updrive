@@ -14,10 +14,8 @@
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "dev": "node .electron-vue/dev-runner.js",
     "pack": "npm run pack:main && npm run pack:renderer",
-    "pack:main":
-      "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
-    "pack:renderer":
-      "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
+    "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
+    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": ""
   },
   "build": {
@@ -27,7 +25,9 @@
     "directories": {
       "output": "build"
     },
-    "files": ["dist/electron/**/*"],
+    "files": [
+      "dist/electron/**/*"
+    ],
     "dmg": {
       "contents": [
         {
@@ -48,7 +48,11 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "target": ["nsis", "portable", "zip"]
+      "target": [
+        "nsis",
+        "portable",
+        "zip"
+      ]
     },
     "linux": {
       "icon": "build/icons"
@@ -92,7 +96,7 @@
     "css-loader": "^0.28.7",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^1.7.9",
+    "electron": "^2.0.0",
     "electron-builder": "^19.45.4",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.1",
