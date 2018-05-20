@@ -26,7 +26,7 @@
             :key="file.id"
           >
             <div class="name file-info-item">
-              <i class="res-icon" :class="getFileIconClass(file.filename)"></i>{{file.filename}}
+               <res-icon :file-name="file.filename" :url="`${file.localPath}`"/> {{file.filename}}
             </div>
             <div class="size file-info-item">
               {{file.transferred | digiUnit}} / {{file.total | digiUnit}}
@@ -86,12 +86,13 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { groupBy } from 'ramda'
 
+import ResIcon from '@/components/ResIcon'
 import ProgressBar from '@/components/ProgressBar'
 import ConfirmModal from '@/components/ConfirmModal'
 import Icon from '@/components/Icon'
 import { timestamp, percent, digiUnit, getFileIconClass } from '@/api/tool'
-import { groupBy } from 'ramda'
 import { showItemInFolder, openItem } from '@/api/electron.js'
 import Message from '@/api/message'
 
@@ -105,7 +106,7 @@ export default {
   components: {
     ConfirmModal,
     ProgressBar,
-    Icon,
+    ResIcon,
   },
   computed: {
     isEmptyList() {

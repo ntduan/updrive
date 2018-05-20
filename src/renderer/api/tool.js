@@ -211,3 +211,8 @@ export const listSort = (data = [], key, isReverse) => {
 
   return isReverse ? reverse(sortData) : sortData
 }
+
+export const createImage = () => {
+
+  console.log('大大说')
+}

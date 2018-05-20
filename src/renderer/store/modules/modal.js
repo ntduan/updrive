@@ -15,9 +15,18 @@ const initState = {
     show: false,
     url: '',
   },
+  uploadHandle: {
+    show: false,
+  },
 }
 
 const mutations = {
+  [Types.OPEN_UPLOAD_HANDLE_MODAL](state, { data }) {
+    state.uploadHandle.show = true
+  },
+  [Types.CLOSE_UPLOAD_HANDLE_MODAL](state) {
+    state.uploadHandle.show = false
+  },
   [Types.OPEN_FORMAT_URL_MODAL](state, { data }) {
     state.formatUrl.show = true
     state.formatUrl.url = data

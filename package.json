@@ -99,7 +99,7 @@
     "electron": "^2.0.0",
     "electron-builder": "^19.45.4",
     "electron-debug": "^1.4.0",
-    "electron-devtools-installer": "^2.2.1",
+    "electron-devtools-installer": "^2.2.4",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.5",
     "html-webpack-plugin": "^2.30.1",
