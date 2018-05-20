@@ -95,8 +95,7 @@ export default {
                 body: '点击查看详情',
               },
               () => {
-                commit('SELECT_TAB_KEY', { tabKey: 'download' })
-                Router.push({ name: 'task' })
+                Router.push({ name: 'download' })
               },
             )
 
@@ -128,8 +127,7 @@ export default {
                 body: '点击查看详情',
               },
               () => {
-                commit('SELECT_TAB_KEY', { tabKey: 'upload' })
-                Router.push({ name: 'task' })
+                Router.push({ name: 'upload' })
               },
             )
           if (isAllSuccess) {
@@ -194,9 +192,8 @@ export default {
     for (const m of mutations) commit(m)
   },
   // 设置 profile 存储数据
-  [Types.SET_PROFILE_STORE]({ getters, dispatch }, { data, noNofity } = {}) {
+  [Types.SET_PROFILE_STORE]({ getters, dispatch }, { data } = {}) {
     getters.profile.setStoreData(data).then(() => {
-      if (!noNofity) Message.success('操作成功')
       dispatch('SYNC_PROFILE_DATA')
     })
   },

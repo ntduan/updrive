@@ -2,10 +2,14 @@ import localforage from 'localforage'
 
 const Profile = {
   initStore: {
-    version: 0.1,
+    version: 0.2,
     data: {
       domain: '',
       urlCopyType: 'url',
+      sortInfo: {
+        isReverse: true,
+        key: 'lastModified',
+      },
     },
   },
 
@@ -26,8 +30,25 @@ const Profile = {
   },
 
   async getStore() {
-    const data = await localforage.getItem(this.storeKey)
-    return data && data.version === this.initStore.version ? data : { ...this.initStore }
+    const store = await localforage.getItem(this.storeKey)
+    if (!store || !store.version) return await localforage.setItem(this.storeKey, initStore)
+    if (store.version !== this.initStore.version) return await this.upgrade(store)
+    return store
+  },
+
+  async upgrade(store) {
+    const data = { ...this.initStore.data }
+    const oldData = { ...store.data }
+    if (oldData.domain !== undefined) {
+      data.domain = oldData.domain
+    }
+    if (oldData.urlCopyType !== undefined) {
+      data.urlCopyType = oldData.urlCopyType
+    }
+    if (oldData.sortInfo !== undefined) {
+      data.sortInfo = oldData.sortInfo
+    }
+    return await localforage.setItem(this.storeKey, { ...this.initStore, data })
   },
 }
 

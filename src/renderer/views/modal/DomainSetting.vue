@@ -41,6 +41,7 @@ import { mapState, mapGetters } from 'vuex'
 
 import { openExternal } from '@/api/electron.js'
 import Icon from '@/components/Icon'
+import Message from '@/api/message.js'
 
 export default {
   name: 'CreateFolder',
@@ -79,6 +80,7 @@ export default {
         .dispatch('SET_PROFILE_STORE', {
           data: { domain: this.domain },
         })
+        .then(() => Message.success('操作成功'))
         .then(() => {
           this.isSubmitting = false
         })

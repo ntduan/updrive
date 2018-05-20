@@ -65,7 +65,7 @@ export default {
       this.$store.commit('CLOSE_FORMAT_URL_MODAL')
     },
     switchFormatType(type) {
-      this.$store.dispatch('SET_PROFILE_STORE', { data: { urlCopyType: type }, noNofity: true })
+      this.$store.dispatch('SET_PROFILE_STORE', { data: { urlCopyType: type } })
     },
     submit() {
       writeText(this.copyText)

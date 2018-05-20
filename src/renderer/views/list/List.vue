@@ -37,7 +37,7 @@
       >
         <div
           class="files-list"
-          v-if="list.dirInfo.data.length"
+          v-if="listData.length"
         >
           <div class="files-list-column">
             <div class="column-file-name table-column" />
@@ -46,31 +46,31 @@
             <div class="column-file-size table-column" v-if="!isViewDetail" />
           </div>
           <div class="files-list-header">
-            <div class="file-info-item column-file-name" @click="sort('filename')">
+            <div class="file-info-header column-file-name" @click="sort('filename')">
               名称
-              <svg v-show="list.sortInfo.key === 'filename' && !list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
-              <svg v-show="list.sortInfo.key === 'filename' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
+              <svg :class="{'is-active': sortInfo.key === 'filename' && !sortInfo.isReverse}" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
+              <svg :class="{'is-active': sortInfo.key === 'filename' && sortInfo.isReverse}" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
             </div>
-            <div class="file-info-item column-last-modified" @click="sort('lastModified')">
-              修改日期
-              <svg v-show="list.sortInfo.key === 'lastModified' && !list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
-              <svg v-show="list.sortInfo.key === 'lastModified' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
+            <div class="file-info-header column-last-modified" @click="sort('lastModified')">
+              添加日期
+              <svg :class="{'is-active': sortInfo.key === 'lastModified' && !sortInfo.isReverse}" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
+              <svg :class="{'is-active': sortInfo.key === 'lastModified' && sortInfo.isReverse}" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
             </div>
-            <div class="file-info-item column-file-type" v-if="!isViewDetail" @click="sort('filetype')">
+            <div class="file-info-header column-file-type" v-if="!isViewDetail" @click="sort('filetype')">
               类型
-              <svg v-show="list.sortInfo.key === 'filetype' && !list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
-              <svg v-show="list.sortInfo.key === 'filetype' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
+              <svg :class="{'is-active': sortInfo.key === 'filetype' && !sortInfo.isReverse}" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
+              <svg :class="{'is-active': sortInfo.key === 'filetype' && sortInfo.isReverse}" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
             </div>
-            <div class="file-info-item column-file-size" v-if="!isViewDetail" @click="sort('size')">
+            <div class="file-info-header column-file-size" v-if="!isViewDetail" @click="sort('size')">
               大小
-              <svg v-show="list.sortInfo.key === 'size' && !list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
-              <svg v-show="list.sortInfo.key === 'size' && list.sortInfo.isReverse" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
+              <svg :class="{'is-active': sortInfo.key === 'size' && !sortInfo.isReverse}" class="svg-icon"><use xlink:href="#icon-arrow-up"></use></svg>
+              <svg :class="{'is-active': sortInfo.key === 'size' && sortInfo.isReverse}" class="svg-icon"><use xlink:href="#icon-arrow-down"></use></svg>
             </div>
           </div>
           <div class="files-list-body" v-if="!list.dirInfo.loading">
             <div
               class="files-list-item"
-              v-for="(file, index) in list.dirInfo.data"
+              v-for="(file, index) in listData"
               :key="file.uri"
               :class="{ 'item-selected': (listItemState[file.uri] && listItemState[file.uri].selected) }"
               :tabindex="getListTabIndex(file.uri)"
@@ -87,7 +87,7 @@
             </div>
           </div>
         </div>
-        <table v-if="!list.dirInfo.data.length && !list.dirInfo.loading" class="table empty-list-table">
+        <table v-if="!listData.length && !list.dirInfo.loading" class="table empty-list-table">
           <tbody>
             <tr v-for="(value, index) in Array.apply(null, {length: 9})" :key="index" class="empty-list-row">
               <div class="empty-content" v-if="index === 3">
@@ -123,7 +123,7 @@
           </div>
           <div class="list-view-detail-content-item">
             <div class="list-view-detail-content-item-label">
-              修改日期
+              添加日期
             </div>
             <div class="list-view-detail-content-item-value">
               {{fileDetail.basicInfo.lastModified | timestamp}}
@@ -232,7 +232,7 @@ import ConfirmModal from '@/components/ConfirmModal'
 
 import Icon from '@/components/Icon'
 import Spinner from '@/components/Spinner'
-import { timestamp, digiUnit, isDir, getFileIconClass } from '@/api/tool'
+import { timestamp, digiUnit, isDir, getFileIconClass, listSort } from '@/api/tool'
 import {
   uploadFileDialog,
   uploadDirectoryDialog,
@@ -260,8 +260,11 @@ export default {
     }
   },
   computed: {
+    listData() {
+      return listSort(this.list.dirInfo.data, this.sortInfo.key, this.sortInfo.isReverse)
+    },
     sortInfo() {
-      return path(['list', 'sortInfo'], this) || {}
+      return path(['profile', 'data', 'sortInfo'], this) || {}
     },
     isSelectedSingleFile() {
       return this.uniqueSelectedUri && !isDir(this.uniqueSelectedUri)
@@ -307,7 +310,7 @@ export default {
       const forwardStack = path(['list', 'history', 'forwardStack'], this) || []
       return last(forwardStack)
     },
-    ...mapState(['list', 'auth']),
+    ...mapState(['list', 'auth', 'profile']),
     ...mapGetters(['baseHref', 'getUpyunApiUrl']),
   },
   methods: {
@@ -347,20 +350,23 @@ export default {
       return this.selected.includes(uri) ? 0 : -1
     },
     sort(key) {
-      this.$store.commit('SET_SORT_INFO', {
+      const sortInfo = {
         key: key,
         isReverse: this.sortInfo.key === key ? !this.sortInfo.isReverse : this.sortInfo.isReverse,
+      }
+      this.$store.dispatch('SET_PROFILE_STORE', {
+        data: { sortInfo },
       })
     },
     findFileByUri(uri = this.uniqueSelectedUri) {
-      return last(this.list.dirInfo.data.filter(data => data.uri === uri))
+      return last(this.listData.filter(data => data.uri === uri))
     },
     listGetFocus() {
       this.$refs.listView.focus()
     },
     keydown($event) {
       const { ctrlKey, key, shiftKey, altKey } = $event
-      const uriData = pluck('uri', this.list.dirInfo.data)
+      const uriData = pluck('uri', this.listData)
       const selectUri = selected => this.$store.commit({ type: 'SET_SELECT_LIST', selected: selected })
       if (ctrlKey && !shiftKey && key === 'a') {
         selectUri(uriData)
@@ -405,7 +411,7 @@ export default {
       }
     },
     selectItem({ uri }, $event, index) {
-      const data = this.list.dirInfo.data
+      const data = this.listData
       const getSelectedList = () => {
         const { selected } = this
         if ($event.shiftKey) {

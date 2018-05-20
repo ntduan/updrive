@@ -14,10 +14,10 @@
           <div class="column-file-handle table-column" />
         </div>
         <div class="files-list-header">
-          <div class="column-file-name file-info-item">名称</div>
-          <div class="column-file-size file-info-item">大小</div>
-          <div class="column-file-status file-info-item">状态</div>
-          <div class="column-file-handle file-info-item">操作</div>
+          <div class="column-file-name file-info-header">名称</div>
+          <div class="column-file-size file-info-header">大小</div>
+          <div class="column-file-status file-info-header">状态</div>
+          <div class="column-file-handle file-info-header">操作</div>
         </div>
         <div class="files-list-body">
           <div
@@ -26,7 +26,7 @@
             :key="file.id"
           >
             <div class="name file-info-item">
-              <i class="res-icon" :class="getFileIconClass(file.filename)"></i>{{file.filename}}
+               <res-icon :file-name="file.filename" :url="`${file.localPath}`"/> {{file.filename}}
             </div>
             <div class="size file-info-item">
               {{file.transferred | digiUnit}} / {{file.total | digiUnit}}
@@ -86,17 +86,18 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { groupBy } from 'ramda'
 
+import ResIcon from '@/components/ResIcon'
 import ProgressBar from '@/components/ProgressBar'
 import ConfirmModal from '@/components/ConfirmModal'
 import Icon from '@/components/Icon'
 import { timestamp, percent, digiUnit, getFileIconClass } from '@/api/tool'
-import { groupBy } from 'ramda'
 import { showItemInFolder, openItem } from '@/api/electron.js'
 import Message from '@/api/message'
 
 export default {
-  name: 'Task',
+  name: 'Download',
   data() {
     return {
       showClearCompletedModal: false,
@@ -105,7 +106,7 @@ export default {
   components: {
     ConfirmModal,
     ProgressBar,
-    Icon,
+    ResIcon,
   },
   computed: {
     isEmptyList() {

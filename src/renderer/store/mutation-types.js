@@ -31,6 +31,9 @@ export const RENAME_FILE_CLEAR_OLD_PATH = 'RENAME_FILE_CLEAR_OLD_PATH' // 清除
 export const OPEN_DOMAIN_SETTING_MODAL = 'OPEN_DOMAIN_SETTING_MODAL' // 打开域名设置框
 export const CLOSE_DOMAIN_SETTING_MODAL = 'CLOSE_DOMAIN_SETTING_MODAL' // 关闭域名设置框
 
+export const OPEN_UPLOAD_HANDLE_MODAL = 'OPEN_UPLOAD_HANDLE_MODAL' // 打开上传操作框
+export const CLOSE_UPLOAD_HANDLE_MODAL = 'CLOSE_UPLOAD_HANDLE_MODAL' // 关闭上传操作框
+
 export const OPEN_FORMAT_URL_MODAL = 'OPEN_FORMAT_URL_MODAL' // 打开链接格式化框
 export const CLOSE_FORMAT_URL_MODAL = 'CLOSE_FORMAT_URL_MODAL' // 关闭链接格式化框
 export const SET_FORMAT_TYPE = 'SET_FORMAT_TYPE' // 设置链接的格式
@@ -43,7 +46,6 @@ export const INIT_JOB = 'INIT_JOB' // 初始化任务实例
 export const SET_JOB_LIST = 'SET_JOB_LIST' // 设置任务列表
 export const UPDATE_JOB_ITEM = 'UPDATE_JOB_ITEM' // 更新一个任务
 export const DELETE_JOB = 'DELETE_JOB' // 删除任务
-export const SELECT_TAB_KEY = 'SELECT_TAB_KEY' // 设置 task tab key
 export const SYNC_JOB_LIST = 'SYNC_JOB_LIST' // 同步下载任务列表
 
 // actions

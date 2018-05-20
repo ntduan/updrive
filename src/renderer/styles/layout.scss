@@ -121,7 +121,7 @@
   display: flex;
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  background: #FAFAFA;
+  background: #fafafa;
   .bar-right {
     display: flex;
     font-size: 24px;
@@ -142,7 +142,7 @@
 
 .nav {
   align-items: center;
-  background: #FAFAFA;
+  background: #fafafa;
   flex: 1;
   padding-right: 16px;
   font-size: 1.5em;
@@ -151,8 +151,8 @@
 
 .task-tag.tag {
   font-size: 12px;
-  height: 20px;
-  line-height: 20px;
+  height: 16px;
+  line-height: 16px;
   padding: 0 8px;
   margin-left: 8px;
   transform: translateY(-1px);
@@ -173,7 +173,7 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background-color: #FF8A80;
+    background-color: #ff8a80;
     margin-bottom: 10px;
     margin-left: 2px;
   }
@@ -227,7 +227,7 @@
     }
   }
   .message-body {
-    max-height: 300px;
+    max-height: 224px;
     overflow-y: scroll;
   }
   .upgrade-download-tip {

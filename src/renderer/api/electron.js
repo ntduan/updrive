@@ -13,7 +13,7 @@ const session = currentWin.webContents.session
 const userAgent = `${process.env.npm_package_build_productName}/${process.env.npm_package_version}`
 
 // 禁止缩放
-webFrame.setZoomLevelLimits(1, 1)
+webFrame.setVisualZoomLevelLimits(1, 1)
 
 // img 标签注入授权头
 session.webRequest.onBeforeSendHeaders(
