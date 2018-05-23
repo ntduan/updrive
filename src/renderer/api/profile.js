@@ -31,7 +31,7 @@ const Profile = {
 
   async getStore() {
     const store = await localforage.getItem(this.storeKey)
-    if (!store || !store.version) return await localforage.setItem(this.storeKey, initStore)
+    if (!store || !store.version) return await localforage.setItem(this.storeKey, this.initStore)
     if (store.version !== this.initStore.version) return await this.upgrade(store)
     return store
   },
